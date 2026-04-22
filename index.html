@@ -1,0 +1,2715 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Vinhomes Green Paradise — Gallery</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  /* Brand palette */
+  --green:       #009b51;
+  --dark-green:  #05785c;
+  --teal:        #005050;
+  --dark-teal:   #00464e;
+  --light-gold:  #f6dfac;
+  --bold-gold:   #e2b055;
+  --golden-sand: #d4903a;
+  --white:       #ffffff;
+
+  --bg:          #021e1a;
+  --surface:     #062e28;
+  --surface2:    #083830;
+  --border:      rgba(0,155,81,0.18);
+  --text:        #e8f5ef;
+  --text-muted:  rgba(232,245,239,0.5);
+  --serif:       'Montserrat', sans-serif;
+  --sans:        'Montserrat', sans-serif;
+  --mono:        'DM Mono', monospace;
+}
+
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+
+/* ── NOISE ── */
+body::after{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:9999;mix-blend-mode:overlay
+}
+
+/* ── HERO HEADER ── */
+.hero{
+  position:relative;
+  min-height:420px;
+  background:url('cover.png') center center / cover no-repeat;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:48px 52px 44px;
+  overflow:hidden;
+}
+.hero::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to top, rgba(2,30,26,.92) 0%, rgba(2,30,26,.45) 50%, rgba(2,30,26,.2) 100%);
+  z-index:0;
+}
+.hero>*{position:relative;z-index:1;}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 60% at 70% 120%, rgba(226,176,85,0.12) 0%, transparent 60%);
+}
+.hero-logo{
+  display:flex;align-items:center;gap:14px;
+  margin-bottom:28px;
+}
+.logo-icon{width:52px;height:52px}
+.logo-text .brand{font-family:var(--mono);font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--bold-gold);margin-bottom:2px}
+.logo-text h1{font-family:var(--serif);font-size:clamp(2rem,4vw,3.4rem);font-weight:300;line-height:1;color:var(--white)}
+.logo-text h1 strong{font-weight:600;font-style:italic;color:var(--bold-gold)}
+.logo-text .sub{font-family:var(--mono);font-size:.62rem;letter-spacing:.18em;color:rgba(255,255,255,.5);text-transform:uppercase;margin-top:6px}
+
+.hero-tagline{
+  font-family:var(--serif);font-style:italic;font-size:1.15rem;font-weight:300;
+  color:rgba(255,255,255,.7);max-width:560px;line-height:1.6;
+}
+
+.hero-stats{
+  position:absolute;top:40px;right:52px;
+  display:flex;gap:28px;
+}
+.stat{text-align:right}
+.stat-val{font-family:var(--mono);font-size:1.5rem;color:var(--bold-gold)}
+.stat-label{font-family:var(--mono);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted)}
+
+/* diagonal accent */
+.hero-accent{
+  position:absolute;bottom:0;right:0;width:380px;height:380px;
+  background:linear-gradient(45deg,transparent,rgba(0,155,81,.08));
+  clip-path:polygon(100% 0,100% 100%,0 100%);
+}
+
+/* ── NAV FILTERS ── */
+.nav-bar{
+  position:sticky;top:0;z-index:100;
+  background:rgba(2,30,26,.92);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:0 52px;
+  display:flex;align-items:stretch;gap:0;
+  overflow-x:auto;
+  scrollbar-width:none;
+}
+.nav-bar::-webkit-scrollbar{display:none}
+
+.nav-btn{
+  flex-shrink:0;
+  padding:16px 22px;
+  background:none;border:none;
+  font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--text-muted);
+  cursor:pointer;
+  border-bottom:2px solid transparent;
+  transition:all .22s ease;
+  position:relative;
+  white-space:nowrap;
+}
+.nav-btn:hover{color:var(--text);border-bottom-color:var(--dark-green)}
+.nav-btn.active{color:var(--bold-gold);border-bottom-color:var(--bold-gold)}
+.nav-btn .rank-badge{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:16px;height:16px;border-radius:50%;
+  background:var(--golden-sand);color:var(--bg);
+  font-size:.5rem;font-weight:600;
+  margin-right:6px;
+}
+
+/* ── MAIN ── */
+main{padding:0 52px 80px}
+
+/* ── SECTION ── */
+.cat-section{padding-top:60px}
+.cat-section.hidden{display:none}
+
+.section-head{
+  display:flex;align-items:flex-end;gap:20px;
+  margin-bottom:32px;
+  padding-bottom:20px;
+  border-bottom:1px solid var(--border);
+  position:relative;
+}
+.section-head::after{
+  content:'';position:absolute;bottom:-1px;left:0;
+  width:72px;height:2px;background:var(--green);
+}
+
+.section-badge{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:32px;height:32px;border-radius:50%;
+  font-family:var(--mono);font-size:.72rem;font-weight:600;
+  flex-shrink:0;margin-bottom:4px;
+}
+.priority-1 .section-badge{background:var(--bold-gold);color:var(--bg)}
+.priority-2 .section-badge{background:var(--green);color:var(--bg)}
+.priority-3 .section-badge{background:var(--dark-green);color:var(--white)}
+.priority-4 .section-badge{background:var(--teal);color:var(--white)}
+.priority-5 .section-badge{background:var(--dark-teal);color:var(--white)}
+.priority-6 .section-badge{background:var(--text-muted);color:var(--bg)}
+.other .section-badge{background:var(--surface2);color:var(--text-muted);border:1px solid var(--border)}
+
+.section-info{flex:1}
+.section-tag{font-family:var(--mono);font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px}
+.section-title{font-family:var(--serif);font-size:clamp(1.3rem,2.5vw,2rem);font-weight:700;line-height:1.1;color:var(--bold-gold)}
+.section-title em{font-style:normal;color:var(--bold-gold)}
+.section-desc{font-size:.82rem;line-height:1.6;color:var(--white);margin-top:8px;max-width:600px}
+
+.section-right{text-align:right;flex-shrink:0}
+.img-count{font-family:var(--mono);font-size:.65rem;color:var(--text-muted)}
+.priority-label{font-family:var(--mono);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--golden-sand);margin-bottom:4px}
+
+/* ── MASONRY ── */
+.masonry{columns:4 240px;column-gap:14px}
+
+/* ── CARD ── */
+.card{
+  margin-bottom:0;
+  position:relative;
+  overflow:hidden;
+  cursor:pointer;
+  background:var(--surface);
+  border:1px solid var(--border);
+  transition:transform .35s cubic-bezier(.34,1.56,.64,1), box-shadow .35s ease, border-color .3s ease;
+  animation:cardIn .5s ease both;
+}
+@keyframes cardIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+
+.card:hover{
+  transform:translateY(-5px) scale(1.015);
+  box-shadow:0 16px 48px rgba(0,0,0,.5);
+  border-color:rgba(0,155,81,.45);
+}
+
+.card img{width:100%;display:block;transition:transform .55s ease;aspect-ratio:auto;min-height:160px;background:var(--surface2)}
+.card img.error{min-height:180px;object-fit:none;filter:brightness(0.3)}
+.img-placeholder{
+  width:100%;min-height:180px;
+  background:linear-gradient(135deg,var(--surface2),var(--surface));
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:8px;padding:24px;
+  border:1px dashed rgba(0,155,81,.2);
+}
+.img-placeholder svg{width:32px;height:32px;opacity:.25;fill:var(--green)}
+.img-placeholder span{font-family:var(--mono);font-size:.6rem;color:var(--text-muted);text-align:center;letter-spacing:.08em}
+.card:hover img{transform:scale(1.06)}
+
+/* ── OVERLAY ── */
+.card-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(2,30,26,.85) 0%,transparent 55%);
+  opacity:0;transition:opacity .3s ease;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:14px;
+}
+.card:hover .card-overlay{opacity:1}
+.card-title{font-family:var(--serif);font-size:.95rem;color:var(--white);font-weight:300;margin-bottom:4px}
+.card-sub{font-family:var(--mono);font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--bold-gold)}
+
+/* ── HEART ── */
+.heart-btn{
+  position:absolute;top:10px;right:10px;
+  width:34px;height:34px;border-radius:50%;
+  background:rgba(2,30,26,.72);border:1px solid rgba(255,255,255,.12);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  opacity:0;transform:scale(.7);
+  transition:opacity .25s ease, transform .35s cubic-bezier(.34,1.56,.64,1);
+  z-index:10;backdrop-filter:blur(6px);
+}
+.card:hover .heart-btn{opacity:1;transform:scale(1)}
+.heart-btn svg{width:16px;height:16px;fill:none;stroke:var(--bold-gold);stroke-width:2;transition:all .25s ease}
+.heart-btn.liked svg{fill:var(--bold-gold)}
+.heart-btn.liked{background:rgba(226,176,85,.15);border-color:var(--bold-gold)}
+@keyframes heartPop{0%{transform:scale(1)}40%{transform:scale(1.5)}70%{transform:scale(.9)}100%{transform:scale(1)}}
+.heart-btn.pop svg{animation:heartPop .4s ease}
+
+/* ── HEART COUNT ── */
+.heart-count{
+  position:absolute;bottom:8px;right:8px;
+  font-family:var(--mono);font-size:.58rem;
+  color:var(--white);background:rgba(0,0,0,.5);
+  padding:3px 8px;border-radius:20px;
+  display:flex;align-items:center;gap:4px;
+  opacity:0;transition:opacity .25s ease;backdrop-filter:blur(4px);
+}
+.card:hover .heart-count,.heart-count.show{opacity:1}
+.heart-count svg{width:9px;height:9px;fill:var(--bold-gold)}
+
+/* ── PLACEHOLDER CARD ── */
+.card-placeholder{
+  break-inside:avoid;margin-bottom:14px;
+  background:var(--surface);border:1px dashed var(--border);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-height:180px;padding:24px;text-align:center;
+  color:var(--text-muted);
+}
+.card-placeholder svg{width:32px;height:32px;margin-bottom:10px;opacity:.3}
+.card-placeholder p{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em}
+
+/* ── INFO BANNER ── */
+.info-banner{
+  background:linear-gradient(135deg,rgba(0,80,80,.4),rgba(5,120,92,.2));
+  border:1px solid rgba(0,155,81,.25);
+  border-left:3px solid var(--green);
+  padding:16px 20px;margin-bottom:20px;
+  display:flex;gap:14px;align-items:flex-start;
+}
+.info-banner-icon{flex-shrink:0;margin-top:2px}
+.info-banner-icon svg{width:18px;height:18px;fill:var(--green)}
+.info-banner-body h4{font-family:var(--sans);font-size:.82rem;font-weight:600;color:var(--text);margin-bottom:4px}
+.info-banner-body p{font-size:.78rem;line-height:1.6;color:var(--text-muted)}
+
+/* ── PRIORITY DIVIDER ── */
+.priority-divider{
+  margin:56px 0 0;
+  padding:16px 0 0;
+  border-top:1px solid var(--border);
+  font-family:var(--mono);font-size:.6rem;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--text-muted);
+  display:flex;align-items:center;gap:16px;
+}
+.priority-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ── FOOTER ── */
+footer{
+  border-top:1px solid var(--border);
+  padding:32px 52px;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.footer-brand{font-family:var(--serif);font-style:italic;font-size:.95rem;color:var(--text-muted)}
+.footer-hearts{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.65rem;color:var(--text-muted)}
+.footer-hearts svg{width:14px;height:14px;fill:var(--bold-gold)}
+
+/* ── LIGHTBOX (Frame.io style) ── */
+.lightbox{
+  display:none;position:fixed;inset:0;
+  background:rgba(2,10,8,.97);
+  z-index:10000;
+  backdrop-filter:blur(10px);
+}
+.lightbox.open{display:flex;animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+.lb-layout{
+  display:flex;width:100%;height:100%;
+}
+
+/* Canvas panel */
+.lb-canvas-panel{
+  flex:1;position:relative;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+  background:#000;
+}
+.lb-canvas-wrap{
+  position:relative;display:inline-block;
+  max-width:100%;max-height:100%;
+}
+.lb-canvas-wrap img{
+  display:block;max-width:100%;max-height:90vh;
+  object-fit:contain;user-select:none;
+  pointer-events:none;
+}
+#draw-canvas{
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  cursor:crosshair;
+}
+.lb-canvas-panel.pan-mode #draw-canvas{cursor:grab}
+.lb-canvas-panel.pan-mode.panning #draw-canvas{cursor:grabbing}
+
+/* Annotation pins */
+.ann-pin{
+  position:absolute;
+  width:26px;height:26px;border-radius:50%;
+  background:var(--bold-gold);
+  border:2px solid var(--white);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:.6rem;font-weight:700;color:var(--bg);
+  cursor:pointer;transform:translate(-50%,-50%);
+  box-shadow:0 2px 8px rgba(0,0,0,.5);
+  z-index:10;transition:transform .15s,box-shadow .15s;
+}
+.ann-pin:hover{transform:translate(-50%,-50%) scale(1.2);box-shadow:0 4px 16px rgba(0,0,0,.7)}
+.ann-pin.active{background:var(--green);border-color:var(--green);color:#fff}
+
+/* Toolbar */
+.lb-toolbar{
+  position:absolute;bottom:20px;left:50%;transform:translateX(-50%);
+  display:flex;align-items:center;gap:6px;
+  background:rgba(10,30,26,.9);
+  border:1px solid rgba(0,155,81,.25);
+  border-radius:32px;padding:7px 14px;
+  backdrop-filter:blur(8px);
+  z-index:20;
+}
+.tb-btn{
+  width:36px;height:36px;border-radius:50%;
+  background:none;border:none;
+  color:var(--text-muted);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1rem;transition:all .2s;
+}
+.tb-btn:hover{background:rgba(255,255,255,.1);color:var(--text)}
+.tb-btn.active{background:var(--green);color:#fff}
+.tb-sep{width:1px;height:20px;background:var(--border);margin:0 4px}
+.tb-color{
+  width:22px;height:22px;border-radius:50%;border:2px solid rgba(255,255,255,.3);
+  cursor:pointer;transition:transform .15s;
+}
+.tb-color:hover{transform:scale(1.2)}
+.tb-color.selected{border-color:#fff;transform:scale(1.15)}
+.tb-size{
+  background:none;border:none;color:var(--text-muted);
+  font-family:var(--mono);font-size:.6rem;cursor:pointer;padding:4px 8px;
+  border-radius:12px;transition:all .2s;
+}
+.tb-size:hover,.tb-size.active{background:rgba(255,255,255,.1);color:var(--text)}
+
+/* Top bar */
+.lb-topbar{
+  position:absolute;top:0;left:0;right:0;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 20px;
+  background:linear-gradient(to bottom,rgba(2,10,8,.8),transparent);
+  z-index:20;
+}
+.lb-title{font-family:var(--sans);font-size:.9rem;font-weight:600;color:var(--white)}
+.lb-sub{font-family:var(--mono);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--bold-gold);margin-top:2px}
+.lb-close{
+  width:36px;height:36px;border-radius:50%;
+  background:rgba(255,255,255,.1);border:none;
+  color:var(--text);cursor:pointer;font-size:1rem;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .2s;
+}
+.lb-close:hover{background:rgba(255,255,255,.2)}
+
+/* Right sidebar */
+.lb-sidebar{
+  width:320px;flex-shrink:0;
+  background:#061a16;
+  border-left:1px solid var(--border);
+  display:flex;flex-direction:column;
+  overflow:hidden;
+}
+.lb-sidebar-tabs{
+  display:flex;border-bottom:1px solid var(--border);
+}
+.lb-stab{
+  flex:1;padding:12px;
+  background:none;border:none;
+  font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--text-muted);cursor:pointer;
+  border-bottom:2px solid transparent;
+  transition:all .2s;
+}
+.lb-stab.active{color:var(--bold-gold);border-bottom-color:var(--bold-gold)}
+
+.lb-tab-panel{display:none;flex:1;flex-direction:column;overflow:hidden}
+.lb-tab-panel.active{display:flex}
+
+/* Comments list */
+.lb-comments-list{
+  flex:1;overflow-y:auto;padding:12px;
+  display:flex;flex-direction:column;gap:8px;
+  scrollbar-width:thin;scrollbar-color:var(--border) transparent;
+}
+.lb-comments-list::-webkit-scrollbar{width:4px}
+.lb-comments-list::-webkit-scrollbar-thumb{background:var(--border)}
+
+.comment-item{
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:8px;padding:10px 12px;
+  cursor:pointer;transition:border-color .2s,background .2s;
+}
+.comment-item:hover,.comment-item.active{border-color:var(--green);background:rgba(0,155,81,.08)}
+.comment-item-head{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.comment-avatar{
+  width:26px;height:26px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--green),var(--dark-teal));
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:.6rem;color:#fff;font-weight:700;
+}
+.comment-pin-badge{
+  width:18px;height:18px;border-radius:50%;
+  background:var(--bold-gold);color:var(--bg);
+  font-family:var(--mono);font-size:.5rem;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.comment-name{font-size:.75rem;font-weight:600;color:var(--bold-gold)}
+.comment-time{font-family:var(--mono);font-size:.55rem;color:var(--text-muted);margin-left:auto}
+.comment-text{font-size:.78rem;color:var(--text);line-height:1.5}
+.comment-empty{text-align:center;padding:32px 16px;font-family:var(--mono);font-size:.6rem;color:var(--text-muted);letter-spacing:.08em;line-height:1.8}
+
+/* Comment form */
+.lb-comment-form{
+  padding:12px;border-top:1px solid var(--border);
+  display:flex;flex-direction:column;gap:8px;
+}
+.form-mode-hint{
+  font-family:var(--mono);font-size:.58rem;color:var(--green);
+  letter-spacing:.08em;padding:4px 0;
+}
+.lb-name-input,.lb-text-input{
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:6px;padding:8px 12px;
+  color:var(--text);font-family:var(--sans);font-size:.78rem;
+  outline:none;transition:border-color .2s;width:100%;
+}
+.lb-name-input:focus,.lb-text-input:focus{border-color:var(--green)}
+.lb-name-input::placeholder,.lb-text-input::placeholder{color:var(--text-muted)}
+.lb-text-input{resize:none;height:64px}
+.lb-form-actions{display:flex;gap:8px;justify-content:flex-end}
+.lb-cancel-btn{
+  padding:7px 14px;background:transparent;
+  border:1px solid var(--border);border-radius:6px;
+  color:var(--text-muted);font-family:var(--mono);font-size:.6rem;
+  cursor:pointer;transition:all .2s;
+}
+.lb-cancel-btn:hover{border-color:var(--text-muted);color:var(--text)}
+.lb-submit-btn{
+  padding:7px 16px;background:var(--green);
+  border:none;border-radius:6px;
+  color:#fff;font-family:var(--mono);font-size:.6rem;letter-spacing:.08em;
+  cursor:pointer;transition:background .2s;
+}
+.lb-submit-btn:hover{background:var(--dark-green)}
+
+/* Annotations tab */
+.ann-list{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:6px}
+.ann-item{
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);
+  border-radius:6px;padding:8px 12px;
+  display:flex;gap:8px;align-items:flex-start;
+  cursor:pointer;transition:all .2s;
+}
+.ann-item:hover{border-color:var(--green);background:rgba(0,155,81,.08)}
+.ann-item-num{
+  width:20px;height:20px;border-radius:50%;
+  background:var(--bold-gold);color:var(--bg);
+  font-family:var(--mono);font-size:.55rem;font-weight:700;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.ann-item-info{flex:1}
+.ann-item-type{font-family:var(--mono);font-size:.58rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em}
+.ann-item-del{
+  background:none;border:none;color:var(--text-muted);
+  cursor:pointer;font-size:.8rem;padding:0 4px;
+  transition:color .2s;
+}
+.ann-item-del:hover{color:#e05555}
+.ann-empty{text-align:center;padding:32px 16px;font-family:var(--mono);font-size:.6rem;color:var(--text-muted);letter-spacing:.08em;line-height:1.8}
+
+@media(max-width:768px){
+  .lb-sidebar{display:none}
+  .lb-toolbar{bottom:10px}
+}
+
+/* ── COMMENT PANEL ── */
+.lb-comment-wrap{width:min(560px,90vw);margin-top:20px}
+.lb-comment-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.lb-comment-header span{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--bold-gold)}
+.lb-comment-count{font-family:var(--mono);font-size:.58rem;color:var(--text-muted)}
+.lb-comments-list{max-height:160px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;margin-bottom:12px;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.lb-comments-list::-webkit-scrollbar{width:4px}
+.lb-comments-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.comment-item{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:10px 12px;display:flex;gap:10px;align-items:flex-start}
+.comment-avatar{width:28px;height:28px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--green),var(--dark-teal));display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.62rem;color:var(--white);font-weight:600}
+.comment-name{font-family:var(--sans);font-size:.72rem;font-weight:600;color:var(--bold-gold);margin-bottom:2px}
+.comment-text{font-size:.8rem;color:var(--text);line-height:1.5}
+.comment-time{font-family:var(--mono);font-size:.55rem;color:var(--text-muted);margin-top:3px}
+.comment-empty{text-align:center;padding:20px;font-family:var(--mono);font-size:.62rem;color:var(--text-muted);letter-spacing:.08em}
+.lb-comment-form{display:flex;gap:8px;align-items:flex-end}
+.lb-comment-inputs{flex:1;display:flex;flex-direction:column;gap:6px}
+.lb-name-input,.lb-text-input{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:8px 12px;color:var(--text);font-family:var(--sans);font-size:.8rem;outline:none;transition:border-color .2s;width:100%}
+.lb-name-input:focus,.lb-text-input:focus{border-color:var(--green)}
+.lb-name-input::placeholder,.lb-text-input::placeholder{color:var(--text-muted)}
+.lb-text-input{resize:none;height:60px}
+.lb-submit-btn{padding:10px 18px;background:var(--green);border:none;border-radius:6px;color:var(--white);font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;cursor:pointer;transition:background .2s,transform .15s;white-space:nowrap;flex-shrink:0;align-self:flex-end;height:60px}
+.lb-submit-btn:hover{background:var(--dark-green)}
+.lb-submit-btn:active{transform:scale(.96)}
+
+/* ── PROJECT BAR ── */
+/* ── PROJECT DROPDOWN ── */
+.project-bar{
+  background:rgba(2,30,26,.95);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:10px 52px;
+  display:flex;align-items:center;gap:14px;
+  position:sticky;top:49px;z-index:99;
+}
+.project-bar-label{
+  font-family:var(--mono);font-size:.58rem;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--text-muted);flex-shrink:0;
+}
+.dropdown-wrap{position:relative}
+.dropdown-trigger{
+  display:flex;align-items:center;gap:8px;
+  padding:7px 16px;
+  background:rgba(255,255,255,.06);
+  border:1px solid var(--border);
+  border-radius:6px;
+  color:var(--text);
+  font-family:var(--sans);font-size:.8rem;
+  cursor:pointer;
+  transition:border-color .2s,background .2s;
+  user-select:none;
+  white-space:nowrap;
+}
+.dropdown-trigger:hover{border-color:var(--green);background:rgba(0,155,81,.08)}
+.dropdown-trigger .dt-label{flex:1}
+.dropdown-trigger .dt-count{
+  background:var(--green);color:var(--white);
+  font-family:var(--mono);font-size:.55rem;font-weight:600;
+  padding:2px 7px;border-radius:10px;
+  display:none;
+}
+.dropdown-trigger .dt-count.show{display:inline}
+.dropdown-trigger .dt-arrow{
+  font-size:.6rem;color:var(--text-muted);
+  transition:transform .25s ease;
+}
+.dropdown-trigger.open .dt-arrow{transform:rotate(180deg)}
+
+.dropdown-menu{
+  display:none;
+  position:absolute;top:calc(100% + 6px);left:0;
+  min-width:260px;
+  background:#0a2e28;
+  border:1px solid rgba(0,155,81,.3);
+  border-radius:8px;
+  box-shadow:0 12px 40px rgba(0,0,0,.6);
+  overflow:hidden;
+  z-index:200;
+  animation:dropIn .18s ease;
+}
+@keyframes dropIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.dropdown-menu.open{display:block}
+
+.dm-header{
+  padding:10px 14px 8px;
+  display:flex;justify-content:space-between;align-items:center;
+  border-bottom:1px solid var(--border);
+}
+.dm-header span{font-family:var(--mono);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted)}
+.dm-clear{
+  font-family:var(--mono);font-size:.58rem;color:var(--golden-sand);
+  background:none;border:none;cursor:pointer;padding:0;
+  transition:color .2s;
+}
+.dm-clear:hover{color:var(--bold-gold)}
+
+.dm-item{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;
+  cursor:pointer;
+  transition:background .15s;
+  border-bottom:1px solid rgba(255,255,255,.04);
+}
+.dm-item:last-child{border-bottom:none}
+.dm-item:hover{background:rgba(0,155,81,.1)}
+.dm-item input[type=checkbox]{
+  width:15px;height:15px;
+  accent-color:var(--green);
+  cursor:pointer;flex-shrink:0;
+}
+.dm-item-info{flex:1}
+.dm-item-name{font-family:var(--sans);font-size:.82rem;color:var(--text)}
+.dm-item-tag{font-family:var(--mono);font-size:.58rem;color:var(--text-muted);margin-top:1px}
+.dm-item-rank{
+  font-family:var(--mono);font-size:.55rem;
+  padding:2px 6px;border-radius:10px;
+  background:rgba(0,155,81,.15);color:var(--green);
+}
+
+.active-tags{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.active-tag{
+  display:flex;align-items:center;gap:5px;
+  padding:4px 10px;
+  background:rgba(0,155,81,.15);
+  border:1px solid rgba(0,155,81,.3);
+  border-radius:20px;
+  font-family:var(--sans);font-size:.72rem;color:var(--text);
+  cursor:pointer;
+  transition:background .2s;
+}
+.active-tag:hover{background:rgba(0,155,81,.25)}
+.active-tag .rm{color:var(--text-muted);font-size:.7rem;margin-left:2px}
+
+/* ── VIDEO ── */
+.section-tabs{display:flex;gap:0;margin-bottom:24px;border-bottom:1px solid var(--border)}
+.sec-tab{
+  padding:8px 20px;background:none;border:none;
+  font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--text-muted);cursor:pointer;
+  border-bottom:2px solid transparent;transition:all .2s;
+}
+.sec-tab:hover{color:var(--text)}
+.sec-tab.active{color:var(--bold-gold);border-bottom-color:var(--bold-gold)}
+.sec-panel{display:none}.sec-panel.active{display:block}
+
+.video-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.video-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:4px;overflow:hidden;cursor:pointer;
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1),box-shadow .3s,border-color .3s;
+  position:relative;
+}
+.video-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.5);border-color:rgba(0,155,81,.4)}
+.video-thumb{
+  position:relative;width:100%;padding-top:56.25%;
+  background:var(--surface2);overflow:hidden;
+}
+.video-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .4s ease}
+.video-card:hover .video-thumb img{transform:scale(1.04)}
+.video-thumb-placeholder{
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,var(--surface2),#041e1a);
+  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;
+}
+.video-thumb-placeholder svg{width:40px;height:40px;opacity:.3;fill:var(--text-muted)}
+.play-btn{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:52px;height:52px;border-radius:50%;
+  background:rgba(226,176,85,.9);
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .2s,background .2s;
+  box-shadow:0 4px 20px rgba(0,0,0,.4);
+}
+.video-card:hover .play-btn{transform:translate(-50%,-50%) scale(1.1);background:var(--bold-gold)}
+.play-btn svg{width:20px;height:20px;fill:#000;margin-left:3px}
+.video-duration{
+  position:absolute;bottom:8px;right:8px;
+  background:rgba(0,0,0,.7);color:#fff;
+  font-family:var(--mono);font-size:.58rem;
+  padding:2px 6px;border-radius:3px;
+}
+.video-info{padding:12px 14px}
+.video-title{font-size:.85rem;font-weight:600;color:var(--text);margin-bottom:4px}
+.video-meta{font-family:var(--mono);font-size:.6rem;color:var(--text-muted);display:flex;align-items:center;gap:8px}
+.video-source-badge{
+  padding:2px 7px;border-radius:10px;font-size:.55rem;
+  background:rgba(226,176,85,.15);color:var(--bold-gold);border:1px solid rgba(226,176,85,.3);
+}
+
+/* Video upload card */
+.video-add-card{
+  background:transparent;border:1px dashed rgba(0,155,81,.3);
+  border-radius:4px;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:10px;padding:32px 20px;min-height:160px;
+  transition:border-color .2s,background .2s;
+}
+.video-add-card:hover{border-color:var(--green);background:rgba(0,155,81,.05)}
+.video-add-card svg{width:28px;height:28px;fill:none;stroke:var(--text-muted);stroke-width:1.5}
+.video-add-card span{font-family:var(--mono);font-size:.6rem;color:var(--text-muted);letter-spacing:.08em;text-align:center;line-height:1.6}
+
+/* Video modal */
+.video-modal{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.95);z-index:20000;
+  align-items:center;justify-content:center;flex-direction:column;
+}
+.video-modal.open{display:flex;animation:fadeIn .2s ease}
+.video-modal-inner{width:min(900px,92vw);position:relative}
+.video-modal iframe,.video-modal video{
+  width:100%;aspect-ratio:16/9;border:none;border-radius:4px;
+  box-shadow:0 24px 80px rgba(0,0,0,.8);
+}
+.video-modal-close{
+  position:absolute;top:-40px;right:0;
+  background:none;border:none;color:rgba(255,255,255,.6);
+  font-size:1.3rem;cursor:pointer;font-family:var(--mono);
+  transition:color .2s;
+}
+.video-modal-close:hover{color:#fff}
+.video-modal-title{margin-top:16px;font-size:.9rem;font-weight:600;color:var(--text);text-align:center}
+
+/* Add video dialog */
+.add-video-dialog{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.85);z-index:20001;
+  align-items:center;justify-content:center;
+}
+.add-video-dialog.open{display:flex;animation:fadeIn .2s ease}
+.avd-box{
+  background:#0a2420;border:1px solid rgba(0,155,81,.3);
+  border-radius:8px;padding:28px;width:min(480px,92vw);
+}
+.avd-title{font-family:var(--sans);font-size:1rem;font-weight:700;color:var(--bold-gold);margin-bottom:20px}
+.avd-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:18px}
+.avd-tab{
+  padding:7px 18px;background:none;border:none;
+  font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--text-muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;
+}
+.avd-tab.active{color:var(--bold-gold);border-bottom-color:var(--bold-gold)}
+.avd-panel{display:none}.avd-panel.active{display:flex;flex-direction:column;gap:12px}
+.avd-input{
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
+  border-radius:6px;padding:9px 13px;color:var(--text);
+  font-family:var(--sans);font-size:.82rem;outline:none;width:100%;
+  transition:border-color .2s;
+}
+.avd-input:focus{border-color:var(--green)}
+.avd-input::placeholder{color:var(--text-muted)}
+.avd-file-area{
+  border:1px dashed rgba(0,155,81,.35);border-radius:6px;
+  padding:24px;text-align:center;cursor:pointer;
+  transition:border-color .2s,background .2s;
+}
+.avd-file-area:hover{border-color:var(--green);background:rgba(0,155,81,.05)}
+.avd-file-area p{font-family:var(--mono);font-size:.62rem;color:var(--text-muted);line-height:1.8}
+.avd-file-area input{display:none}
+.avd-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:8px}
+.avd-cancel{padding:8px 16px;background:none;border:1px solid var(--border);border-radius:6px;color:var(--text-muted);font-family:var(--mono);font-size:.62rem;cursor:pointer;transition:all .2s}
+.avd-cancel:hover{border-color:var(--text-muted);color:var(--text)}
+.avd-save{padding:8px 18px;background:var(--green);border:none;border-radius:6px;color:#fff;font-family:var(--mono);font-size:.62rem;cursor:pointer;transition:background .2s}
+.avd-save:hover{background:var(--dark-green)}
+
+/* ── UPLOAD PANEL ── */
+.upload-drop-zone{
+  border:2px dashed rgba(0,155,81,.35);border-radius:8px;
+  padding:48px 24px;text-align:center;cursor:pointer;
+  transition:border-color .2s,background .2s;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+}
+.upload-drop-zone:hover,.upload-drop-zone.dragover{border-color:var(--green);background:rgba(0,155,81,.06)}
+.upload-drop-zone svg{width:40px;height:40px;color:var(--text-muted);opacity:.5}
+.upload-drop-zone p{font-family:var(--sans);font-size:.9rem;color:var(--text)}
+.upload-drop-zone span{font-family:var(--mono);font-size:.62rem;color:var(--text-muted)}
+.upload-preview{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-top:16px}
+.upload-prev-item{
+  position:relative;border-radius:4px;overflow:hidden;
+  background:var(--surface2);aspect-ratio:4/3;
+}
+.upload-prev-item img{width:100%;height:100%;object-fit:cover}
+.upload-prev-item .up-status{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:4px;
+  background:rgba(2,30,26,.7);
+}
+.upload-prev-item .up-status span{font-family:var(--mono);font-size:.55rem;color:#fff;letter-spacing:.06em}
+.up-progress{width:80%;height:3px;background:rgba(255,255,255,.2);border-radius:2px;overflow:hidden}
+.up-progress-bar{height:100%;background:var(--green);transition:width .3s ease}
+.up-title-input{
+  position:absolute;bottom:0;left:0;right:0;
+  background:rgba(0,0,0,.7);border:none;border-top:1px solid rgba(255,255,255,.1);
+  color:#fff;font-family:var(--sans);font-size:.7rem;padding:5px 8px;
+  outline:none;
+}
+.up-title-input::placeholder{color:rgba(255,255,255,.4)}
+.upload-actions{display:flex;gap:10px;margin-top:16px;justify-content:flex-end}
+.upload-submit-btn{
+  padding:10px 24px;background:var(--green);border:none;border-radius:6px;
+  color:#fff;font-family:var(--mono);font-size:.65rem;letter-spacing:.1em;
+  cursor:pointer;transition:background .2s;font-weight:600;
+}
+.upload-submit-btn:hover{background:var(--dark-green)}
+.upload-submit-btn:disabled{opacity:.5;cursor:not-allowed}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  .hero{padding:36px 24px 32px}
+  .hero-stats{display:none}
+  main,.nav-bar,.project-bar,footer{padding-left:20px;padding-right:20px}
+  .masonry{columns:2 140px}
+  .project-bar{top:45px;padding-left:20px;padding-right:20px}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ HERO ══ -->
+<header class="hero">
+  <div class="hero-accent"></div>
+  <div class="hero-logo">
+    <!-- Logo SVG inspired by the brand mark -->
+    <svg class="logo-icon" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="52" height="52" rx="4" fill="rgba(0,155,81,0.15)"/>
+      <path d="M26 8 L20 18 L26 16 L32 18 Z" fill="#009b51"/>
+      <path d="M26 16 L18 26 L26 24 L34 26 Z" fill="#05785c"/>
+      <path d="M26 24 L16 36 L26 33 L36 36 Z" fill="#005050"/>
+      <path d="M26 33 L22 44 L26 42 L30 44 Z" fill="#00464e"/>
+      <circle cx="26" cy="8" r="3" fill="#e2b055"/>
+    </svg>
+    <div class="logo-text">
+      <div class="brand">Vinhomes</div>
+      <h1><strong>Green Paradise</strong></h1>
+      <div class="sub">Cần Giờ · Asset Gallery</div>
+    </div>
+  </div>
+  <p class="hero-tagline">Bộ sưu tập các hình ảnh dự án, hạ tầng, tiện ích Vinhomes Green Paradise Cần Giờ</p>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-val" id="s-total">—</div>
+      <div class="stat-label">Hạng mục</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val" id="s-hearts">0</div>
+      <div class="stat-label">Lượt thích</div>
+    </div>
+    <div class="stat">
+      <div id="editor-badge" style="display:none;align-items:center;gap:6px;background:rgba(0,155,81,.2);border:1px solid var(--green);border-radius:20px;padding:4px 12px;cursor:pointer" onclick="sessionStorage.removeItem('vgp_editor');isEditor=false;updateEditorUI();showToast('Editor mode off')">
+        <span style="font-family:var(--mono);font-size:.6rem;color:var(--green);letter-spacing:.1em">✏️ EDITOR</span>
+      </div>
+      <button onclick="showEditorLoginDialog()" id="editor-login-btn" style="background:none;border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:5px 14px;color:rgba(255,255,255,.5);font-family:var(--mono);font-size:.58rem;cursor:pointer;letter-spacing:.1em;transition:all .2s" onmouseover="this.style.borderColor='var(--green)';this.style.color='var(--green)'" onmouseout="this.style.borderColor='rgba(255,255,255,.15)';this.style.color='rgba(255,255,255,.5)'">🔐 Editor</button>
+    </div>
+  </div>
+</header>
+
+<!-- ══ NAV ══ -->
+<nav class="nav-bar" id="nav-bar">
+  <button class="nav-btn active" data-filter="all">All</button>
+  <button class="nav-btn" data-filter="priority"><span class="rank-badge">★</span>Priority</button>
+  <button class="nav-btn" data-filter="other">Other</button>
+  <button class="nav-btn" data-filter="liked">❤️ Liked</button>
+  <button class="nav-btn" data-filter="commented">💬 Commented</button>
+</nav>
+<div class="project-bar" id="project-bar">
+  <span class="project-bar-label">Assets:</span>
+  <div class="dropdown-wrap" id="dropdown-wrap">
+    <div class="dropdown-trigger" id="dropdown-trigger">
+      <span class="dt-label">Select assets...</span>
+      <span class="dt-count" id="dt-count">0</span>
+      <span class="dt-arrow">▼</span>
+    </div>
+    <div class="dropdown-menu" id="dropdown-menu"></div>
+  </div>
+  <div class="active-tags" id="active-tags"></div>
+</div>
+
+<!-- ══ MAIN ══ -->
+<main id="gallery-root"></main>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <span class="footer-brand">Vinhomes Green Paradise · Cần Giờ</span>
+  <div class="footer-hearts">
+    <svg viewBox="0 0 24 24"><path d="M12 21C12 21 3 14.5 3 8.5C3 5.42 5.42 3 8.5 3C10.24 3 11.78 3.82 12 5C12.22 3.82 13.76 3 15.5 3C18.58 3 21 5.42 21 8.5C21 14.5 12 21 12 21Z"/></svg>
+    <span id="footer-hearts-count">0 lượt thích</span>
+  </div>
+</footer>
+
+<!-- ══ LIGHTBOX ══ -->
+<div class="lightbox" id="lightbox">
+  <div class="lb-layout">
+    <!-- Canvas Panel -->
+    <div class="lb-canvas-panel" id="lb-canvas-panel">
+      <div class="lb-topbar">
+        <div>
+          <div class="lb-title" id="lb-title"></div>
+          <div class="lb-sub" id="lb-sub"></div>
+        </div>
+        <button class="lb-close" id="lb-close">✕</button>
+      </div>
+      <div class="lb-canvas-wrap" id="lb-canvas-wrap">
+        <img id="lb-img" src="" alt=""/>
+        <canvas id="draw-canvas"></canvas>
+        <!-- annotation pins injected here -->
+      </div>
+      <!-- Toolbar -->
+      <div class="lb-toolbar">
+        <button class="tb-btn active" id="tb-select" title="Select / Pan">☞</button>
+        <button class="tb-btn" id="tb-draw" title="Freehand draw">✏️</button>
+        <button class="tb-btn" id="tb-pin" title="Add annotation pin">📌</button>
+        <button class="tb-btn" id="tb-rect" title="Rectangle">⬜</button>
+        <button class="tb-btn" id="tb-arrow" title="Arrow">↗</button>
+        <div class="tb-sep"></div>
+        <div class="tb-color selected" style="background:#e2b055" data-color="#e2b055" title="Gold"></div>
+        <div class="tb-color" style="background:#ff4d4d" data-color="#ff4d4d" title="Red"></div>
+        <div class="tb-color" style="background:#4dff88" data-color="#4dff88" title="Green"></div>
+        <div class="tb-color" style="background:#4db8ff" data-color="#4db8ff" title="Blue"></div>
+        <div class="tb-color" style="background:#ffffff" data-color="#ffffff" title="White"></div>
+        <div class="tb-sep"></div>
+        <button class="tb-size active" data-size="2" id="sz-s">S</button>
+        <button class="tb-size" data-size="4" id="sz-m">M</button>
+        <button class="tb-size" data-size="7" id="sz-l">L</button>
+        <div class="tb-sep"></div>
+        <button class="tb-btn" id="tb-undo" title="Undo">↩</button>
+        <button class="tb-btn" id="tb-clear" title="Clear drawings">🗑</button>
+        <button class="tb-btn" id="tb-export" title="Export PNG">⬇</button>
+      </div>
+    </div>
+    <!-- Sidebar -->
+    <div class="lb-sidebar">
+      <div class="lb-sidebar-tabs">
+        <button class="lb-stab active" data-tab="comments">💬 Comments</button>
+        <button class="lb-stab" data-tab="annotations">📌 Annotations</button>
+      </div>
+      <!-- Comments tab -->
+      <div class="lb-tab-panel active" id="tab-comments">
+        <div class="lb-comments-list" id="lb-comments-list">
+          <div class="comment-empty">No comments yet.<br/>Click 📌 on the toolbar to pin a comment on the image, or type below.</div>
+        </div>
+        <div class="lb-comment-form">
+          <div class="form-mode-hint" id="form-mode-hint">💬 General comment</div>
+          <div id="lb-name-display" style="display:none;align-items:center;gap:8px;padding:6px 0;">
+            <div class="comment-avatar" style="flex-shrink:0" id="lb-name-avatar">?</div>
+            <span id="lb-name-shown" style="font-size:.82rem;font-weight:600;color:var(--bold-gold)"></span>
+            <button id="lb-name-change" style="margin-left:auto;background:none;border:none;font-family:var(--mono);font-size:.58rem;color:var(--text-muted);cursor:pointer;">Change</button>
+          </div>
+          <input class="lb-name-input" id="lb-name-input" type="text" placeholder="Your name..." maxlength="40"/>
+          <textarea class="lb-text-input" id="lb-text-input" placeholder="Write a comment..."></textarea>
+          <div class="lb-form-actions">
+            <button class="lb-cancel-btn" id="lb-cancel-btn">Cancel</button>
+            <button class="lb-submit-btn" id="lb-submit-btn">Send</button>
+          </div>
+        </div>
+      </div>
+      <!-- Annotations tab -->
+      <div class="lb-tab-panel" id="tab-annotations">
+        <div class="ann-list" id="ann-list">
+          <div class="ann-empty">No annotations yet.<br/>Use the toolbar to draw on the image.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ VIDEO MODAL ══ -->
+<div class="video-modal" id="video-modal">
+  <div class="video-modal-inner">
+    <button class="video-modal-close" id="video-modal-close">✕</button>
+    <div id="video-modal-body"></div>
+    <div class="video-modal-title" id="video-modal-title"></div>
+  </div>
+</div>
+
+<!-- ══ ADD VIDEO DIALOG ══ -->
+<div class="add-video-dialog" id="add-video-dialog">
+  <div class="avd-box">
+    <div class="avd-title">➕ Thêm Video</div>
+    <div class="avd-tabs">
+      <button class="avd-tab active" data-avd="link">🔗 YouTube / Vimeo</button>
+      <button class="avd-tab" data-avd="file">📁 Upload File</button>
+    </div>
+    <div class="avd-panel active" id="avd-link">
+      <input class="avd-input" id="avd-url" placeholder="Paste YouTube or Vimeo URL..." type="url"/>
+      <input class="avd-input" id="avd-link-title" placeholder="Video title..."/>
+      <input class="avd-input" id="avd-link-duration" placeholder="Duration (e.g. 3:42) — optional"/>
+    </div>
+    <div class="avd-panel" id="avd-file">
+      <div class="avd-file-area" id="avd-file-area">
+        <p>🎬 Drag & drop video file here<br/>or click to browse<br/><span style="color:var(--green)">MP4, MOV, WebM supported</span></p>
+        <input type="file" id="avd-file-input" accept="video/*"/>
+      </div>
+      <input class="avd-input" id="avd-file-title" placeholder="Video title..."/>
+      <input class="avd-input" id="avd-file-duration" placeholder="Duration (e.g. 3:42) — optional"/>
+    </div>
+    <div class="avd-actions">
+      <button class="avd-cancel" id="avd-cancel">Cancel</button>
+      <button class="avd-save" id="avd-save">Add Video</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════
+   SUPABASE CONFIG
+   ══════════════════════════════════════════════ */
+const SUPA_URL = "https://evrbuamyldrfspbityfr.supabase.co";
+const SUPA_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV2cmJ1YW15bGRyZnNwYml0eWZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4NDM2MjcsImV4cCI6MjA5MjQxOTYyN30.faNwCXvJL2YoZ4loU74ZAICgsyEsAeIjPY9ZH7HbNkw";
+const EDITOR_PASSWORD = "vinhomes2025";
+
+async function supa(path, options={}) {
+  const res = await fetch(SUPA_URL + '/rest/v1/' + path, {
+    headers: {
+      'apikey': SUPA_KEY,
+      'Authorization': 'Bearer ' + SUPA_KEY,
+      'Content-Type': 'application/json',
+      'Prefer': options.prefer || '',
+      ...( options.headers || {})
+    },
+    ...options
+  });
+  if(!res.ok) { const e = await res.text(); console.error('Supabase error:', e); return null; }
+  const text = await res.text();
+  return text ? JSON.parse(text) : null;
+}
+
+async function supaUpload(file, path) {
+  const res = await fetch(`${SUPA_URL}/storage/v1/object/gallery-media/${path}`, {
+    method: 'POST',
+    headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY },
+    body: file
+  });
+  if(!res.ok) return null;
+  return `${SUPA_URL}/storage/v1/object/public/gallery-media/${path}`;
+}
+
+/* ══ EDITOR AUTH ══ */
+let isEditor = sessionStorage.getItem('vgp_editor') === '1';
+
+function showEditorLoginDialog() {
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:99999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px)';
+  overlay.innerHTML = `
+    <div style="background:#0a2420;border:1px solid rgba(0,155,81,.3);border-radius:10px;padding:32px;width:min(360px,90vw);text-align:center">
+      <div style="font-family:var(--mono);font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--bold-gold);margin-bottom:8px">Editor Access</div>
+      <h3 style="font-family:var(--sans);font-size:1.1rem;font-weight:700;color:var(--white);margin-bottom:20px">Nhập mật khẩu để chỉnh sửa</h3>
+      <input id="editor-pw-input" type="password" placeholder="Mật khẩu..." style="width:100%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:6px;padding:10px 14px;color:#fff;font-family:var(--sans);font-size:.9rem;outline:none;margin-bottom:12px;box-sizing:border-box"/>
+      <div id="editor-pw-err" style="color:#e05555;font-family:var(--mono);font-size:.62rem;margin-bottom:10px;display:none">Mật khẩu không đúng!</div>
+      <div style="display:flex;gap:10px;justify-content:center">
+        <button onclick="this.closest('div[style]').remove()" style="padding:9px 20px;background:none;border:1px solid rgba(255,255,255,.15);border-radius:6px;color:rgba(255,255,255,.6);font-family:var(--mono);font-size:.62rem;cursor:pointer">Huỷ</button>
+        <button id="editor-pw-btn" style="padding:9px 20px;background:var(--green);border:none;border-radius:6px;color:#fff;font-family:var(--mono);font-size:.62rem;cursor:pointer;font-weight:600">Đăng nhập</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  const inp = overlay.querySelector('#editor-pw-input');
+  const btn = overlay.querySelector('#editor-pw-btn');
+  const err = overlay.querySelector('#editor-pw-err');
+  inp.focus();
+  const tryLogin = () => {
+    if(inp.value === EDITOR_PASSWORD) {
+      isEditor = true;
+      sessionStorage.setItem('vgp_editor', '1');
+      overlay.remove();
+      updateEditorUI();
+      showToast('✅ Editor mode enabled!');
+    } else {
+      err.style.display = 'block';
+      inp.value = '';
+      inp.focus();
+    }
+  };
+  btn.addEventListener('click', tryLogin);
+  inp.addEventListener('keydown', e => { if(e.key==='Enter') tryLogin(); });
+}
+
+function updateEditorUI() {
+  document.querySelectorAll('.editor-only').forEach(el => {
+    el.style.display = isEditor ? '' : 'none';
+  });
+  const badge = document.getElementById('editor-badge');
+  if(badge) badge.style.display = isEditor ? 'flex' : 'none';
+}
+
+function showToast(msg, type='success') {
+  const t = document.createElement('div');
+  t.style.cssText = `position:fixed;bottom:32px;left:50%;transform:translateX(-50%);background:${type==='error'?'#8b1a1a':'rgba(0,80,40,.95)'};color:#fff;padding:10px 20px;border-radius:20px;font-family:var(--mono);font-size:.7rem;z-index:99999;box-shadow:0 4px 20px rgba(0,0,0,.4);animation:fadeIn .2s ease;letter-spacing:.06em`;
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3000);
+}
+
+/* ══════════════════════════════════════════════
+   DATA — Vinhomes Green Paradise
+   group: 'priority' | 'other'
+   rank: thứ tự ưu tiên (1 = cao nhất)
+   ══════════════════════════════════════════════ */
+const CATEGORIES = [
+  {
+    id: "toa-108",
+    group: "priority",
+    rank: 1,
+    label: "Toà nhà 108 Tầng",
+    tag: "Biểu tượng kiến trúc",
+    desc: "Toà tháp chủ đạo 108 tầng — biểu tượng kỳ quan kiến trúc của dự án, trở thành điểm nhấn trên đường chân trời Cần Giờ, thiết kế lấy cảm hứng từ những tán lá rừng ngập mặn.",
+    driveNote: "Thêm ảnh từ thư mục của bạn",
+    images: [
+      { id:"t108-1", src:"https://images.unsplash.com/photo-1486325212027-8081e485255e?w=700&q=85", title:"Phối cảnh ban ngày", sub:"Toà 108 Tầng" },
+      { id:"t108-2", src:"https://images.unsplash.com/photo-1582407947304-fd86f028f716?w=700&q=85", title:"Skyline về đêm", sub:"Toà 108 Tầng" },
+      { id:"t108-3", src:"https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=700&q=85", title:"Kiến trúc chi tiết mặt đứng", sub:"Toà 108 Tầng" },
+      { id:"t108-4", src:"https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=500&q=85", title:"Nhìn từ biển", sub:"Toà 108 Tầng" },
+      { id:"t108-5", src:"https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=700&q=85", title:"Toàn cảnh dự án", sub:"Toà 108 Tầng" },
+    ]
+  },
+  {
+    id: "blue-waves",
+    group: "priority",
+    rank: 2,
+    label: "Blue Waves Theatre",
+    tag: "Giải trí biểu diễn",
+    desc: "Nhà hát Blue Waves — không gian biểu diễn nghệ thuật đỉnh cao bên bờ biển, kiến trúc lấy cảm hứng từ những con sóng vỗ bờ, sức chứa hàng nghìn khán giả.",
+    driveNote: "drive.google.com/drive/folders/18-clXBCe2g5qhMMblTsEjuuw5GsUy_OX",
+    images: [
+      { id:"bw-1", src:"https://res.cloudinary.com/dfphe25o0/image/upload/v1776845778/C01-PSD_t9bnul.jpg", title:"Phối cảnh từ mặt biển — hoàng hôn", sub:"Blue Waves Theatre" },
+      { id:"bw-2", src:"https://res.cloudinary.com/dfphe25o0/image/upload/v1776845778/C02-PSD_ntkhwv.jpg", title:"Nhìn từ trên cao — sunset panorama", sub:"Blue Waves Theatre" },
+      { id:"bw-3", src:"https://res.cloudinary.com/dfphe25o0/image/upload/v1776845777/C04-PSD_wb8p1z.jpg", title:"Show đêm — ánh sáng & đám đông", sub:"Blue Waves Theatre" },
+      { id:"bw-4", src:"https://res.cloudinary.com/dfphe25o0/image/upload/v1776845777/C05-PSD_fhuhbd.jpg", title:"Sương sớm bên mặt nước", sub:"Blue Waves Theatre" },
+      { id:"bw-5", src:"https://res.cloudinary.com/dfphe25o0/image/upload/v1776845777/C06-PSD_gldqty.jpg", title:"Mặt đứng chính — góc đường", sub:"Blue Waves Theatre" },
+      { id:"bw-6", src:"https://res.cloudinary.com/dfphe25o0/image/upload/v1776845777/C08-PSD_ne2ybm.jpg", title:"Không gian quảng trường phía trước", sub:"Blue Waves Theatre" },
+      { id:"bw-7", src:"https://res.cloudinary.com/dfphe25o0/image/upload/v1776845777/C09-PSD_vjkcrz.jpg", title:"Đêm — Blue Waves illuminated", sub:"Blue Waves Theatre" },
+      { id:"bw-8", src:"https://res.cloudinary.com/dfphe25o0/image/upload/v1776845778/C01-NIGHT-PSD_mqoyl9.jpg", title:"Toàn cảnh đêm từ biển", sub:"Blue Waves Theatre" },
+      { id:"bw-9", src:"https://res.cloudinary.com/dfphe25o0/image/upload/v1776845777/C11-PSD_r2jknl.jpg", title:"Aerial view — ban ngày", sub:"Blue Waves Theatre" },
+    ]
+  },
+  {
+    id: "paradise-lagoon",
+    group: "priority",
+    rank: 3,
+    label: "Paradise Lagoon",
+    tag: "Bãi biển & Lagoon",
+    desc: "Đầm phá thiên đường nhân tạo với nước biển trong xanh, bãi cát trắng mịn — trải nghiệm nghỉ dưỡng resort 5 sao ngay trong lòng dự án.",
+    driveNote: "drive.google.com/drive/folders/1_jzb3rFbR-ZFzC6sTekC3DyYcPqu-XF_",
+    images: [
+      { id:"pl-1", src:"https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=700&q=85", title:"Toàn cảnh Lagoon", sub:"Paradise Lagoon" },
+      { id:"pl-2", src:"https://images.unsplash.com/photo-1566073771259-6a8506099945?w=700&q=85", title:"Bãi biển riêng tư", sub:"Paradise Lagoon" },
+      { id:"pl-3", src:"https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=500&q=85", title:"Sunset tại Lagoon", sub:"Paradise Lagoon" },
+      { id:"pl-4", src:"https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=700&q=85", title:"Nước trong xanh", sub:"Paradise Lagoon" },
+      { id:"pl-5", src:"https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=700&q=85", title:"Nhìn từ trên cao", sub:"Paradise Lagoon" },
+    ]
+  },
+  {
+    id: "san-golf",
+    group: "priority",
+    rank: 4,
+    label: "Bộ đôi Sân golf Tiger Woods",
+    tag: "Golf · Thể thao đẳng cấp",
+    desc: "Hai sân golf 18 lỗ tiêu chuẩn PGA được thiết kế bởi huyền thoại Tiger Woods — trải nghiệm golf đẳng cấp thế giới đầu tiên tại Việt Nam, view biển độc đáo.",
+    driveNote: "drive.google.com/drive/folders/1sCXGcFzUpHgfXgt-buc0CXxrmljbrFEW",
+    images: [
+      { id:"sg-1", src:"https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?w=700&q=85", title:"Sân golf fairway panorama", sub:"Tiger Woods Golf" },
+      { id:"sg-2", src:"https://images.unsplash.com/photo-1535131749006-b7f58c99034b?w=700&q=85", title:"Green view biển", sub:"Tiger Woods Golf" },
+      { id:"sg-3", src:"https://images.unsplash.com/photo-1591491653056-4e43b9bb95a5?w=500&q=85", title:"Clubhouse đẳng cấp", sub:"Tiger Woods Golf" },
+      { id:"sg-4", src:"https://images.unsplash.com/photo-1632148102880-5768f6e93e7a?w=700&q=85", title:"Sáng sớm trên sân", sub:"Tiger Woods Golf" },
+    ]
+  },
+  {
+    id: "vinwonders",
+    group: "priority",
+    rank: 5,
+    label: "VinWonders",
+    tag: "Giải trí · Núi tuyết 68m",
+    desc: "Công viên giải trí VinWonders với hơn 100 trò chơi — điểm nhấn là ngọn núi tuyết nhân tạo cao 68m, lớn nhất Đông Nam Á. Trải nghiệm trượt tuyết giữa vùng nhiệt đới.",
+    driveNote: "drive.google.com/drive/folders/1jOmK5wNemrIt4n1fgFP1dyMP1kb7PpnT",
+    images: [
+      { id:"vw-1", src:"https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=700&q=85", title:"Núi tuyết nhân tạo 68m", sub:"VinWonders" },
+      { id:"vw-2", src:"https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=700&q=85", title:"Khu vực vui chơi trẻ em", sub:"VinWonders" },
+      { id:"vw-3", src:"https://images.unsplash.com/photo-1622135487614-c89a694f0d8e?w=500&q=85", title:"Trải nghiệm trượt tuyết", sub:"VinWonders" },
+      { id:"vw-4", src:"https://images.unsplash.com/photo-1603565816030-6b389eeb23cb?w=700&q=85", title:"Toàn cảnh công viên", sub:"VinWonders" },
+      { id:"vw-5", src:"https://images.unsplash.com/photo-1568667256549-094345857637?w=700&q=85", title:"Show ánh sáng đêm", sub:"VinWonders" },
+    ]
+  },
+  {
+    id: "biet-thu-vnh",
+    group: "priority",
+    rank: 6,
+    label: "Biệt thự Vịnh Ngọc",
+    tag: "Biệt thự · Waterfront",
+    desc: "Dòng biệt thự Vịnh Ngọc — cuộc sống xa hoa bên bờ vịnh với view nước trực diện, thiết kế kiến trúc Địa Trung Hải kết hợp hiện đại, hồ bơi riêng và cầu tàu riêng.",
+    driveNote: "drive.google.com/drive/folders/1dzHI5XuByKwVEW50X1OOTzzfuKpDWV1H",
+    images: [
+      { id:"vinh-ngoc-1", src:"https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=700&q=85", title:"Biệt thự view vịnh", sub:"Vịnh Ngọc" },
+      { id:"vinh-ngoc-2", src:"https://images.unsplash.com/photo-1615571022219-eb45cf7faa9d?w=700&q=85", title:"Hồ bơi riêng tư", sub:"Vịnh Ngọc" },
+      { id:"vinh-ngoc-3", src:"https://images.unsplash.com/photo-1613977257592-4871e5fcd7c4?w=500&q=85", title:"Nội thất sang trọng", sub:"Vịnh Ngọc" },
+      { id:"vinh-ngoc-4", src:"https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?w=700&q=85", title:"Khu vực cầu tàu", sub:"Vịnh Ngọc" },
+    ]
+  },
+  {
+    id: "biet-thu-vt",
+    group: "priority",
+    rank: 6,
+    label: "Biệt thự Vịnh Tiên",
+    tag: "Biệt thự · Beachfront",
+    desc: "Biệt thự Vịnh Tiên — dòng sản phẩm resort villa đẳng cấp với view biển trực diện, không gian sống mở hoà quyện thiên nhiên. Cần xác nhận thêm tư liệu hình ảnh.",
+    driveNote: "drive.google.com/drive/folders/1QKl-mBBaRrO-5MNP8snyZ6La6FX1vT-i",
+    images: [
+      { id:"vinh-tien-1", src:"https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=700&q=85", title:"Biệt thự bãi biển", sub:"Vịnh Tiên" },
+      { id:"vinh-tien-2", src:"https://images.unsplash.com/photo-1602002418082-a4443978a678?w=700&q=85", title:"View biển từ terrace", sub:"Vịnh Tiên" },
+      { id:"vinh-tien-3", src:"https://images.unsplash.com/photo-1463074075349-0406c7a39c46?w=500&q=85", title:"Không gian sinh hoạt ngoài trời", sub:"Vịnh Tiên" },
+    ]
+  },
+  {
+    id: "di-chuyen-xanh",
+    group: "priority",
+    rank: 6,
+    label: "Di chuyển Nội khu Xanh",
+    tag: "Giao thông · 100% năng lượng xanh",
+    desc: "Toàn bộ phương tiện di chuyển nội khu sử dụng 100% năng lượng xanh — xe điện, thuyền điện, xe đạp điện. Cam kết zero-carbon trong khuôn viên dự án.",
+    driveNote: "Đang cập nhật hình ảnh",
+    infoBanner: {
+      title: "100% Năng lượng Xanh — Zero Carbon Nội khu",
+      body: "Vinhomes Green Paradise là dự án đầu tiên tại Việt Nam cam kết 100% phương tiện nội khu chạy bằng năng lượng điện: xe golf điện, xe buýt điện mini, thuyền điện di chuyển trên kênh rạch nội khu và hệ thống xe đạp công cộng. Trạm sạc phủ khắp khu vực. Mục tiêu đạt chứng chỉ Net Zero Carbon vào 2028."
+    },
+    images: [
+      { id:"dcx-1", src:"https://images.unsplash.com/photo-1593941707882-a5bba14938c7?w=700&q=85", title:"Xe điện nội khu", sub:"Di chuyển xanh" },
+      { id:"dcx-2", src:"https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&q=85", title:"Thuyền điện kênh nội khu", sub:"Di chuyển xanh" },
+      { id:"dcx-3", src:"https://images.unsplash.com/photo-1558980394-0a06c4631733?w=500&q=85", title:"Xe đạp điện công cộng", sub:"Di chuyển xanh" },
+    ]
+  },
+  // OTHER
+  {
+    id: "ritz-carlton",
+    group: "other",
+    rank: null,
+    label: "Ritz-Carlton & Vincom Plaza",
+    tag: "Khách sạn · Thương mại",
+    desc: "Tổ hợp khách sạn 6 sao Ritz-Carlton kết hợp Vincom Plaza thương mại — trung tâm dịch vụ cao cấp, shopping và ẩm thực đẳng cấp quốc tế.",
+    driveNote: "drive.google.com/drive/folders/18ZPk2lbfCwxdKRjiawTE80YEcaQIKGjS",
+    images: [
+      { id:"rc-1", src:"https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=700&q=85", title:"Lobby Ritz-Carlton", sub:"Ritz-Carlton" },
+      { id:"rc-2", src:"https://images.unsplash.com/photo-1584132967334-10e028bd69f7?w=700&q=85", title:"Sky Bar tầng thượng", sub:"Ritz-Carlton" },
+      { id:"rc-3", src:"https://images.unsplash.com/photo-1561501878-aabd62634533?w=500&q=85", title:"Vincom Plaza tầng trệt", sub:"Vincom Plaza" },
+      { id:"rc-4", src:"https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=700&q=85", title:"Hồ bơi vô cực khách sạn", sub:"Ritz-Carlton" },
+    ]
+  },
+  {
+    id: "cosmo-bay",
+    group: "other",
+    rank: null,
+    label: "Cosmo Bay",
+    tag: "Giải trí · Lifestyle",
+    desc: "Cosmo Bay — khu phức hợp giải trí bên vịnh với bar, nhà hàng, shop, entertainment. Không gian sống động về đêm của dự án.",
+    driveNote: "Đang cập nhật hình ảnh",
+    images: [
+      { id:"cb-1", src:"https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=700&q=85", title:"Nhà hàng bờ vịnh", sub:"Cosmo Bay" },
+      { id:"cb-2", src:"https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=700&q=85", title:"Bar & Nightlife", sub:"Cosmo Bay" },
+      { id:"cb-3", src:"https://images.unsplash.com/photo-1596436889106-be35e843f974?w=500&q=85", title:"Khu mua sắm lifestyle", sub:"Cosmo Bay" },
+    ]
+  },
+  {
+    id: "sportia",
+    group: "other",
+    rank: null,
+    label: "Sportia Complex",
+    tag: "Thể thao · Wellness",
+    desc: "Tổ hợp thể thao Sportia — sân tennis, gym đẳng cấp, bể bơi Olympic, phòng yoga, spa và wellness center phục vụ toàn bộ cư dân.",
+    driveNote: "drive.google.com/drive/folders/1HSv7ixvTlDAHiHDzfQ2G2HZKGjBa4LPr",
+    images: [
+      { id:"sp-1", src:"https://images.unsplash.com/photo-1544919982-b61976f0ba43?w=700&q=85", title:"Sân tennis outdoor", sub:"Sportia Complex" },
+      { id:"sp-2", src:"https://images.unsplash.com/photo-1593079831268-3381b0db4a77?w=700&q=85", title:"Gym cao cấp", sub:"Sportia Complex" },
+      { id:"sp-3", src:"https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=500&q=85", title:"Bể bơi Olympic", sub:"Sportia Complex" },
+      { id:"sp-4", src:"https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=700&q=85", title:"Spa & Wellness", sub:"Sportia Complex" },
+    ]
+  },
+  {
+    id: "ben-du-thuyen",
+    group: "other",
+    rank: null,
+    label: "Bến Du thuyền",
+    tag: "Marina · Mood",
+    desc: "Bến du thuyền nội khu — hình ảnh mood & concept của không gian marina đẳng cấp, nơi neo đậu du thuyền và điểm xuất phát khám phá vùng biển Cần Giờ.",
+    driveNote: "drive.google.com/drive/folders/1ZbzNITzeCn0NHZugSbW07C-EgkEeSBv5",
+    images: [
+      { id:"dt-1", src:"https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?w=700&q=85", title:"Cảnh đêm bến du thuyền", sub:"Marina · Mood" },
+      { id:"dt-2", src:"https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?w=700&q=85", title:"Du thuyền neo đậu", sub:"Marina · Mood" },
+      { id:"dt-3", src:"https://images.unsplash.com/photo-1518578219994-b9de410cbabf?w=500&q=85", title:"Sunset marina", sub:"Marina · Mood" },
+      { id:"dt-4", src:"https://images.unsplash.com/photo-1534361960057-19f4434a4fec?w=700&q=85", title:"Góc nhìn từ trên cao", sub:"Marina · Mood" },
+    ]
+  }
+];
+
+/* ══════════════════════════════════════════════
+   STATE
+   ══════════════════════════════════════════════ */
+let likes = JSON.parse(localStorage.getItem('vgp_likes') || '{}');
+let activeFilter = 'all';
+
+function saveLikes(){ localStorage.setItem('vgp_likes', JSON.stringify(likes)); }
+function totalLikes(){ return Object.values(likes).reduce((a,b)=>a+b,0); }
+
+/* ══════════════════════════════════════════════
+   RENDER
+   ══════════════════════════════════════════════ */
+function priorityClass(cat){
+  if(cat.group==='other') return 'other';
+  const r = cat.rank;
+  if(r===1) return 'priority-1';
+  if(r===2) return 'priority-2';
+  if(r===3) return 'priority-3';
+  if(r===4) return 'priority-4';
+  if(r===5) return 'priority-5';
+  return 'priority-6';
+}
+
+function priorityLabel(cat){
+  if(cat.group==='other') return 'Other';
+  return `Ưu tiên #${cat.rank}`;
+}
+
+function badgeText(cat){
+  if(cat.group==='other') return '•';
+  return cat.rank;
+}
+
+function renderAll(){
+  const root = document.getElementById('gallery-root');
+  root.innerHTML = '';
+
+  // Special filters: liked / commented
+  if(activeFilter === 'liked' || activeFilter === 'commented'){
+    renderSpecialFilter(root, activeFilter);
+    updateStats();
+    return;
+  }
+
+  const visible = CATEGORIES.filter(c => {
+    if(activeFilter==='all') return true;
+    return c.group === activeFilter;
+  });
+
+  // Priority section first, then other
+  const priority = visible.filter(c=>c.group==='priority');
+  const other    = visible.filter(c=>c.group==='other');
+
+  if(priority.length){
+    if(activeFilter==='all'){
+      const div = document.createElement('div');
+      div.className='priority-divider';
+      div.innerHTML='<span>Priority Assets</span>';
+      root.appendChild(div);
+    }
+    priority.forEach((cat,i) => renderSection(cat, root, i));
+  }
+
+  if(other.length){
+    const div = document.createElement('div');
+    div.className='priority-divider';
+    div.innerHTML='<span>Other Assets</span>';
+    root.appendChild(div);
+    other.forEach((cat,i) => renderSection(cat, root, i));
+  }
+
+  // Render global Videos section
+  const existingVidSec = document.getElementById('sec-all-videos');
+  if(!existingVidSec){
+    const vidDiv = document.createElement('div');
+    vidDiv.className = 'priority-divider';
+    vidDiv.innerHTML = '<span>🎬 Video Library</span>';
+    root.appendChild(vidDiv);
+    const vidSec = document.createElement('section');
+    vidSec.className = 'cat-section gallery-section';
+    vidSec.id = 'sec-all-videos';
+    vidSec.innerHTML = `
+      <div class="section-head">
+        <div class="section-info">
+          <div class="section-tag">Tổng hợp video</div>
+          <h2 class="section-title"><em>Video Library</em></h2>
+          <p class="section-desc">Tất cả video từ các hạng mục — YouTube, Vimeo và file upload</p>
+        </div>
+      </div>
+      <div class="video-grid" id="vgrid-all"></div>
+    `;
+    root.appendChild(vidSec);
+    setTimeout(renderVideoSection, 0);
+  }
+  updateStats();
+}
+
+function renderSpecialFilter(root, type){
+  // Collect matching images across all categories
+  const matched = [];
+  CATEGORIES.forEach(cat => {
+    cat.images.forEach(img => {
+      if(type==='liked' && likes[img.id]){
+        matched.push({img, cat});
+      }
+      if(type==='commented' && comments[img.id] && comments[img.id].length > 0){
+        matched.push({img, cat});
+      }
+    });
+  });
+
+  const label = type==='liked' ? '❤️ Ảnh đã thả tim' : '💬 Ảnh có bình luận';
+  const emptyMsg = type==='liked' ? 'Bạn chưa thả tim ảnh nào.' : 'Chưa có ảnh nào được bình luận.';
+
+  const sec = document.createElement('section');
+  sec.className = 'cat-section gallery-section';
+  sec.innerHTML = `
+    <div class="section-head">
+      <div class="section-info">
+        <div class="section-tag">${type==='liked' ? 'Yêu thích' : 'Bình luận'}</div>
+        <h2 class="section-title"><em>${label}</em></h2>
+        <p class="section-desc">${matched.length} ảnh</p>
+      </div>
+    </div>
+    <div class="masonry" id="grid-special"></div>
+  `;
+  root.appendChild(sec);
+
+  const grid = sec.querySelector('#grid-special');
+
+  if(matched.length === 0){
+    grid.innerHTML = `<div class="comment-empty" style="padding:40px;width:100%">${emptyMsg}</div>`;
+    return;
+  }
+
+  matched.forEach(({img, cat}, idx) => {
+    const liked = !!likes[img.id];
+    const count = likes[img.id] || 0;
+    const cmtCount = (comments[img.id]||[]).length;
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.style.animationDelay = `${idx*55}ms`;
+    card.innerHTML = `
+      <img src="${img.src}" alt="${img.title}" loading="lazy"
+        onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+      />
+      <div class="img-placeholder" style="display:none">
+        <svg viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zm-8.5-5.5l-2.51 3.01L7 14l-4 5h18l-5.5-7-2 2.5z"/></svg>
+        <span>${img.title}<br/>Ảnh chưa cập nhật</span>
+      </div>
+      <div class="card-overlay">
+        <div class="card-title">${img.title}</div>
+        <div class="card-sub">${cat.label}${cmtCount>0 ? ' · 💬 '+cmtCount : ''}</div>
+      </div>
+      <button class="heart-btn${liked?' liked':''}" data-id="${img.id}" title="Thả tim">
+        <svg viewBox="0 0 24 24"><path d="M12 21C12 21 3 14.5 3 8.5C3 5.42 5.42 3 8.5 3C10.24 3 11.78 3.82 12 5C12.22 3.82 13.76 3 15.5 3C18.58 3 21 5.42 21 8.5C21 14.5 12 21 12 21Z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="heart-count${count>0?' show':''}" id="hc-${img.id}">
+        <svg viewBox="0 0 24 24"><path d="M12 21C12 21 3 14.5 3 8.5C3 5.42 5.42 3 8.5 3C10.24 3 11.78 3.82 12 5C12.22 3.82 13.76 3 15.5 3C18.58 3 21 5.42 21 8.5C21 14.5 12 21 12 21Z"/></svg>
+        <span>${count}</span>
+      </div>
+    `;
+    card.querySelector('.heart-btn').addEventListener('click', e => {
+      e.stopPropagation();
+      toggleLike(img.id, card);
+    });
+    card.querySelector('img').addEventListener('click', ()=> openLB(img, cat));
+    card.querySelector('.card-overlay').addEventListener('click', ()=> openLB(img, cat));
+    grid.appendChild(card);
+  });
+}
+
+function renderSection(cat, root, i){
+  const sec = document.createElement('section');
+  sec.className = `cat-section ${priorityClass(cat)}`;
+  sec.id = `sec-${cat.id}`;
+
+  const infoHTML = cat.infoBanner ? `
+    <div class="info-banner">
+      <div class="info-banner-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+      </div>
+      <div class="info-banner-body">
+        <h4>${cat.infoBanner.title}</h4>
+        <p>${cat.infoBanner.body}</p>
+      </div>
+    </div>` : '';
+
+  sec.innerHTML = `
+    <div class="section-head">
+      <div class="section-badge">${badgeText(cat)}</div>
+      <div class="section-info">
+        <div class="section-tag">${cat.tag}</div>
+        <h2 class="section-title"><em>${cat.label}</em></h2>
+        <p class="section-desc">${cat.desc}</p>
+      </div>
+      <div class="section-right">
+        <div class="priority-label">${priorityLabel(cat)}</div>
+        <div class="img-count" id="cnt-${cat.id}">${cat.images.length} ảnh</div>
+      </div>
+    </div>
+    ${infoHTML}
+    <div class="section-tabs">
+      <button class="sec-tab active" data-sec="${cat.id}" data-panel="images">🖼 Images (${cat.images.length})</button>
+      <button class="sec-tab editor-only" data-sec="${cat.id}" data-panel="upload" style="display:none">⬆️ Upload</button>
+      <button class="sec-tab" data-sec="${cat.id}" data-panel="videos">🎬 Videos (<span id="vcnt-${cat.id}">0</span>)</button>
+    </div>
+    <div class="sec-panel active" id="sp-images-${cat.id}">
+      <div class="masonry" id="grid-${cat.id}"></div>
+    </div>
+    <div class="sec-panel" id="sp-videos-${cat.id}">
+      <div class="video-grid" id="vgrid-${cat.id}"></div>
+    </div>
+    <div class="sec-panel editor-only" id="sp-upload-${cat.id}" style="display:none">
+      <div class="upload-panel" id="upanel-${cat.id}">
+        <div class="upload-drop-zone" id="udrop-${cat.id}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 16V8m0 0l-3 3m3-3l3 3M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1"/></svg>
+          <p>Kéo thả ảnh vào đây hoặc click để chọn</p>
+          <span>JPG, PNG, WebP — tối đa 10MB/ảnh</span>
+          <input type="file" id="ufile-${cat.id}" multiple accept="image/*" style="display:none"/>
+        </div>
+        <div class="upload-preview" id="uprev-${cat.id}"></div>
+      </div>
+    </div>
+  `;
+  root.appendChild(sec);
+
+  // Init video grid
+  const vgridEl = sec.querySelector(`#vgrid-${cat.id}`);
+  if(vgridEl) renderVideoGrid(cat.id, vgridEl);
+  // Init upload panel
+  setTimeout(() => initUploadPanel(cat.id), 0);
+  // Update video count
+  const vcntEl = sec.querySelector(`#vcnt-${cat.id}`);
+  if(vcntEl) vcntEl.textContent = (videos[cat.id]||[]).length;
+
+  // Section tab switching
+  sec.querySelectorAll('.sec-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      sec.querySelectorAll('.sec-tab').forEach(t=>t.classList.remove('active'));
+      sec.querySelectorAll('.sec-panel').forEach(p=>p.classList.remove('active'));
+      tab.classList.add('active');
+      sec.querySelector(`#sp-${tab.dataset.panel}-${tab.dataset.sec}`).classList.add('active');
+    });
+  });
+
+  const grid = sec.querySelector(`#grid-${cat.id}`);
+  cat.images.forEach((img, idx) => {
+    const liked = !!likes[img.id];
+    const count = likes[img.id] || 0;
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.style.animationDelay = `${idx*55}ms`;
+    card.innerHTML = `
+      <img src="${img.src}" alt="${img.title}" loading="lazy"
+        onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+      />
+      <div class="img-placeholder" style="display:none">
+        <svg viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zm-8.5-5.5l-2.51 3.01L7 14l-4 5h18l-5.5-7-2 2.5z"/></svg>
+        <span>${img.title}<br/>Ảnh chưa cập nhật</span>
+      </div>
+      <div class="card-overlay">
+        <div class="card-title">${img.title}</div>
+        <div class="card-sub">${img.sub}</div>
+      </div>
+      <button class="heart-btn${liked?' liked':''}" data-id="${img.id}" title="Thả tim">
+        <svg viewBox="0 0 24 24"><path d="M12 21C12 21 3 14.5 3 8.5C3 5.42 5.42 3 8.5 3C10.24 3 11.78 3.82 12 5C12.22 3.82 13.76 3 15.5 3C18.58 3 21 5.42 21 8.5C21 14.5 12 21 12 21Z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="heart-count${count>0?' show':''}" id="hc-${img.id}">
+        <svg viewBox="0 0 24 24"><path d="M12 21C12 21 3 14.5 3 8.5C3 5.42 5.42 3 8.5 3C10.24 3 11.78 3.82 12 5C12.22 3.82 13.76 3 15.5 3C18.58 3 21 5.42 21 8.5C21 14.5 12 21 12 21Z"/></svg>
+        <span>${count}</span>
+      </div>
+    `;
+    card.querySelector('.heart-btn').addEventListener('click', e => {
+      e.stopPropagation();
+      toggleLike(img.id, card);
+    });
+    card.querySelector('img').addEventListener('click', ()=> openLB(img, cat));
+    card.querySelector('.card-overlay').addEventListener('click', ()=> openLB(img, cat));
+    grid.appendChild(card);
+  });
+}
+
+function toggleLike(id, card){
+  const btn = card.querySelector('.heart-btn');
+  const hcWrap = card.querySelector('.heart-count');
+  const hcSpan = hcWrap.querySelector('span');
+  const wasLiked = !!likes[id];
+  if(wasLiked){
+    likes[id] = Math.max(0,(likes[id]||0)-1);
+    if(likes[id]===0) delete likes[id];
+    btn.classList.remove('liked');
+  } else {
+    likes[id] = (likes[id]||0)+1;
+    btn.classList.add('liked');
+    btn.classList.remove('pop');
+    void btn.offsetWidth;
+    btn.classList.add('pop');
+  }
+  const n = likes[id]||0;
+  hcSpan.textContent = n;
+  if(n>0) hcWrap.classList.add('show'); else hcWrap.classList.remove('show');
+  saveLikes();
+  updateStats();
+}
+
+function updateStats(){
+  const total = CATEGORIES.length;
+  const hearts = totalLikes();
+  document.getElementById('s-total').textContent = total;
+  document.getElementById('s-hearts').textContent = hearts;
+  document.getElementById('footer-hearts-count').textContent = `${hearts} lượt thích`;
+}
+
+/* ══════════════════════════════════
+   FRAME.IO STYLE — DRAW + ANNOTATE + COMMENT
+   ══════════════════════════════════ */
+let comments    = JSON.parse(localStorage.getItem('vgp_comments') || '{}');
+let annotations = JSON.parse(localStorage.getItem('vgp_annotations') || '{}');
+let currentImgId = null;
+
+// Drawing state
+let tool = 'select'; // select | draw | pin | rect | arrow
+let drawColor = '#e2b055';
+let drawSize  = 2;
+let isDrawing = false;
+let startX, startY;
+let strokes   = {}; // imgId -> [{type, points, color, size, commentIdx}]
+let pendingPin = null; // {x,y} percent coords waiting for comment
+let pendingStrokeIdx = null; // index of stroke waiting to be linked to a comment
+
+const canvas = document.getElementById('draw-canvas');
+const ctx    = canvas.getContext('2d');
+
+function saveComments(){ localStorage.setItem('vgp_comments', JSON.stringify(comments)); }
+function saveStrokes(){ localStorage.setItem('vgp_strokes', JSON.stringify(strokes)); }
+function saveAnnotations(){ localStorage.setItem('vgp_annotations', JSON.stringify(annotations)); }
+
+strokes = JSON.parse(localStorage.getItem('vgp_strokes') || '{}');
+
+function formatTime(ts){
+  const d = new Date(ts);
+  return d.toLocaleDateString('vi-VN',{day:'2-digit',month:'2-digit'}) + ' ' + d.toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'});
+}
+
+/* ── Sidebar tabs ── */
+document.querySelectorAll('.lb-stab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.lb-stab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.lb-tab-panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+  });
+});
+
+/* ── Toolbar tools ── */
+const toolBtns = {
+  select: document.getElementById('tb-select'),
+  draw:   document.getElementById('tb-draw'),
+  pin:    document.getElementById('tb-pin'),
+  rect:   document.getElementById('tb-rect'),
+  arrow:  document.getElementById('tb-arrow'),
+};
+Object.entries(toolBtns).forEach(([t, btn]) => {
+  btn.addEventListener('click', () => {
+    tool = t;
+    Object.values(toolBtns).forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    canvas.style.cursor = t === 'select' ? 'default' : 'crosshair';
+    pendingPin = null;
+    document.getElementById('form-mode-hint').textContent = t === 'pin' ? '📌 Click on image to place pin' : '💬 General comment';
+  });
+});
+
+/* ── Colors ── */
+document.querySelectorAll('.tb-color').forEach(el => {
+  el.addEventListener('click', () => {
+    document.querySelectorAll('.tb-color').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    drawColor = el.dataset.color;
+  });
+});
+
+/* ── Sizes ── */
+document.querySelectorAll('.tb-size').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tb-size').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    drawSize = parseInt(btn.dataset.size);
+  });
+});
+
+/* ── Canvas helpers ── */
+function resizeCanvas(){
+  const img = document.getElementById('lb-img');
+  canvas.width  = img.offsetWidth;
+  canvas.height = img.offsetHeight;
+  redraw();
+}
+
+function getCanvasPos(e){
+  const r = canvas.getBoundingClientRect();
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+  return { x: clientX - r.left, y: clientY - r.top };
+}
+
+function getPct(pos){
+  return { px: pos.x / canvas.width * 100, py: pos.y / canvas.height * 100 };
+}
+
+function redraw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  const list = strokes[currentImgId] || [];
+  list.forEach(s => drawStroke(s));
+}
+
+function drawStroke(s){
+  ctx.save();
+  ctx.strokeStyle = s.color;
+  ctx.lineWidth   = s.size;
+  ctx.lineCap     = 'round';
+  ctx.lineJoin    = 'round';
+
+  if(s.type === 'free'){
+    ctx.beginPath();
+    s.pts.forEach((p,i) => {
+      const x = p[0]/100*canvas.width, y = p[1]/100*canvas.height;
+      i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+    });
+    ctx.stroke();
+  } else if(s.type === 'rect'){
+    const x1=s.x1/100*canvas.width, y1=s.y1/100*canvas.height;
+    const x2=s.x2/100*canvas.width, y2=s.y2/100*canvas.height;
+    ctx.strokeRect(x1,y1,x2-x1,y2-y1);
+  } else if(s.type === 'arrow'){
+    const x1=s.x1/100*canvas.width, y1=s.y1/100*canvas.height;
+    const x2=s.x2/100*canvas.width, y2=s.y2/100*canvas.height;
+    ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+    const angle=Math.atan2(y2-y1,x2-x1), hs=12;
+    ctx.beginPath();
+    ctx.moveTo(x2,y2);
+    ctx.lineTo(x2-hs*Math.cos(angle-0.4),y2-hs*Math.sin(angle-0.4));
+    ctx.lineTo(x2-hs*Math.cos(angle+0.4),y2-hs*Math.sin(angle+0.4));
+    ctx.closePath(); ctx.fillStyle=s.color; ctx.fill();
+  }
+  ctx.restore();
+}
+
+/* ── Canvas events ── */
+canvas.addEventListener('mousedown', e => {
+  if(tool === 'select') return;
+  if(tool === 'pin'){
+    const pos = getCanvasPos(e);
+    const pct = getPct(pos);
+    pendingPin = pct;
+    pendingStrokeIdx = null;
+    document.getElementById('form-mode-hint').textContent = `📌 Pin placed — add your comment below`;
+    document.querySelectorAll('.lb-stab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.lb-tab-panel').forEach(p=>p.classList.remove('active'));
+    document.querySelector('.lb-stab[data-tab="comments"]').classList.add('active');
+    document.getElementById('tab-comments').classList.add('active');
+    document.getElementById('lb-text-input').focus();
+    return;
+  }
+  isDrawing = true;
+  const pos = getCanvasPos(e);
+  const pct = getPct(pos);
+  startX = pct.px; startY = pct.py;
+  if(tool === 'free'){
+    if(!strokes[currentImgId]) strokes[currentImgId]=[];
+    strokes[currentImgId].push({type:'free', pts:[[startX,startY]], color:drawColor, size:drawSize});
+  }
+});
+
+canvas.addEventListener('mousemove', e => {
+  if(!isDrawing) return;
+  const pos = getCanvasPos(e);
+  const pct = getPct(pos);
+  const list = strokes[currentImgId];
+  if(tool === 'free'){
+    list[list.length-1].pts.push([pct.px, pct.py]);
+    redraw();
+  } else if(tool === 'rect' || tool === 'arrow'){
+    redraw();
+    ctx.save();
+    ctx.strokeStyle = drawColor; ctx.lineWidth = drawSize;
+    ctx.lineCap='round'; ctx.lineJoin='round';
+    const x1=startX/100*canvas.width, y1=startY/100*canvas.height;
+    const x2=pct.px/100*canvas.width, y2=pct.py/100*canvas.height;
+    if(tool==='rect'){
+      ctx.strokeRect(x1,y1,x2-x1,y2-y1);
+    } else {
+      ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+      const angle=Math.atan2(y2-y1,x2-x1),hs=12;
+      ctx.beginPath();
+      ctx.moveTo(x2,y2);
+      ctx.lineTo(x2-hs*Math.cos(angle-0.4),y2-hs*Math.sin(angle-0.4));
+      ctx.lineTo(x2-hs*Math.cos(angle+0.4),y2-hs*Math.sin(angle+0.4));
+      ctx.closePath(); ctx.fillStyle=drawColor; ctx.fill();
+    }
+    ctx.restore();
+  }
+});
+
+canvas.addEventListener('mouseup', e => {
+  if(!isDrawing) return;
+  isDrawing = false;
+  const pos = getCanvasPos(e);
+  const pct = getPct(pos);
+  if(tool === 'rect' || tool === 'arrow'){
+    if(!strokes[currentImgId]) strokes[currentImgId]=[];
+    strokes[currentImgId].push({type:tool, x1:startX,y1:startY,x2:pct.px,y2:pct.py, color:drawColor, size:drawSize});
+    redraw();
+  }
+  saveStrokes();
+  renderAnnotationsList();
+  // Prompt user to add comment linked to this stroke
+  if(tool === 'rect' || tool === 'arrow' || tool === 'free'){
+    const slist = strokes[currentImgId] || [];
+    pendingStrokeIdx = slist.length - 1;
+    activePinIdx = null;
+    document.getElementById('form-mode-hint').textContent = '✏️ Add a comment for this annotation';
+    // Switch to comments tab
+    document.querySelectorAll('.lb-stab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.lb-tab-panel').forEach(p=>p.classList.remove('active'));
+    document.querySelector('.lb-stab[data-tab="comments"]').classList.add('active');
+    document.getElementById('tab-comments').classList.add('active');
+    document.getElementById('lb-text-input').focus();
+  }
+});
+
+/* ── Undo / Clear ── */
+document.getElementById('tb-undo').addEventListener('click', () => {
+  if(strokes[currentImgId] && strokes[currentImgId].length){
+    strokes[currentImgId].pop(); redraw(); saveStrokes(); renderAnnotationsList();
+  }
+});
+document.getElementById('tb-clear').addEventListener('click', () => {
+  strokes[currentImgId] = []; redraw(); saveStrokes(); renderAnnotationsList();
+});
+
+/* ── Export PNG ── */
+document.getElementById('tb-export').addEventListener('click', () => {
+  const img = document.getElementById('lb-img');
+  const exp = document.createElement('canvas');
+  exp.width = img.naturalWidth; exp.height = img.naturalHeight;
+  const ec = exp.getContext('2d');
+  ec.drawImage(img,0,0);
+  // scale strokes
+  const sx = img.naturalWidth/canvas.width, sy = img.naturalHeight/canvas.height;
+  const savedW = canvas.width, savedH = canvas.height;
+  canvas.width = exp.width; canvas.height = exp.height;
+  redraw();
+  ec.drawImage(canvas,0,0);
+  canvas.width = savedW; canvas.height = savedH; redraw();
+  const a = document.createElement('a');
+  a.download = `annotation-${currentImgId}.png`;
+  a.href = exp.toDataURL('image/png');
+  a.click();
+});
+
+/* ── Pin rendering ── */
+function renderPins(){
+  document.querySelectorAll('.ann-pin').forEach(p=>p.remove());
+  const wrap = document.getElementById('lb-canvas-wrap');
+  const cmts = comments[currentImgId] || [];
+  let pinNum = 0;
+  cmts.forEach((c,i) => {
+    if(c.pin == null) return;
+    pinNum++;
+    const pin = document.createElement('div');
+    pin.className = 'ann-pin' + (activePinIdx === i ? ' active' : '');
+    pin.textContent = pinNum;
+    pin.style.left = c.pin.px + '%';
+    pin.style.top  = c.pin.py + '%';
+    pin.title = c.name + ': ' + c.text;
+    pin.addEventListener('click', e => { e.stopPropagation(); openPinThread(i); });
+    wrap.appendChild(pin);
+  });
+}
+
+function highlightComment(idx){
+  document.querySelectorAll('.lb-stab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.lb-tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelector('.lb-stab[data-tab="comments"]').classList.add('active');
+  document.getElementById('tab-comments').classList.add('active');
+  const items = document.querySelectorAll('#lb-comments-list .comment-item');
+  items.forEach(it => it.classList.remove('active'));
+  if(items[idx]){ items[idx].classList.add('active'); items[idx].scrollIntoView({behavior:'smooth',block:'nearest'}); }
+}
+
+/* ── Comments rendering ── */
+function renderComments(imgId){
+  const list = document.getElementById('lb-comments-list');
+  const allCmts = comments[imgId] || [];
+
+  if(activePinIdx != null){
+    // Thread view: show pin comment + all replies
+    const pinCmt = allCmts[activePinIdx];
+    const replies = allCmts.filter((c,i) => i !== activePinIdx && c.replyTo === activePinIdx);
+    list.innerHTML = `
+      <div style="padding:8px 12px 4px;display:flex;align-items:center;gap:8px">
+        <button onclick="clearPinThread()" style="background:none;border:none;color:var(--bold-gold);cursor:pointer;font-family:var(--mono);font-size:.6rem;">← All comments</button>
+        <span style="font-family:var(--mono);font-size:.58rem;color:var(--text-muted)">Pin #${activePinIdx+1} thread</span>
+      </div>
+      <div class="comment-item active">
+        <div class="comment-item-head">
+          <div class="comment-pin-badge">${activePinIdx+1}</div>
+          <div class="comment-avatar">${pinCmt.name.charAt(0).toUpperCase()}</div>
+          <div class="comment-name">${pinCmt.name}</div>
+          <div class="comment-time">${formatTime(pinCmt.ts)}</div>
+        </div>
+        <div class="comment-text">${pinCmt.text}</div>
+      </div>
+      ${replies.length ? `<div style="padding:6px 12px;font-family:var(--mono);font-size:.58rem;color:var(--text-muted);">${replies.length} repl${replies.length>1?'ies':'y'}</div>` : ''}
+      ${replies.map(c => `
+        <div class="comment-item" style="margin-left:16px;border-left:2px solid var(--green);">
+          <div class="comment-item-head">
+            <div class="comment-avatar">${c.name.charAt(0).toUpperCase()}</div>
+            <div class="comment-name">${c.name}</div>
+            <div class="comment-time">${formatTime(c.ts)}</div>
+          </div>
+          <div class="comment-text">${c.text}</div>
+        </div>
+      `).join('')}
+    `;
+    list.scrollTop = 0;
+    return;
+  }
+
+  // All comments view
+  if(allCmts.length === 0){
+    list.innerHTML = '<div class="comment-empty">No comments yet.<br/>Click 📌 on the toolbar to pin a comment on the image, or type below.</div>';
+    return;
+  }
+  // Group: show only root comments (non-replies or pin roots)
+  const roots = allCmts.filter((c,i) => c.replyTo == null);
+  list.innerHTML = roots.map((c,i) => {
+    const realIdx = allCmts.indexOf(c);
+    const replyCount = allCmts.filter(r => r.replyTo === realIdx).length;
+    return `
+      <div class="comment-item" onclick="if(this.dataset.pin=='1')openPinThread(${realIdx})" data-pin="${c.pin!=null?'1':'0'}">
+        <div class="comment-item-head">
+          ${c.pin != null ? `<div class="comment-pin-badge" style="cursor:pointer">${realIdx+1}</div>` : ''}
+          <div class="comment-avatar">${c.name.charAt(0).toUpperCase()}</div>
+          <div class="comment-name">${c.name}</div>
+          <div class="comment-time">${formatTime(c.ts)}</div>
+        </div>
+        <div class="comment-text">${c.text}</div>
+        ${replyCount > 0 ? `<div style="margin-top:6px;font-family:var(--mono);font-size:.58rem;color:var(--green);cursor:pointer" onclick="event.stopPropagation();openPinThread(${realIdx})">↩ ${replyCount} repl${replyCount>1?'ies':'y'}</div>` : ''}
+        ${c.pin != null ? `<div style="margin-top:4px;font-family:var(--mono);font-size:.55rem;color:var(--text-muted);">Click to view thread →</div>` : ''}
+      </div>
+    `;
+  }).join('');
+  list.scrollTop = list.scrollHeight;
+}
+
+/* ── Annotations list ── */
+function renderAnnotationsList(){
+  const list = document.getElementById('ann-list');
+  const s = strokes[currentImgId] || [];
+  if(s.length === 0){
+    list.innerHTML = '<div class="ann-empty">No annotations yet.<br/>Use the toolbar to draw on the image.</div>';
+    return;
+  }
+  const cmts = comments[currentImgId] || [];
+  list.innerHTML = s.map((st,i) => {
+    const linkedCmt = st.commentIdx != null ? cmts[st.commentIdx] : null;
+    return `
+      <div class="ann-item" onclick="if(${st.commentIdx != null})focusAnnotationComment(${st.commentIdx})">
+        <div class="ann-item-num">${i+1}</div>
+        <div class="ann-item-info">
+          <div class="ann-item-type">${st.type === 'free' ? '✏️ Freehand' : st.type === 'rect' ? '⬜ Rectangle' : '↗ Arrow'}</div>
+          ${linkedCmt ? `<div style="font-size:.72rem;color:var(--text);margin-top:3px;line-height:1.4"><strong style="color:var(--bold-gold)">${linkedCmt.name}:</strong> ${linkedCmt.text.substring(0,60)}${linkedCmt.text.length>60?'…':''}</div>` : `<div style="font-family:var(--mono);font-size:.58rem;color:var(--text-muted);margin-top:2px">No comment linked</div>`}
+        </div>
+        <button class="ann-item-del" onclick="event.stopPropagation();deleteStroke(${i})" title="Delete annotation + comment">✕</button>
+      </div>
+    `;
+  }).join('');
+}
+
+function focusAnnotationComment(cmtIdx){
+  document.querySelectorAll('.lb-stab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.lb-tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelector('.lb-stab[data-tab="comments"]').classList.add('active');
+  document.getElementById('tab-comments').classList.add('active');
+  activePinIdx = null;
+  renderComments(currentImgId);
+  setTimeout(() => {
+    const items = document.querySelectorAll('#lb-comments-list .comment-item');
+    // find by index order
+    let count = 0;
+    const allCmts = comments[currentImgId] || [];
+    allCmts.forEach((c,i) => {
+      if(i === cmtIdx && items[count]){
+        items[count].classList.add('active');
+        items[count].scrollIntoView({behavior:'smooth',block:'nearest'});
+      }
+      if(c.replyTo == null) count++;
+    });
+  }, 50);
+}
+
+function deleteStroke(i){
+  const stroke = strokes[currentImgId][i];
+  // Remove associated comment if this stroke has a linked comment
+  if(stroke && stroke.commentIdx != null){
+    const cmts = comments[currentImgId] || [];
+    // Remove the comment and all its replies
+    const rootIdx = stroke.commentIdx;
+    comments[currentImgId] = cmts.filter((c, ci) => ci !== rootIdx && c.replyTo !== rootIdx);
+    // Remap remaining stroke commentIdx references
+    strokes[currentImgId].forEach(s => {
+      if(s.commentIdx != null && s.commentIdx > rootIdx) s.commentIdx--;
+    });
+    saveComments();
+    renderComments(currentImgId);
+    renderPins();
+  }
+  strokes[currentImgId].splice(i, 1);
+  redraw(); saveStrokes(); renderAnnotationsList();
+}
+
+/* ── Submit comment ── */
+function submitComment(){
+  const nameInp = document.getElementById('lb-name-input');
+  const name = savedName || nameInp.value.trim();
+  const text = document.getElementById('lb-text-input').value.trim();
+  if(!name || !text) return;
+  if(!savedName){
+    savedName = name;
+    localStorage.setItem('vgp_username', savedName);
+    initNameInput();
+  }
+  if(!comments[currentImgId]) comments[currentImgId] = [];
+  const pinData = activePinIdx != null ? comments[currentImgId][activePinIdx]?.pin : pendingPin;
+  const newCmtIdx = comments[currentImgId].length;
+  comments[currentImgId].push({ name, text, ts: Date.now(), pin: pinData, replyTo: activePinIdx });
+  saveComments();
+
+  // Link pending stroke to this comment (for pin/draw annotations)
+  if(pendingStrokeIdx != null){
+    if(strokes[currentImgId] && strokes[currentImgId][pendingStrokeIdx]){
+      strokes[currentImgId][pendingStrokeIdx].commentIdx = newCmtIdx;
+      saveStrokes();
+      renderAnnotationsList();
+    }
+    pendingStrokeIdx = null;
+  }
+
+  renderComments(currentImgId);
+  renderPins();
+  document.getElementById('lb-text-input').value = '';
+  pendingPin = null;
+  document.getElementById('form-mode-hint').textContent = activePinIdx != null ? `📌 Replying to Pin #${activePinIdx+1}` : '💬 General comment';
+}
+
+document.getElementById('lb-submit-btn').addEventListener('click', submitComment);
+document.getElementById('lb-cancel-btn').addEventListener('click', () => {
+  pendingPin = null;
+  document.getElementById('lb-text-input').value = '';
+  document.getElementById('form-mode-hint').textContent = '💬 General comment';
+});
+document.getElementById('lb-text-input').addEventListener('keydown', e => {
+  if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); submitComment(); }
+});
+
+/* ══ USERNAME MEMORY ══ */
+let savedName = localStorage.getItem('vgp_username') || '';
+function initNameInput(){
+  const inp = document.getElementById('lb-name-input');
+  if(savedName){ inp.value = savedName; inp.style.display = 'none'; document.getElementById('lb-name-display').style.display = 'flex'; document.getElementById('lb-name-shown').textContent = savedName; document.getElementById('lb-name-avatar').textContent = savedName.charAt(0).toUpperCase(); }
+  else { inp.style.display = ''; document.getElementById('lb-name-display').style.display = 'none'; }
+}
+document.getElementById('lb-name-change').addEventListener('click', () => {
+  savedName = '';
+  localStorage.removeItem('vgp_username');
+  document.getElementById('lb-name-input').value = '';
+  document.getElementById('lb-name-display').style.display = 'none';
+  document.getElementById('lb-name-input').style.display = '';
+  document.getElementById('lb-name-input').focus();
+});
+
+/* ══ ACTIVE PIN THREAD ══ */
+let activePinIdx = null; // null = all comments, number = pin thread
+
+function openPinThread(idx){
+  activePinIdx = idx;
+  // highlight pin
+  document.querySelectorAll('.ann-pin').forEach((p,i) => p.classList.toggle('active', i === idx));
+  renderComments(currentImgId);
+  // Switch to comments tab
+  document.querySelectorAll('.lb-stab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.lb-tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelector('.lb-stab[data-tab="comments"]').classList.add('active');
+  document.getElementById('tab-comments').classList.add('active');
+  const hint = document.getElementById('form-mode-hint');
+  hint.textContent = `📌 Replying to Pin #${idx+1}`;
+  pendingPin = comments[currentImgId][idx]?.pin || null;
+  document.getElementById('lb-text-input').focus();
+}
+
+function clearPinThread(){
+  activePinIdx = null;
+  document.querySelectorAll('.ann-pin').forEach(p=>p.classList.remove('active'));
+  renderComments(currentImgId);
+  document.getElementById('form-mode-hint').textContent = '💬 General comment';
+  pendingPin = null;
+}
+
+/* ══ LIGHTBOX ══ */
+function openLB(img, cat){
+  currentImgId = img.id;
+  activePinIdx = null;
+  const lbImg = document.getElementById('lb-img');
+  lbImg.src = img.src.replace('w=500','w=1400').replace('w=700','w=1400');
+  document.getElementById('lb-title').textContent = img.title;
+  document.getElementById('lb-sub').textContent = `${cat.label} · ${cat.tag}`;
+  initNameInput();
+  renderComments(img.id);
+  renderAnnotationsList();
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow='hidden';
+  lbImg.onload = () => { resizeCanvas(); renderPins(); };
+  if(lbImg.complete) { resizeCanvas(); renderPins(); }
+}
+function closeLB(){
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow='';
+  pendingPin = null;
+  activePinIdx = null;
+}
+document.getElementById('lb-close').addEventListener('click', closeLB);
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeLB(); });
+window.addEventListener('resize', () => { if(document.getElementById('lightbox').classList.contains('open')) resizeCanvas(); });
+
+/* ══ NAV FILTER ══ */
+document.getElementById('nav-bar').addEventListener('click',e=>{
+  const btn = e.target.closest('.nav-btn');
+  if(!btn) return;
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  activeFilter = btn.dataset.filter;
+  renderAll();
+});
+
+/* ══ VIDEO DATA ══ */
+let videos = JSON.parse(localStorage.getItem('vgp_videos') || '{}');
+// videos[catId] = [{id, title, type:'yt'|'vimeo'|'file', src, thumb, duration}]
+function saveVideos(){ localStorage.setItem('vgp_videos', JSON.stringify(videos)); }
+
+let currentAddCatId = null;
+let pendingFileData = null;
+
+function getYTId(url){
+  const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([^&?\s]{11})/);
+  return m ? m[1] : null;
+}
+function getVimeoId(url){
+  const m = url.match(/vimeo\.com\/(\d+)/);
+  return m ? m[1] : null;
+}
+function getVideoThumb(v){
+  if(v.type==='yt') return `https://img.youtube.com/vi/${v.src}/hqdefault.jpg`;
+  if(v.type==='vimeo') return v.thumb || '';
+  return v.thumb || ''; // file: base64 thumb stored
+}
+function getEmbedHTML(v){
+  if(v.type==='yt'){
+    const ytUrl = `https://www.youtube.com/watch?v=${v.src}`;
+    return `
+      <div style="position:relative;width:100%;aspect-ratio:16/9;background:#000;border-radius:4px;overflow:hidden">
+        <iframe
+          src="https://www.youtube.com/embed/${v.src}?autoplay=1&rel=0"
+          allowfullscreen allow="autoplay; encrypted-media"
+          style="position:absolute;inset:0;width:100%;height:100%;border:none"
+          onerror="this.style.display='none';document.getElementById('yt-fallback-${v.src}').style.display='flex'"
+        ></iframe>
+        <div id="yt-fallback-${v.src}" style="display:none;position:absolute;inset:0;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:linear-gradient(135deg,#0a1a16,#041010)">
+          <img src="https://img.youtube.com/vi/${v.src}/hqdefault.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.3"/>
+          <div style="position:relative;z-index:1;text-align:center">
+            <p style="font-family:var(--mono);font-size:.7rem;color:rgba(255,255,255,.6);margin-bottom:16px">Video không thể nhúng trực tiếp</p>
+            <a href="${ytUrl}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;background:#ff0000;color:#fff;padding:12px 24px;border-radius:6px;text-decoration:none;font-family:var(--sans);font-size:.85rem;font-weight:600">
+              <svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:#fff"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-2.75 12.27 12.27 0 00-8.07 3.1A12.12 12.12 0 004 12a12.14 12.14 0 003.75 8.7A12.27 12.27 0 0012 22a12.31 12.31 0 008.25-3.14 12.08 12.08 0 003.75-8.66 12 12 0 00-4.41-3.51zM10 15V9l5 3z"/></svg>
+              Xem trên YouTube
+            </a>
+          </div>
+        </div>
+      </div>`;
+  }
+  if(v.type==='vimeo'){
+    return `<iframe src="https://player.vimeo.com/video/${v.src}?autoplay=1&color=e2b055" allowfullscreen allow="autoplay; fullscreen" style="width:100%;aspect-ratio:16/9;border:none;border-radius:4px"></iframe>`;
+  }
+  if(v.type==='file'){
+    return `<video src="${v.src}" controls autoplay style="width:100%;aspect-ratio:16/9;border-radius:4px;background:#000;max-height:80vh"></video>`;
+  }
+  return '';
+}
+
+function openVideoModal(v){
+  // For YouTube, show modal with embed + fallback open-in-new-tab button
+  const body = document.getElementById('video-modal-body');
+  body.innerHTML = getEmbedHTML(v);
+  document.getElementById('video-modal-title').textContent = v.title;
+
+  // Add "Open in YouTube" shortcut button for YT videos
+  const existingBtn = document.getElementById('vm-open-ext');
+  if(existingBtn) existingBtn.remove();
+  if(v.type === 'yt' || v.type === 'vimeo'){
+    const extUrl = v.type === 'yt'
+      ? `https://www.youtube.com/watch?v=${v.src}`
+      : `https://vimeo.com/${v.src}`;
+    const extBtn = document.createElement('a');
+    extBtn.id = 'vm-open-ext';
+    extBtn.href = extUrl;
+    extBtn.target = '_blank';
+    extBtn.rel = 'noopener';
+    extBtn.style.cssText = 'display:inline-flex;align-items:center;gap:6px;margin-top:12px;font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;color:var(--text-muted);text-decoration:none;transition:color .2s;';
+    extBtn.innerHTML = `<svg viewBox="0 0 24 24" style="width:13px;height:13px;fill:currentColor"><path d="M19 19H5V5h7V3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg> Open in ${v.type === 'yt' ? 'YouTube' : 'Vimeo'}`;
+    extBtn.addEventListener('mouseover', ()=> extBtn.style.color = 'var(--bold-gold)');
+    extBtn.addEventListener('mouseout', ()=> extBtn.style.color = 'var(--text-muted)');
+    document.querySelector('.video-modal-inner').appendChild(extBtn);
+  }
+
+  document.getElementById('video-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeVideoModal(){
+  document.getElementById('video-modal').classList.remove('open');
+  document.getElementById('video-modal-body').innerHTML = '';
+  document.body.style.overflow = '';
+}
+document.getElementById('video-modal-close').addEventListener('click', closeVideoModal);
+document.getElementById('video-modal').addEventListener('click', e => { if(e.target===e.currentTarget) closeVideoModal(); });
+
+function renderVideoGrid(catId, container){
+  const vids = videos[catId] || [];
+  container.innerHTML = '';
+  // Add card
+  const addCard = document.createElement('div');
+  addCard.className = 'video-add-card';
+  addCard.innerHTML = `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg><span>Add YouTube / Vimeo link<br/>or upload video file</span>`;
+  addCard.addEventListener('click', () => openAddVideoDialog(catId));
+  container.appendChild(addCard);
+  // Video cards
+  vids.forEach((v,i) => {
+    const thumb = getVideoThumb(v);
+    const card = document.createElement('div');
+    card.className = 'video-card';
+    card.innerHTML = `
+      <div class="video-thumb">
+        ${thumb ? `<img src="${thumb}" alt="${v.title}" loading="lazy" onerror="this.style.display='none'"/>` : '<div class="video-thumb-placeholder"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>'}
+        <div class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+        ${v.duration ? `<div class="video-duration">${v.duration}</div>` : ''}
+      </div>
+      <div class="video-info">
+        <div class="video-title">${v.title}</div>
+        <div class="video-meta">
+          <span class="video-source-badge">${v.type==='yt'?'YouTube':v.type==='vimeo'?'Vimeo':'File'}</span>
+          <button onclick="event.stopPropagation();deleteVideo('${catId}',${i})" style="margin-left:auto;background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:.75rem;transition:color .2s" onmouseover="this.style.color='#e05555'" onmouseout="this.style.color=''">✕ Remove</button>
+        </div>
+      </div>
+    `;
+    card.addEventListener('click', () => openVideoModal(v));
+    container.appendChild(card);
+  });
+}
+
+function deleteVideo(catId, idx){
+  if(!videos[catId]) return;
+  videos[catId].splice(idx,1);
+  saveVideos();
+  // re-render
+  const grid = document.getElementById(`vgrid-${catId}`);
+  if(grid) renderVideoGrid(catId, grid);
+  // update Videos section too
+  renderVideoSection();
+}
+
+/* ── Add Video Dialog ── */
+function openAddVideoDialog(catId){
+  currentAddCatId = catId;
+  pendingFileData = null;
+  document.getElementById('avd-url').value = '';
+  document.getElementById('avd-link-title').value = '';
+  document.getElementById('avd-link-duration').value = '';
+  document.getElementById('avd-file-title').value = '';
+  document.getElementById('avd-file-duration').value = '';
+  document.getElementById('add-video-dialog').classList.add('open');
+}
+function closeAddVideoDialog(){
+  document.getElementById('add-video-dialog').classList.remove('open');
+  currentAddCatId = null; pendingFileData = null;
+}
+
+// Dialog tabs
+document.querySelectorAll('.avd-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.avd-tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.avd-panel').forEach(p=>p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('avd-'+tab.dataset.avd).classList.add('active');
+  });
+});
+
+// File drop
+const fileArea = document.getElementById('avd-file-area');
+const fileInput = document.getElementById('avd-file-input');
+fileArea.addEventListener('click', () => fileInput.click());
+fileArea.addEventListener('dragover', e => { e.preventDefault(); fileArea.style.borderColor='var(--green)'; });
+fileArea.addEventListener('dragleave', () => { fileArea.style.borderColor=''; });
+fileArea.addEventListener('drop', e => {
+  e.preventDefault(); fileArea.style.borderColor='';
+  const file = e.dataTransfer.files[0];
+  if(file && file.type.startsWith('video/')) handleVideoFile(file);
+});
+fileInput.addEventListener('change', e => { if(e.target.files[0]) handleVideoFile(e.target.files[0]); });
+
+function handleVideoFile(file){
+  const url = URL.createObjectURL(file);
+  pendingFileData = { src: url, name: file.name, thumb: null };
+
+  // Auto-generate thumbnail from video frame
+  const vid = document.createElement('video');
+  vid.preload = 'metadata';
+  vid.muted = true;
+  vid.playsInline = true;
+  vid.src = url;
+  vid.addEventListener('loadeddata', () => {
+    vid.currentTime = Math.min(1, vid.duration * 0.1);
+  });
+  vid.addEventListener('seeked', () => {
+    const cvs = document.createElement('canvas');
+    cvs.width = vid.videoWidth;
+    cvs.height = vid.videoHeight;
+    cvs.getContext('2d').drawImage(vid, 0, 0);
+    const thumb = cvs.toDataURL('image/jpeg', 0.8);
+    pendingFileData.thumb = thumb;
+    // Show preview in dialog
+    fileArea.innerHTML = `
+      <div style="position:relative;width:100%;padding-top:42%;overflow:hidden;border-radius:4px;margin-bottom:8px">
+        <img src="${thumb}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"/>
+        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center">
+          <div style="width:40px;height:40px;border-radius:50%;background:rgba(226,176,85,.85);display:flex;align-items:center;justify-content:center">
+            <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:#000;margin-left:3px"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+      </div>
+      <p style="margin:0">✅ <strong style="color:var(--green)">${file.name}</strong><br/><span style="font-size:.6rem;color:var(--text-muted)">${(file.size/1024/1024).toFixed(1)} MB · ${Math.floor(vid.duration/60)}:${String(Math.floor(vid.duration%60)).padStart(2,'0')}</span></p>
+      <input type="file" id="avd-file-input" accept="video/*" style="display:none"/>
+    `;
+    // Auto-fill duration
+    if(!document.getElementById('avd-file-duration').value){
+      const m = Math.floor(vid.duration/60);
+      const s = String(Math.floor(vid.duration%60)).padStart(2,'0');
+      document.getElementById('avd-file-duration').value = `${m}:${s}`;
+    }
+  });
+
+  fileArea.innerHTML = `<p>⏳ Generating preview...<br/><span style="color:var(--text-muted);font-size:.6rem">${file.name}</span></p><input type="file" id="avd-file-input" accept="video/*" style="display:none"/>`;
+  if(!document.getElementById('avd-file-title').value)
+    document.getElementById('avd-file-title').value = file.name.replace(/\.[^/.]+$/, '');
+}
+
+document.getElementById('avd-cancel').addEventListener('click', closeAddVideoDialog);
+document.getElementById('add-video-dialog').addEventListener('click', e => { if(e.target===e.currentTarget) closeAddVideoDialog(); });
+
+document.getElementById('avd-save').addEventListener('click', () => {
+  const activeTab = document.querySelector('.avd-tab.active').dataset.avd;
+  let newVid = null;
+
+  if(activeTab === 'link'){
+    const url = document.getElementById('avd-url').value.trim();
+    const title = document.getElementById('avd-link-title').value.trim() || 'Untitled video';
+    const duration = document.getElementById('avd-link-duration').value.trim();
+    const ytId = getYTId(url);
+    const vimeoId = getVimeoId(url);
+    if(ytId) newVid = { id: Date.now()+'', title, type:'yt', src:ytId, duration };
+    else if(vimeoId) newVid = { id: Date.now()+'', title, type:'vimeo', src:vimeoId, duration };
+    else { alert('Invalid YouTube or Vimeo URL'); return; }
+  } else {
+    if(!pendingFileData){ alert('Please select a video file'); return; }
+    const title = document.getElementById('avd-file-title').value.trim() || pendingFileData.name;
+    const duration = document.getElementById('avd-file-duration').value.trim();
+    newVid = { id: Date.now()+'', title, type:'file', src: pendingFileData.src, thumb: pendingFileData.thumb || '', duration };
+  }
+
+  if(!videos[currentAddCatId]) videos[currentAddCatId] = [];
+  videos[currentAddCatId].push(newVid);
+  saveVideos();
+
+  // re-render grids
+  const grid = document.getElementById(`vgrid-${currentAddCatId}`);
+  if(grid) renderVideoGrid(currentAddCatId, grid);
+  renderVideoSection();
+  closeAddVideoDialog();
+});
+
+/* ══ VIDEO SECTION (global) ══ */
+function renderVideoSection(){
+  const sec = document.getElementById('sec-all-videos');
+  if(!sec) return;
+  const grid = sec.querySelector('.video-grid');
+  grid.innerHTML = '';
+  // Add card for general
+  const addCard = document.createElement('div');
+  addCard.className = 'video-add-card';
+  addCard.innerHTML = `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg><span>Add video to library</span>`;
+  addCard.addEventListener('click', () => openAddVideoDialog('__global__'));
+  grid.appendChild(addCard);
+  // All videos from all categories
+  let hasAny = false;
+  CATEGORIES.forEach(cat => {
+    (videos[cat.id]||[]).forEach(v => {
+      hasAny = true;
+      const thumb = getVideoThumb(v);
+      const card = document.createElement('div');
+      card.className = 'video-card';
+      card.innerHTML = `
+        <div class="video-thumb">
+          ${thumb ? `<img src="${thumb}" alt="${v.title}" loading="lazy" onerror="this.style.display='none'"/>` : '<div class="video-thumb-placeholder"><svg viewBox="0 0 24 24" style="width:36px;height:36px;fill:rgba(255,255,255,.2)"><path d="M8 5v14l11-7z"/></svg></div>'}
+          <div class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+          ${v.duration?`<div class="video-duration">${v.duration}</div>`:''}
+        </div>
+        <div class="video-info">
+          <div class="video-title">${v.title}</div>
+          <div class="video-meta">
+            <span class="video-source-badge">${v.type==='yt'?'YouTube':v.type==='vimeo'?'Vimeo':'File'}</span>
+            <span style="color:var(--text-muted);font-size:.6rem">${cat.label}</span>
+          </div>
+        </div>
+      `;
+      card.addEventListener('click', () => openVideoModal(v));
+      grid.appendChild(card);
+    });
+  });
+  // Global videos
+  (videos['__global__']||[]).forEach(v => {
+    hasAny = true;
+    const thumb = getVideoThumb(v);
+    const card = document.createElement('div');
+    card.className = 'video-card';
+    card.innerHTML = `
+      <div class="video-thumb">
+        ${thumb ? `<img src="${thumb}" alt="${v.title}" loading="lazy"/>` : '<div class="video-thumb-placeholder"><svg viewBox="0 0 24 24" style="width:36px;height:36px;fill:rgba(255,255,255,.2)"><path d="M8 5v14l11-7z"/></svg></div>'}
+        <div class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+        ${v.duration?`<div class="video-duration">${v.duration}</div>`:''}
+      </div>
+      <div class="video-info">
+        <div class="video-title">${v.title}</div>
+        <div class="video-meta"><span class="video-source-badge">${v.type==='yt'?'YouTube':v.type==='vimeo'?'Vimeo':'File'}</span></div>
+      </div>
+    `;
+    card.addEventListener('click', () => openVideoModal(v));
+    grid.appendChild(card);
+  });
+}
+
+/* ══ SUPABASE SYNC ══ */
+async function syncLikesToSupabase(imageId, count) {
+  await supa('likes?on_conflict=image_id', {
+    method: 'POST',
+    prefer: 'resolution=merge-duplicates',
+    body: JSON.stringify({ image_id: imageId, count })
+  });
+}
+
+async function syncCommentToSupabase(imgId, comment) {
+  const row = {
+    image_id: imgId,
+    name: comment.name,
+    text: comment.text,
+    pin: comment.pin || null,
+  };
+  const result = await supa('comments', {
+    method: 'POST',
+    prefer: 'return=representation',
+    body: JSON.stringify(row)
+  });
+  return result?.[0]?.id;
+}
+
+async function loadRemoteImages(catId) {
+  const rows = await supa(`images?cat_id=eq.${catId}&order=created_at.asc`);
+  return rows || [];
+}
+
+/* ══ UPLOAD LOGIC ══ */
+let uploadQueues = {}; // catId -> [{file, previewEl, title}]
+
+function initUploadPanel(catId) {
+  const drop = document.getElementById(`udrop-${catId}`);
+  const fileInput = document.getElementById(`ufile-${catId}`);
+  if(!drop || !fileInput) return;
+
+  uploadQueues[catId] = [];
+
+  drop.addEventListener('click', () => fileInput.click());
+  drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('dragover'); });
+  drop.addEventListener('dragleave', () => drop.classList.remove('dragover'));
+  drop.addEventListener('drop', e => {
+    e.preventDefault(); drop.classList.remove('dragover');
+    handleUploadFiles(catId, Array.from(e.dataTransfer.files));
+  });
+  fileInput.addEventListener('change', e => {
+    handleUploadFiles(catId, Array.from(e.target.files));
+    e.target.value = '';
+  });
+}
+
+function handleUploadFiles(catId, files) {
+  const prevWrap = document.getElementById(`uprev-${catId}`);
+  files.filter(f => f.type.startsWith('image/')).forEach(file => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const item = document.createElement('div');
+      item.className = 'upload-prev-item';
+      const defaultTitle = file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g,' ');
+      item.innerHTML = `
+        <img src="${e.target.result}" alt=""/>
+        <div class="up-status">
+          <div class="up-progress"><div class="up-progress-bar" style="width:0%"></div></div>
+          <span class="up-status-text">Ready</span>
+        </div>
+        <input class="up-title-input" placeholder="Nhập tiêu đề..." value="${defaultTitle}"/>
+      `;
+      prevWrap.appendChild(item);
+      uploadQueues[catId].push({ file, el: item, title: defaultTitle });
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // Show upload button
+  let actionsEl = document.querySelector(`#upanel-${catId} .upload-actions`);
+  if(!actionsEl) {
+    actionsEl = document.createElement('div');
+    actionsEl.className = 'upload-actions';
+    actionsEl.innerHTML = `<button class="upload-submit-btn" onclick="startUpload('${catId}')">⬆️ Upload ${files.length} ảnh lên Supabase</button>`;
+    document.getElementById(`upanel-${catId}`).appendChild(actionsEl);
+  } else {
+    actionsEl.querySelector('button').textContent = `⬆️ Upload ${uploadQueues[catId].length} ảnh lên Supabase`;
+  }
+}
+
+async function startUpload(catId) {
+  if(!isEditor) { showEditorLoginDialog(); return; }
+  const queue = uploadQueues[catId] || [];
+  if(!queue.length) return;
+
+  const btn = document.querySelector(`#upanel-${catId} .upload-submit-btn`);
+  btn.disabled = true;
+  btn.textContent = 'Đang upload...';
+
+  for(let i = 0; i < queue.length; i++) {
+    const { file, el } = queue[i];
+    const bar = el.querySelector('.up-progress-bar');
+    const statusTxt = el.querySelector('.up-status-text');
+    const titleInput = el.querySelector('.up-title-input');
+    const title = titleInput.value.trim() || file.name;
+
+    statusTxt.textContent = 'Uploading...';
+    bar.style.width = '30%';
+
+    const ext = file.name.split('.').pop();
+    const path = `images/${catId}/${Date.now()}-${i}.${ext}`;
+    const url = await supaUpload(file, path);
+
+    if(url) {
+      bar.style.width = '70%';
+      // Save to DB
+      const row = { cat_id: catId, title, src: url, sub: 'Blue Waves Theatre', uploaded_by: savedName || 'Editor' };
+      await supa('images', { method: 'POST', prefer: 'return=representation', body: JSON.stringify(row) });
+      bar.style.width = '100%';
+      bar.style.background = 'var(--green)';
+      statusTxt.textContent = '✅ Done';
+    } else {
+      bar.style.background = '#e05555';
+      statusTxt.textContent = '❌ Failed';
+    }
+  }
+
+  uploadQueues[catId] = [];
+  btn.textContent = '✅ Upload hoàn tất! Tải lại trang để xem';
+  btn.style.background = 'var(--dark-green)';
+  showToast('✅ Upload thành công! Ảnh đã lưu vào Supabase');
+}
+
+/* ══ PROJECT DROPDOWN ══ */
+let selectedProjects = new Set(); // empty = all
+
+function buildDropdown(){
+  const menu = document.getElementById('dropdown-menu');
+  const trigger = document.getElementById('dropdown-trigger');
+
+  // Header
+  const header = document.createElement('div');
+  header.className = 'dm-header';
+  header.innerHTML = '<span>Select Assets</span><button class="dm-clear" id="dm-clear">Clear all</button>';
+  menu.appendChild(header);
+
+  // Items
+  CATEGORIES.forEach(cat => {
+    const item = document.createElement('div');
+    item.className = 'dm-item';
+    item.innerHTML = `
+      <input type="checkbox" id="chk-${cat.id}" data-id="${cat.id}"/>
+      <div class="dm-item-info">
+        <div class="dm-item-name">${cat.label}</div>
+        <div class="dm-item-tag">${cat.tag}</div>
+      </div>
+      ${cat.rank ? `<span class="dm-item-rank">#${cat.rank}</span>` : ''}
+    `;
+    item.addEventListener('click', e => {
+      if(e.target.tagName === 'INPUT') return;
+      const chk = item.querySelector('input');
+      chk.checked = !chk.checked;
+      onCheckChange(cat.id, chk.checked);
+    });
+    item.querySelector('input').addEventListener('change', e => {
+      onCheckChange(cat.id, e.target.checked);
+    });
+    menu.appendChild(item);
+  });
+
+  // Toggle dropdown
+  trigger.addEventListener('click', e => {
+    e.stopPropagation();
+    trigger.classList.toggle('open');
+    menu.classList.toggle('open');
+  });
+
+  // Close on outside click
+  document.addEventListener('click', e => {
+    if(!document.getElementById('dropdown-wrap').contains(e.target)){
+      trigger.classList.remove('open');
+      menu.classList.remove('open');
+    }
+  });
+
+  // Clear all
+  document.getElementById('dm-clear').addEventListener('click', e => {
+    e.stopPropagation();
+    selectedProjects.clear();
+    menu.querySelectorAll('input[type=checkbox]').forEach(c => c.checked = false);
+    updateDropdownUI();
+    applyProjectFilter();
+  });
+}
+
+function onCheckChange(id, checked){
+  if(checked) selectedProjects.add(id);
+  else selectedProjects.delete(id);
+  updateDropdownUI();
+  applyProjectFilter();
+}
+
+function updateDropdownUI(){
+  const count = selectedProjects.size;
+  const countEl = document.getElementById('dt-count');
+  const label = document.querySelector('.dt-label');
+  const tagsWrap = document.getElementById('active-tags');
+
+  countEl.textContent = count;
+  countEl.classList.toggle('show', count > 0);
+  label.textContent = count === 0 ? 'Select assets...' : `${count} assets selected`;
+
+  // Active tags
+  tagsWrap.innerHTML = '';
+  selectedProjects.forEach(id => {
+    const cat = CATEGORIES.find(c => c.id === id);
+    if(!cat) return;
+    const tag = document.createElement('div');
+    tag.className = 'active-tag';
+    tag.innerHTML = `${cat.label} <span class="rm">✕</span>`;
+    tag.addEventListener('click', () => {
+      selectedProjects.delete(id);
+      const chk = document.getElementById(`chk-${id}`);
+      if(chk) chk.checked = false;
+      updateDropdownUI();
+      applyProjectFilter();
+    });
+    tagsWrap.appendChild(tag);
+  });
+}
+
+function applyProjectFilter(){
+  if(selectedProjects.size === 0){
+    // Show all sections
+    document.querySelectorAll('.cat-section').forEach(s => s.style.display = '');
+    document.querySelectorAll('.priority-divider').forEach(d => d.style.display = '');
+    return;
+  }
+  // Show only selected
+  document.querySelectorAll('.cat-section').forEach(s => {
+    const id = s.id.replace('sec-','');
+    s.style.display = selectedProjects.has(id) ? '' : 'none';
+  });
+  document.querySelectorAll('.priority-divider').forEach(d => d.style.display = 'none');
+}
+
+/* ══ INIT ══ */
+buildDropdown();
+renderAll();
+updateEditorUI();
+</script>
+</body>
+</html>
