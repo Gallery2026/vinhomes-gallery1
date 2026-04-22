@@ -1747,9 +1747,6 @@ function renderSection(cat, root, i){
 }
 
 function renderImgGrid(grid, images, cat){
-  // Prevent duplicate renders by checking if already rendering
-  if(grid.dataset.rendering === '1') return;
-  grid.dataset.rendering = '1';
   // Clear existing cards but keep add-img-card
   Array.from(grid.children).forEach(c => { if(!c.classList.contains('add-img-card')) c.remove(); });
 
@@ -2812,6 +2809,26 @@ function renderVideoSection(){
 }
 
 /* ══ IMAGE DIALOG ══ */
+/* ── refreshCatGrid: reload a category grid from Supabase ── */
+function refreshCatGrid(catId){
+  const grid = document.getElementById(`grid-${catId}`);
+  const cat = CATEGORIES.find(c => c.id === catId);
+  if(!grid || !cat) return;
+  loadRemoteImages(catId).then(remoteImgs => {
+    const deletedIds = new Set(getDeletedIds());
+    const replacedMap = JSON.parse(localStorage.getItem('vgp_replaced') || '{}');
+    const replacedLocalIds = new Set(remoteImgs.filter(r => r.local_id).map(r => r.local_id));
+    Object.keys(replacedMap).forEach(lid => replacedLocalIds.add(lid));
+    const localImgs = cat.images
+      .filter(img => !replacedLocalIds.has(img.id) && !deletedIds.has(img.id))
+      .map(img => { const rep = replacedMap[img.id]; return rep ? {...img, src:rep.src, title:rep.title} : img; });
+    const newRemote = remoteImgs
+      .filter(r => r.local_id == null && !deletedIds.has(r.id))
+      .map(r => ({ id: r.id, src: r.src, title: r.title, sub: r.sub || cat.label, _remote: true }));
+    renderImgGrid(grid, [...localImgs, ...newRemote], cat);
+  });
+}
+
 let imgDialogMode = 'add'; // 'add' | 'replace'
 let imgDialogCatId = null;
 let imgDialogImgId = null; // for replace mode
@@ -2978,15 +2995,8 @@ document.getElementById('img-dialog-save').addEventListener('click', async () =>
     btn.textContent='Lưu'; btn.disabled=false;
     showToast(`✅ Đã upload ${ok}/${imgMultiFiles.length} ảnh!`);
     closeImgDialog();
-    // Refresh grid
-    const catGrid2 = document.getElementById(`grid-${imgDialogCatId}`);
-    if(catGrid2){
-      loadRemoteImages(imgDialogCatId).then(remoteImgs => {
-        const remoteFormatted = remoteImgs.map(r => ({ id: r.id, src: r.src, title: r.title, sub: r.sub || catLabel, _remote: true }));
-        const allImgs = [...catObj.images, ...remoteFormatted.filter(r => !catObj.images.find(i => i.src === r.src))];
-        renderImgGrid(catGrid2, allImgs, catObj);
-      });
-    }
+    // Refresh grid with new remote images
+    refreshCatGrid(imgDialogCatId);
     return;
   }
 
@@ -3046,19 +3056,8 @@ document.getElementById('img-dialog-save').addEventListener('click', async () =>
     }
   }
 
-  // Also refresh grid from Supabase
-  const catGrid = document.getElementById(`grid-${imgDialogCatId}`);
-  if(catGrid){
-    const cat = CATEGORIES.find(c => c.id === imgDialogCatId);
-    if(cat){
-      loadRemoteImages(imgDialogCatId).then(remoteImgs => {
-        const remoteFormatted = remoteImgs.map(r => ({ id: r.id, src: r.src, title: r.title, sub: r.sub || cat.label, _remote: true }));
-        const allImgs = [...cat.images, ...remoteFormatted.filter(r => !cat.images.find(i => i.src === r.src))];
-        catGrid.dataset.rendering = '0';
-        renderImgGrid(catGrid, allImgs, cat);
-      });
-    }
-  }
+  // Refresh grid
+  if(imgDialogMode === 'add') refreshCatGrid(imgDialogCatId);
 });
 
 /* ══ SUPABASE SYNC ══ */
