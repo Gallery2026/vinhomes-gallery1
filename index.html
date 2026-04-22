@@ -169,21 +169,22 @@ main{padding:0 52px 80px}
 
 /* ── MASONRY ── */
 .masonry{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  grid-auto-rows:220px;
-  gap:8px;
+  columns:4 220px;
+  column-gap:8px;
 }
-@media(max-width:1100px){.masonry{grid-template-columns:repeat(3,1fr);grid-auto-rows:200px}}
-@media(max-width:700px){.masonry{grid-template-columns:repeat(2,1fr);grid-auto-rows:160px}}
+@media(max-width:1100px){.masonry{columns:3 180px}}
+@media(max-width:700px){.masonry{columns:2 140px}}
 
 /* ── CARD ── */
 .card{
+  break-inside:avoid;
+  margin-bottom:8px;
   position:relative;
   overflow:hidden;
   cursor:pointer;
   background:var(--surface);
   border:none;
+  display:block;
   transition:transform .3s ease, box-shadow .3s ease;
   animation:cardIn .5s ease both;
 }
@@ -196,14 +197,14 @@ main{padding:0 52px 80px}
 }
 
 .card img{
-  width:100%;height:100%;
+  width:100%;
+  height:auto;
   display:block;
-  object-fit:cover;
+  object-fit:contain;
   transition:transform .5s ease;
-  position:absolute;inset:0;
 }
 .img-placeholder{
-  position:absolute;inset:0;
+  width:100%;min-height:160px;
   background:linear-gradient(135deg,var(--surface2),var(--surface));
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   gap:8px;padding:24px;
@@ -856,6 +857,8 @@ footer{
   font-family:var(--mono);font-size:.58rem;letter-spacing:.06em;
   transition:all .2s;
 }
+.card-rename-btn{background:rgba(255,255,255,.15);color:#fff;font-size:.8rem}
+.card-rename-btn:hover{background:rgba(255,255,255,.25)}
 .card-replace-btn{background:rgba(226,176,85,.9);color:#000}
 .card-replace-btn:hover{background:var(--bold-gold)}
 .card-delete-btn{background:rgba(180,40,40,.85);color:#fff}
@@ -1131,6 +1134,18 @@ footer{
   <button class="ms-btn ms-select-all" id="ms-select-all">Chọn tất cả</button>
   <button class="ms-btn ms-delete" id="ms-delete-selected">🗑 Xóa</button>
   <button class="ms-btn ms-cancel" id="ms-cancel">✕ Huỷ</button>
+</div>
+
+<!-- ══ RENAME DIALOG ══ -->
+<div class="img-dialog" id="rename-dialog">
+  <div class="img-dialog-box" style="max-width:420px">
+    <div class="img-dialog-title">✏️ Đổi tên ảnh</div>
+    <input class="img-dialog-input" id="rename-input" type="text" placeholder="Nhập tên mới..." style="margin-bottom:16px"/>
+    <div style="display:flex;gap:10px;justify-content:flex-end">
+      <button class="img-dialog-cancel" id="rename-cancel">Huỷ</button>
+      <button class="img-dialog-save" id="rename-save">💾 Lưu tên</button>
+    </div>
+  </div>
 </div>
 
 <!-- ══ IMAGE DIALOG ══ -->
@@ -1851,8 +1866,9 @@ function renderImgGrid(grid, images, cat){
         <span>${count}</span>
       </div>
       <div class="card-editor-bar${isEditor?' visible':''}" id="ebar-${img.id}">
-        <button class="card-edit-btn card-replace-btn" onclick="event.stopPropagation();handleReplaceClick(this)">🔄 Replace</button>
-        <button class="card-edit-btn card-delete-btn" onclick="event.stopPropagation();handleDeleteClick(this)">🗑 Delete</button>
+        <button class="card-edit-btn card-rename-btn" onclick="event.stopPropagation();handleRenameClick(this)">✏️</button>
+        <button class="card-edit-btn card-replace-btn" onclick="event.stopPropagation();handleReplaceClick(this)">🔄</button>
+        <button class="card-edit-btn card-delete-btn" onclick="event.stopPropagation();handleDeleteClick(this)">🗑</button>
       </div>
     `;
     card.querySelector('.heart-btn').addEventListener('click', e => {
@@ -3415,6 +3431,73 @@ function applyProjectFilter(){
   });
   document.querySelectorAll('.priority-divider').forEach(d => d.style.display = 'none');
 }
+
+/* ══ RENAME ══ */
+let renameImgId = null;
+let renameCatId = null;
+
+function handleRenameClick(btn){
+  const card = btn.closest('.card');
+  renameImgId = card.dataset.imgId;
+  renameCatId = card.dataset.catId;
+  const currentTitle = card.dataset.imgTitle || '';
+  const input = document.getElementById('rename-input');
+  input.value = currentTitle;
+  document.getElementById('rename-dialog').classList.add('open');
+  setTimeout(() => { input.focus(); input.select(); }, 100);
+}
+
+document.getElementById('rename-cancel').addEventListener('click', () => {
+  document.getElementById('rename-dialog').classList.remove('open');
+});
+document.getElementById('rename-dialog').addEventListener('click', e => {
+  if(e.target === e.currentTarget) document.getElementById('rename-dialog').classList.remove('open');
+});
+document.getElementById('rename-input').addEventListener('keydown', e => {
+  if(e.key === 'Enter') document.getElementById('rename-save').click();
+  if(e.key === 'Escape') document.getElementById('rename-dialog').classList.remove('open');
+});
+
+document.getElementById('rename-save').addEventListener('click', async () => {
+  const newTitle = document.getElementById('rename-input').value.trim();
+  if(!newTitle){ showToast('Vui lòng nhập tên!', 'error'); return; }
+  const btn = document.getElementById('rename-save');
+  btn.textContent = 'Đang lưu...'; btn.disabled = true;
+
+  const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-/.test(renameImgId);
+  if(isUUID){
+    await supa(`images?id=eq.${renameImgId}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ title: newTitle })
+    });
+  } else {
+    // Local image — update CATEGORIES
+    for(const cat of CATEGORIES){
+      const img = cat.images.find(i => i.id === renameImgId);
+      if(img){ img.title = newTitle; break; }
+    }
+    // Save to replacedMap to persist
+    const replacedMap = JSON.parse(localStorage.getItem('vgp_replaced') || '{}');
+    if(replacedMap[renameImgId]){
+      replacedMap[renameImgId].title = newTitle;
+    } else {
+      replacedMap[renameImgId] = { title: newTitle, src: null, catId: renameCatId };
+    }
+    localStorage.setItem('vgp_replaced', JSON.stringify(replacedMap));
+  }
+
+  // Update card DOM directly
+  const card = document.querySelector(`.card[data-img-id="${renameImgId}"]`);
+  if(card){
+    card.dataset.imgTitle = newTitle;
+    const titleEl = card.querySelector('.card-title');
+    if(titleEl) titleEl.textContent = newTitle;
+  }
+
+  btn.textContent = '💾 Lưu tên'; btn.disabled = false;
+  document.getElementById('rename-dialog').classList.remove('open');
+  showToast('✅ Đã đổi tên ảnh!');
+});
 
 /* ══ MULTI SELECT ══ */
 let multiSelectActive = false;
