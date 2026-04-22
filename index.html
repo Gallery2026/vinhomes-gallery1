@@ -177,8 +177,9 @@ main{padding:0 52px 80px}
   overflow:hidden;
   cursor:pointer;
   background:var(--surface);
-  border:1px solid var(--border);
-  transition:transform .35s cubic-bezier(.34,1.56,.64,1), box-shadow .35s ease, border-color .3s ease;
+  border:none;
+  aspect-ratio:4/3;
+  transition:transform .2s ease, box-shadow .2s ease;
   animation:cardIn .5s ease both;
 }
 @keyframes cardIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
@@ -192,7 +193,7 @@ main{padding:0 52px 80px}
 .card img{width:100%;display:block;transition:transform .55s ease;aspect-ratio:auto;min-height:160px;background:var(--surface2)}
 .card img.error{min-height:180px;object-fit:none;filter:brightness(0.3)}
 .img-placeholder{
-  width:100%;min-height:180px;
+  position:absolute;inset:0;
   background:linear-gradient(135deg,var(--surface2),var(--surface));
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   gap:8px;padding:24px;
@@ -216,7 +217,7 @@ main{padding:0 52px 80px}
 
 /* ── HEART ── */
 .heart-btn{
-  position:absolute;top:10px;right:10px;
+  position:absolute;top:10px;right:10px;z-index:8;
   width:34px;height:34px;border-radius:50%;
   background:rgba(2,30,26,.72);border:1px solid rgba(255,255,255,.12);
   cursor:pointer;display:flex;align-items:center;justify-content:center;
@@ -233,7 +234,7 @@ main{padding:0 52px 80px}
 
 /* ── HEART COUNT ── */
 .heart-count{
-  position:absolute;bottom:8px;right:8px;
+  position:absolute;bottom:8px;right:8px;z-index:8;
   font-family:var(--mono);font-size:.58rem;
   color:var(--white);background:rgba(0,0,0,.5);
   padding:3px 8px;border-radius:20px;
@@ -780,9 +781,75 @@ footer{
 .avd-save{padding:8px 18px;background:var(--green);border:none;border-radius:6px;color:#fff;font-family:var(--mono);font-size:.62rem;cursor:pointer;transition:background .2s}
 .avd-save:hover{background:var(--dark-green)}
 
+/* ── ACCESS GATE ── */
+.access-gate{
+  position:fixed;inset:0;z-index:99998;
+  background:linear-gradient(135deg,var(--dark-teal) 0%,var(--teal) 40%,var(--dark-green) 75%,var(--green) 100%);
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;
+}
+.access-gate::before{
+  content:'';position:absolute;inset:0;
+  background:url('cover.png') center/cover no-repeat;
+  opacity:.15;
+}
+.access-box{
+  position:relative;z-index:1;
+  background:rgba(2,30,26,.85);
+  border:1px solid rgba(0,155,81,.3);
+  border-radius:12px;
+  padding:48px 40px;
+  width:min(400px,90vw);
+  text-align:center;
+  backdrop-filter:blur(16px);
+  box-shadow:0 24px 80px rgba(0,0,0,.5);
+}
+.access-logo{
+  width:56px;height:56px;margin:0 auto 20px;
+}
+.access-brand{
+  font-family:var(--mono);font-size:.65rem;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--bold-gold);margin-bottom:6px;
+}
+.access-title{
+  font-family:var(--serif);font-size:2rem;font-weight:600;
+  color:var(--white);margin-bottom:4px;line-height:1.2;
+}
+.access-sub{
+  font-family:var(--mono);font-size:.6rem;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--text-muted);margin-bottom:32px;
+}
+.access-input{
+  width:100%;background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.15);border-radius:8px;
+  padding:13px 16px;color:var(--white);
+  font-family:var(--sans);font-size:1rem;
+  outline:none;text-align:center;letter-spacing:.1em;
+  transition:border-color .2s;margin-bottom:12px;
+}
+.access-input:focus{border-color:var(--green)}
+.access-input::placeholder{color:rgba(255,255,255,.3);letter-spacing:.05em;font-size:.85rem}
+.access-btn{
+  width:100%;padding:13px;
+  background:var(--green);border:none;border-radius:8px;
+  color:#fff;font-family:var(--sans);font-size:.9rem;font-weight:600;
+  cursor:pointer;transition:background .2s,transform .15s;
+  letter-spacing:.05em;
+}
+.access-btn:hover{background:var(--dark-green)}
+.access-btn:active{transform:scale(.98)}
+.access-err{
+  font-family:var(--mono);font-size:.62rem;color:#e05555;
+  margin-top:10px;display:none;letter-spacing:.06em;
+}
+.access-hint{
+  font-family:var(--mono);font-size:.58rem;color:var(--text-muted);
+  margin-top:20px;letter-spacing:.08em;line-height:1.8;
+}
+
 /* ── EDITOR CARD CONTROLS ── */
 .card-editor-bar{
-  position:absolute;bottom:0;left:0;right:0;
+  position:absolute;bottom:0;left:0;right:0;z-index:9;
   background:linear-gradient(to top,rgba(2,20,16,.95),transparent);
   padding:28px 8px 8px;
   display:none;
@@ -804,9 +871,9 @@ footer{
 .add-img-card{
   background:transparent;
   border:1px dashed rgba(0,155,81,.35);
-  border-radius:4px;
+  aspect-ratio:4/3;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:10px;padding:32px 16px;min-height:180px;
+  gap:10px;padding:32px 16px;
   cursor:pointer;transition:border-color .2s,background .2s;
 }
 .add-img-card:hover{border-color:var(--green);background:rgba(0,155,81,.06)}
@@ -1060,6 +1127,27 @@ footer{
   </div>
 </div>
 
+<!-- ══ ACCESS GATE ══ -->
+<div class="access-gate" id="access-gate">
+  <div class="access-box">
+    <svg class="access-logo" viewBox="0 0 52 52" fill="none">
+      <rect width="52" height="52" rx="8" fill="rgba(0,155,81,0.15)"/>
+      <path d="M26 8 L20 18 L26 16 L32 18 Z" fill="#009b51"/>
+      <path d="M26 16 L18 26 L26 24 L34 26 Z" fill="#05785c"/>
+      <path d="M26 24 L16 36 L26 33 L36 36 Z" fill="#005050"/>
+      <path d="M26 33 L22 44 L26 42 L30 44 Z" fill="#00464e"/>
+      <circle cx="26" cy="8" r="3" fill="#e2b055"/>
+    </svg>
+    <div class="access-brand">Vinhomes</div>
+    <div class="access-title">Green Paradise</div>
+    <div class="access-sub">Cần Giờ · Asset Gallery</div>
+    <input class="access-input" id="access-input" type="password" placeholder="Nhập mật khẩu truy cập..."/>
+    <button class="access-btn" id="access-btn">Truy cập →</button>
+    <div class="access-err" id="access-err">⚠️ Mật khẩu không đúng</div>
+    <div class="access-hint">Liên hệ quản trị viên để được cấp quyền truy cập</div>
+  </div>
+</div>
+
 <!-- ══ GLOBAL FILE INPUTS (prevents duplicate dialog) ══ -->
 <input type="file" id="global-img-input" accept="image/*" style="display:none" multiple/>
 <input type="file" id="global-video-input" accept="video/*" style="display:none"/>
@@ -1167,6 +1255,56 @@ footer{
 </div>
 
 <script>
+/* ══ ACCESS GATE ══ */
+const ACCESS_PASSWORD = '6879';
+const ACCESS_KEY = 'vgp_access';
+
+function checkAccess(){
+  return sessionStorage.getItem(ACCESS_KEY) === '1';
+}
+
+function unlockAccess(){
+  sessionStorage.setItem(ACCESS_KEY, '1');
+  const gate = document.getElementById('access-gate');
+  gate.style.transition = 'opacity .5s ease';
+  gate.style.opacity = '0';
+  setTimeout(() => gate.remove(), 500);
+}
+
+(function initGate(){
+  if(checkAccess()){
+    document.getElementById('access-gate').remove();
+    return;
+  }
+  // Prevent scrolling while gate is shown
+  document.body.style.overflow = 'hidden';
+
+  const input = document.getElementById('access-input');
+  const btn = document.getElementById('access-btn');
+  const err = document.getElementById('access-err');
+
+  function tryAccess(){
+    if(input.value === ACCESS_PASSWORD || input.value === EDITOR_PASSWORD){
+      document.body.style.overflow = '';
+      // If editor password → also set editor mode
+      if(input.value === EDITOR_PASSWORD){
+        sessionStorage.setItem('vgp_editor', '1');
+      }
+      unlockAccess();
+    } else {
+      err.style.display = 'block';
+      input.value = '';
+      input.focus();
+      input.style.borderColor = '#e05555';
+      setTimeout(() => { input.style.borderColor = ''; err.style.display = 'none'; }, 2500);
+    }
+  }
+
+  btn.addEventListener('click', tryAccess);
+  input.addEventListener('keydown', e => { if(e.key === 'Enter') tryAccess(); });
+  input.focus();
+})();
+
 /* ══════════════════════════════════════════════
    SUPABASE CONFIG
    ══════════════════════════════════════════════ */
@@ -1742,14 +1880,17 @@ function renderSection(cat, root, i){
     const replacedMap = JSON.parse(localStorage.getItem('vgp_replaced') || '{}');
     Object.keys(replacedMap).forEach(lid => replacedLocalIds.add(lid));
     // Apply localStorage overrides to local images
+    // Apply localStorage replacements to preserve position
     const localImgs = cat.images
       .filter(img => !replacedLocalIds.has(img.id))
       .map(img => {
         const rep = replacedMap[img.id];
-        return rep ? { ...img, src: rep.src, title: rep.title } : img;
+        if(rep) return { ...img, src: rep.src, title: rep.title }; // replaced — keep position, new src
+        return img;
       });
-    // Merge: local (with overrides) + remote
-    const allImgs = [...localImgs, ...remoteFormatted];
+    // Merge: local images (with replacements) + new remote images (not replacements)
+    const newRemote = remoteFormatted.filter(r => r.local_id == null); // only truly new uploads
+    const allImgs = [...localImgs, ...newRemote];
     grid.dataset.rendering = '0';
     renderImgGrid(grid, allImgs, cat);
   });
