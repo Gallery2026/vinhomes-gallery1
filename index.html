@@ -168,17 +168,23 @@ main{padding:0 52px 80px}
 .priority-label{font-family:var(--mono);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--golden-sand);margin-bottom:4px}
 
 /* ── MASONRY ── */
-.masonry{columns:4 240px;column-gap:14px}
+.masonry{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  grid-auto-rows:220px;
+  gap:8px;
+}
+@media(max-width:1100px){.masonry{grid-template-columns:repeat(3,1fr);grid-auto-rows:200px}}
+@media(max-width:700px){.masonry{grid-template-columns:repeat(2,1fr);grid-auto-rows:160px}}
 
 /* ── CARD ── */
 .card{
-  margin-bottom:0;
   position:relative;
   overflow:hidden;
   cursor:pointer;
   background:var(--surface);
-  border:1px solid var(--border);
-  transition:transform .35s cubic-bezier(.34,1.56,.64,1), box-shadow .35s ease, border-color .3s ease;
+  border:none;
+  transition:transform .3s ease, box-shadow .3s ease;
   animation:cardIn .5s ease both;
 }
 @keyframes cardIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
@@ -189,10 +195,15 @@ main{padding:0 52px 80px}
   border-color:rgba(0,155,81,.45);
 }
 
-.card img{width:100%;display:block;transition:transform .55s ease;aspect-ratio:auto;min-height:160px;background:var(--surface2)}
-.card img.error{min-height:180px;object-fit:none;filter:brightness(0.3)}
+.card img{
+  width:100%;height:100%;
+  display:block;
+  object-fit:cover;
+  transition:transform .5s ease;
+  position:absolute;inset:0;
+}
 .img-placeholder{
-  width:100%;min-height:180px;
+  position:absolute;inset:0;
   background:linear-gradient(135deg,var(--surface2),var(--surface));
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   gap:8px;padding:24px;
@@ -780,6 +791,56 @@ footer{
 .avd-save{padding:8px 18px;background:var(--green);border:none;border-radius:6px;color:#fff;font-family:var(--mono);font-size:.62rem;cursor:pointer;transition:background .2s}
 .avd-save:hover{background:var(--dark-green)}
 
+/* ── MULTI SELECT ── */
+.card.selected::before{
+  content:'';position:absolute;inset:0;
+  background:rgba(0,155,81,.25);
+  border:3px solid var(--green);
+  z-index:12;pointer-events:none;
+}
+.card .select-check{
+  position:absolute;top:10px;left:10px;
+  width:24px;height:24px;border-radius:50%;
+  background:rgba(2,30,26,.8);
+  border:2px solid rgba(255,255,255,.5);
+  display:none;align-items:center;justify-content:center;
+  z-index:13;cursor:pointer;
+  transition:all .2s;
+}
+.multiselect-active .card .select-check{display:flex}
+.card.selected .select-check{
+  background:var(--green);border-color:var(--green);
+}
+.card.selected .select-check::after{
+  content:'✓';color:#fff;font-size:.7rem;font-weight:700;
+}
+.multiselect-toolbar{
+  position:fixed;bottom:28px;left:50%;transform:translateX(-50%);
+  background:#0a2420;border:1px solid rgba(0,155,81,.4);
+  border-radius:40px;padding:10px 20px;
+  display:none;align-items:center;gap:14px;
+  z-index:5000;box-shadow:0 8px 32px rgba(0,0,0,.6);
+  backdrop-filter:blur(12px);
+  animation:slideUp .2s ease;
+}
+@keyframes slideUp{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+.multiselect-toolbar.show{display:flex}
+.ms-count{
+  font-family:var(--mono);font-size:.68rem;
+  color:var(--bold-gold);letter-spacing:.08em;white-space:nowrap;
+}
+.ms-btn{
+  padding:7px 16px;border-radius:20px;border:none;
+  font-family:var(--mono);font-size:.62rem;letter-spacing:.08em;
+  cursor:pointer;transition:all .2s;white-space:nowrap;
+}
+.ms-delete{background:rgba(180,40,40,.85);color:#fff}
+.ms-delete:hover{background:#c0392b}
+.ms-cancel{background:rgba(255,255,255,.1);color:var(--text-muted)}
+.ms-cancel:hover{background:rgba(255,255,255,.15);color:var(--text)}
+.ms-select-all{background:rgba(0,155,81,.2);color:var(--green);border:1px solid rgba(0,155,81,.3)}
+.ms-select-all:hover{background:rgba(0,155,81,.3)}
+
 /* ── EDITOR CARD CONTROLS ── */
 .card-editor-bar{
   position:absolute;bottom:0;left:0;right:0;
@@ -946,6 +1007,7 @@ footer{
       <div id="editor-badge" style="display:none;align-items:center;gap:6px;background:rgba(0,155,81,.2);border:1px solid var(--green);border-radius:20px;padding:4px 12px;cursor:pointer" onclick="sessionStorage.removeItem('vgp_editor');isEditor=false;updateEditorUI();showToast('Editor mode off')">
         <span style="font-family:var(--mono);font-size:.6rem;color:var(--green);letter-spacing:.1em">✏️ EDITOR</span>
       </div>
+      <button id="ms-toggle-btn" class="editor-only" onclick="toggleMultiSelect()" style="display:none;padding:5px 14px;background:rgba(255,255,255,.08);border:1px solid var(--border);border-radius:20px;color:var(--text-muted);font-family:var(--mono);font-size:.58rem;cursor:pointer;letter-spacing:.1em;transition:all .2s">☑ Select</button>
       <button onclick="showEditorLoginDialog()" id="editor-login-btn" style="background:none;border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:5px 14px;color:rgba(255,255,255,.5);font-family:var(--mono);font-size:.58rem;cursor:pointer;letter-spacing:.1em;transition:all .2s" onmouseover="this.style.borderColor='var(--green)';this.style.color='var(--green)'" onmouseout="this.style.borderColor='rgba(255,255,255,.15)';this.style.color='rgba(255,255,255,.5)'">🔐 Editor</button>
     </div>
   </div>
@@ -1062,6 +1124,14 @@ footer{
 
 <!-- ══ PERMANENT FILE INPUT (never removed from DOM) ══ -->
 <input type="file" id="img-file-input-global" accept="image/*" multiple style="display:none"/>
+
+<!-- ══ MULTI SELECT TOOLBAR ══ -->
+<div class="multiselect-toolbar" id="multiselect-toolbar">
+  <span class="ms-count" id="ms-count">0 ảnh được chọn</span>
+  <button class="ms-btn ms-select-all" id="ms-select-all">Chọn tất cả</button>
+  <button class="ms-btn ms-delete" id="ms-delete-selected">🗑 Xóa</button>
+  <button class="ms-btn ms-cancel" id="ms-cancel">✕ Huỷ</button>
+</div>
 
 <!-- ══ IMAGE DIALOG ══ -->
 <div class="img-dialog" id="img-dialog">
@@ -1613,6 +1683,7 @@ function renderSpecialFilter(root, type){
     card.dataset.catId = cat.id;
     card.dataset.imgTitle = img.title;
     card.innerHTML = `
+      <div class="select-check" onclick="event.stopPropagation();toggleCardSelect(this.closest('.card'))"></div>
       <img src="${img.src}" alt="${img.title}" loading="lazy"
         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
       />
@@ -1760,6 +1831,7 @@ function renderImgGrid(grid, images, cat){
     card.dataset.catId = cat.id;
     card.dataset.imgTitle = img.title;
     card.innerHTML = `
+      <div class="select-check" onclick="event.stopPropagation();toggleCardSelect(this.closest('.card'))"></div>
       <img src="${img.src}" alt="${img.title}" loading="lazy"
         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
       />
@@ -3343,6 +3415,137 @@ function applyProjectFilter(){
   });
   document.querySelectorAll('.priority-divider').forEach(d => d.style.display = 'none');
 }
+
+/* ══ MULTI SELECT ══ */
+let multiSelectActive = false;
+let selectedCards = new Set();
+
+function toggleMultiSelect(){
+  multiSelectActive = !multiSelectActive;
+  const galleryRoot = document.getElementById('gallery-root');
+  const btn = document.getElementById('ms-toggle-btn');
+  const toolbar = document.getElementById('multiselect-toolbar');
+
+  if(multiSelectActive){
+    galleryRoot.classList.add('multiselect-active');
+    btn.textContent = '✕ Cancel Select';
+    btn.style.borderColor = 'var(--bold-gold)';
+    btn.style.color = 'var(--bold-gold)';
+    toolbar.classList.add('show');
+    selectedCards.clear();
+    updateMsCount();
+  } else {
+    exitMultiSelect();
+  }
+}
+
+function exitMultiSelect(){
+  multiSelectActive = false;
+  selectedCards.clear();
+  document.getElementById('gallery-root').classList.remove('multiselect-active');
+  document.querySelectorAll('.card.selected').forEach(c => c.classList.remove('selected'));
+  document.getElementById('multiselect-toolbar').classList.remove('show');
+  const btn = document.getElementById('ms-toggle-btn');
+  btn.textContent = '☑ Select';
+  btn.style.borderColor = '';
+  btn.style.color = '';
+}
+
+function toggleCardSelect(card){
+  if(!multiSelectActive) return;
+  const imgId = card.dataset.imgId;
+  if(selectedCards.has(imgId)){
+    selectedCards.delete(imgId);
+    card.classList.remove('selected');
+  } else {
+    selectedCards.add(imgId);
+    card.classList.add('selected');
+  }
+  updateMsCount();
+}
+
+function updateMsCount(){
+  const n = selectedCards.size;
+  document.getElementById('ms-count').textContent = `${n} ảnh được chọn`;
+}
+
+document.getElementById('ms-select-all').addEventListener('click', () => {
+  const allCards = document.querySelectorAll('.card[data-img-id]');
+  const allSelected = [...allCards].every(c => selectedCards.has(c.dataset.imgId));
+  if(allSelected){
+    // Deselect all
+    selectedCards.clear();
+    allCards.forEach(c => c.classList.remove('selected'));
+  } else {
+    // Select all visible
+    allCards.forEach(c => {
+      selectedCards.add(c.dataset.imgId);
+      c.classList.add('selected');
+    });
+  }
+  updateMsCount();
+});
+
+document.getElementById('ms-cancel').addEventListener('click', exitMultiSelect);
+
+document.getElementById('ms-delete-selected').addEventListener('click', async () => {
+  if(!isEditor){ showEditorLoginDialog(); return; }
+  if(selectedCards.size === 0){ showToast('Chưa chọn ảnh nào!', 'error'); return; }
+  if(!confirm(`Xóa ${selectedCards.size} ảnh đã chọn?`)) return;
+
+  const btn = document.getElementById('ms-delete-selected');
+  btn.textContent = `Đang xóa...`; btn.disabled = true;
+
+  const toDelete = [...selectedCards];
+  let deleted = 0;
+
+  // Group by catId for refresh
+  const affectedCats = new Set();
+
+  for(const imgId of toDelete){
+    const card = document.querySelector(`.card[data-img-id="${imgId}"]`);
+    const catId = card ? card.dataset.catId : null;
+    if(catId) affectedCats.add(catId);
+
+    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-/.test(imgId);
+    if(isUUID){
+      await supa(`images?id=eq.${imgId}`, { method: 'DELETE' });
+    } else {
+      // Local image
+      for(const cat of CATEGORIES){
+        const idx = cat.images.findIndex(i => i.id === imgId);
+        if(idx > -1){ cat.images.splice(idx, 1); break; }
+      }
+    }
+    saveDeletedId(imgId);
+
+    // Animate card out
+    if(card){
+      card.style.transition = 'opacity .25s, transform .25s';
+      card.style.opacity = '0';
+      card.style.transform = 'scale(.9)';
+      setTimeout(() => card.remove(), 250);
+    }
+    deleted++;
+  }
+
+  btn.textContent = '🗑 Xóa'; btn.disabled = false;
+  showToast(`🗑 Đã xóa ${deleted} ảnh`);
+  exitMultiSelect();
+
+  // Refresh affected grids
+  affectedCats.forEach(catId => refreshCatGrid(catId));
+});
+
+// Also allow clicking card image to toggle select in multiselect mode
+document.addEventListener('click', e => {
+  if(!multiSelectActive) return;
+  const card = e.target.closest('.card');
+  if(card && card.dataset.imgId){
+    e.stopPropagation();
+    toggleCardSelect(card);
+  }
+}, true);
 
 /* ══ INIT ══ */
 async function init(){
