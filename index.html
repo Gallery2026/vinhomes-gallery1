@@ -1723,15 +1723,21 @@ function renderSection(cat, root, i){
     const remoteFormatted = remoteImgs.map(r => ({
       id: r.id, src: r.src, title: r.title, sub: r.sub || cat.label, _remote: true
     }));
-    const allImgs = [...cat.images, ...remoteFormatted];
+    // Remote images take priority, then add local ones not already in remote
+    const remoteIds = new Set(remoteImgs.map(r => r.id));
+    const localOnly = cat.images.filter(img => !remoteIds.has(img.id));
+    const allImgs = [...cat.images, ...remoteFormatted.filter(r => !cat.images.find(i => i.src === r.src))];
     renderImgGrid(grid, allImgs, cat);
   });
 
-  // Show local images immediately while loading
+  // Show local images while Supabase loads
   renderImgGrid(grid, cat.images, cat);
 }
 
 function renderImgGrid(grid, images, cat){
+  // Prevent duplicate renders by checking if already rendering
+  if(grid.dataset.rendering === '1') return;
+  grid.dataset.rendering = '1';
   // Clear existing cards but keep add-img-card
   Array.from(grid.children).forEach(c => { if(!c.classList.contains('add-img-card')) c.remove(); });
 
@@ -2898,25 +2904,50 @@ document.getElementById('img-dialog-save').addEventListener('click', async () =>
 
   if(imgDialogMode === 'add'){
     // Insert new image to Supabase
-    await supa('images', {
+    const result = await supa('images', {
       method: 'POST',
       prefer: 'return=representation',
       body: JSON.stringify({ cat_id: imgDialogCatId, title, src, sub: imgDialogCatId, uploaded_by: savedName || 'Editor' })
     });
-    showToast('✅ Đã thêm ảnh mới!');
+    if(result){ showToast('✅ Đã thêm ảnh mới!'); }
+    else { showToast('❌ Thêm ảnh thất bại!', 'error'); btn.textContent='Lưu'; btn.disabled=false; return; }
   } else {
-    // Update existing image in Supabase
-    await supa(`images?id=eq.${imgDialogImgId}`, {
-      method: 'PATCH',
-      body: JSON.stringify({ src, title })
-    });
+    // Replace: if it's a remote image (UUID id), update Supabase
+    // If it's a local image (not UUID), just update the src in CATEGORIES
+    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-/.test(imgDialogImgId);
+    if(isUUID){
+      const result = await supa(`images?id=eq.${imgDialogImgId}`, {
+        method: 'PATCH',
+        headers: { 'Prefer': 'return=representation' },
+        body: JSON.stringify({ src, title })
+      });
+      if(!result && result !== null){ showToast('❌ Thay thế thất bại!', 'error'); btn.textContent='Lưu'; btn.disabled=false; return; }
+    } else {
+      // Local image — update in CATEGORIES array directly
+      for(const cat of CATEGORIES){
+        const img = cat.images.find(i => i.id === imgDialogImgId);
+        if(img){ img.src = src; img.title = title; break; }
+      }
+    }
     showToast('✅ Đã thay thế ảnh!');
   }
 
   btn.textContent='Lưu'; btn.disabled=false;
   closeImgDialog();
-  // Reload gallery to show changes
-  renderAll();
+  // Reload just this category grid
+  const catGrid = document.getElementById(`grid-${imgDialogCatId}`);
+  if(catGrid){
+    catGrid.dataset.rendering = '0';
+    const cat = CATEGORIES.find(c => c.id === imgDialogCatId);
+    if(cat) {
+      loadRemoteImages(imgDialogCatId).then(remoteImgs => {
+        const remoteFormatted = remoteImgs.map(r => ({ id: r.id, src: r.src, title: r.title, sub: r.sub || cat.label, _remote: true }));
+        const allImgs = [...cat.images, ...remoteFormatted.filter(r => !cat.images.find(i => i.src === r.src))];
+        catGrid.dataset.rendering = '0';
+        renderImgGrid(catGrid, allImgs, cat);
+      });
+    }
+  }
 });
 
 /* ══ SUPABASE SYNC ══ */
@@ -3052,9 +3083,29 @@ async function startUpload(catId) {
 async function deleteImage(catId, imgId){
   if(!isEditor) return;
   if(!confirm('Xóa ảnh này?')) return;
-  await supa(`images?id=eq.${imgId}`, { method: 'DELETE' });
+  const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-/.test(imgId);
+  if(isUUID){
+    await supa(`images?id=eq.${imgId}`, { method: 'DELETE' });
+  } else {
+    // Local image - remove from CATEGORIES
+    const cat = CATEGORIES.find(c => c.id === catId);
+    if(cat) cat.images = cat.images.filter(i => i.id !== imgId);
+  }
   showToast('🗑 Đã xóa ảnh');
-  renderAll();
+  // Refresh grid
+  const catGrid = document.getElementById(`grid-${catId}`);
+  if(catGrid){
+    catGrid.dataset.rendering = '0';
+    const cat = CATEGORIES.find(c => c.id === catId);
+    if(cat){
+      loadRemoteImages(catId).then(remoteImgs => {
+        const remoteFormatted = remoteImgs.map(r => ({ id: r.id, src: r.src, title: r.title, sub: r.sub || cat.label, _remote: true }));
+        const allImgs = [...cat.images, ...remoteFormatted.filter(r => !cat.images.find(i => i.src === r.src))];
+        catGrid.dataset.rendering = '0';
+        renderImgGrid(catGrid, allImgs, cat);
+      });
+    }
+  }
 }
 
 /* ══ PROJECT DROPDOWN ══ */
