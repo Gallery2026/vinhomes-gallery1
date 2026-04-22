@@ -172,15 +172,16 @@ main{padding:0 52px 80px}
 
 /* ── CARD ── */
 .card{
-  margin-bottom:0;
+  break-inside:avoid;
+  margin-bottom:10px;
   position:relative;
   overflow:hidden;
   cursor:pointer;
   background:var(--surface);
   border:none;
-  aspect-ratio:4/3;
-  transition:transform .2s ease, box-shadow .2s ease;
+  transition:transform .4s cubic-bezier(.25,.46,.45,.94), box-shadow .4s ease;
   animation:cardIn .5s ease both;
+  display:block;
 }
 @keyframes cardIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 
@@ -193,7 +194,7 @@ main{padding:0 52px 80px}
 .card img{width:100%;display:block;transition:transform .55s ease;aspect-ratio:auto;min-height:160px;background:var(--surface2)}
 .card img.error{min-height:180px;object-fit:none;filter:brightness(0.3)}
 .img-placeholder{
-  position:absolute;inset:0;
+  width:100%;min-height:160px;
   background:linear-gradient(135deg,var(--surface2),var(--surface));
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   gap:8px;padding:24px;
@@ -869,11 +870,12 @@ footer{
 
 /* ── ADD IMAGE BTN ── */
 .add-img-card{
+  break-inside:avoid;
+  margin-bottom:10px;
   background:transparent;
   border:1px dashed rgba(0,155,81,.35);
-  aspect-ratio:4/3;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:10px;padding:32px 16px;
+  gap:10px;padding:48px 16px;min-height:180px;
   cursor:pointer;transition:border-color .2s,background .2s;
 }
 .add-img-card:hover{border-color:var(--green);background:rgba(0,155,81,.06)}
@@ -1705,8 +1707,10 @@ function renderAll(){
 function renderSpecialFilter(root, type){
   // Collect matching images across all categories
   const matched = [];
+  const deletedIds = new Set(getDeletedIds());
   CATEGORIES.forEach(cat => {
     cat.images.forEach(img => {
+      if(deletedIds.has(img.id)) return; // skip deleted
       if(type==='liked' && likes[img.id]){
         matched.push({img, cat});
       }
@@ -1881,15 +1885,16 @@ function renderSection(cat, root, i){
     Object.keys(replacedMap).forEach(lid => replacedLocalIds.add(lid));
     // Apply localStorage overrides to local images
     // Apply localStorage replacements to preserve position
+    const deletedIds = new Set(getDeletedIds());
     const localImgs = cat.images
-      .filter(img => !replacedLocalIds.has(img.id))
+      .filter(img => !replacedLocalIds.has(img.id) && !deletedIds.has(img.id))
       .map(img => {
         const rep = replacedMap[img.id];
-        if(rep) return { ...img, src: rep.src, title: rep.title }; // replaced — keep position, new src
+        if(rep) return { ...img, src: rep.src, title: rep.title };
         return img;
       });
-    // Merge: local images (with replacements) + new remote images (not replacements)
-    const newRemote = remoteFormatted.filter(r => r.local_id == null); // only truly new uploads
+    // New remote images (not replacements, not deleted)
+    const newRemote = remoteFormatted.filter(r => r.local_id == null && !deletedIds.has(r.id));
     const allImgs = [...localImgs, ...newRemote];
     grid.dataset.rendering = '0';
     renderImgGrid(grid, allImgs, cat);
@@ -3285,6 +3290,12 @@ function handleDeleteClick(btn){
   deleteImage(card.dataset.catId, card.dataset.imgId);
 }
 
+function getDeletedIds(){ return JSON.parse(localStorage.getItem('vgp_deleted') || '[]'); }
+function saveDeletedId(imgId){
+  const deleted = getDeletedIds();
+  if(!deleted.includes(imgId)){ deleted.push(imgId); localStorage.setItem('vgp_deleted', JSON.stringify(deleted)); }
+}
+
 async function deleteImage(catId, imgId){
   if(!isEditor) return;
   if(!confirm('Xóa ảnh này?')) return;
@@ -3292,25 +3303,22 @@ async function deleteImage(catId, imgId){
   if(isUUID){
     await supa(`images?id=eq.${imgId}`, { method: 'DELETE' });
   } else {
-    // Local image - remove from CATEGORIES
+    // Local image - remove from CATEGORIES and save to deleted list
     const cat = CATEGORIES.find(c => c.id === catId);
     if(cat) cat.images = cat.images.filter(i => i.id !== imgId);
   }
-  showToast('🗑 Đã xóa ảnh');
-  // Refresh grid
-  const catGrid = document.getElementById(`grid-${catId}`);
-  if(catGrid){
-    catGrid.dataset.rendering = '0';
-    const cat = CATEGORIES.find(c => c.id === catId);
-    if(cat){
-      loadRemoteImages(catId).then(remoteImgs => {
-        const remoteFormatted = remoteImgs.map(r => ({ id: r.id, src: r.src, title: r.title, sub: r.sub || cat.label, _remote: true }));
-        const allImgs = [...cat.images, ...remoteFormatted.filter(r => !cat.images.find(i => i.src === r.src))];
-        catGrid.dataset.rendering = '0';
-        renderImgGrid(catGrid, allImgs, cat);
-      });
-    }
+  // Always save to deleted list so it's filtered on reload
+  saveDeletedId(imgId);
+
+  // Remove card from DOM immediately — no re-render needed
+  const card = document.querySelector(`.card[data-img-id="${imgId}"]`);
+  if(card){
+    card.style.transition = 'opacity .3s ease, transform .3s ease';
+    card.style.opacity = '0';
+    card.style.transform = 'scale(.95)';
+    setTimeout(() => card.remove(), 300);
   }
+  showToast('🗑 Đã xóa ảnh');
 }
 
 /* ══ PROJECT DROPDOWN ══ */
