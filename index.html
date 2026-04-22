@@ -1060,6 +1060,11 @@ footer{
   </div>
 </div>
 
+<!-- ══ GLOBAL FILE INPUTS (prevents duplicate dialog) ══ -->
+<input type="file" id="global-img-input" accept="image/*" style="display:none" multiple/>
+<input type="file" id="global-video-input" accept="video/*" style="display:none"/>
+<input type="file" id="global-thumb-input" accept="image/*" style="display:none"/>
+
 <!-- ══ IMAGE DIALOG ══ -->
 <div class="img-dialog" id="img-dialog">
   <div class="img-dialog-box">
@@ -1072,7 +1077,6 @@ footer{
       <div class="img-preview-wrap" id="img-preview-wrap"><img id="img-preview-img" src="" alt=""/></div>
       <div class="img-file-area" id="img-file-area">
         <p>🖼 Kéo thả ảnh vào đây<br/>hoặc click để chọn file<br/><span style="color:var(--green)">JPG, PNG, WebP</span></p>
-        <input type="file" id="img-file-input" accept="image/*" style="display:none"/>
       </div>
     </div>
     <div class="img-dpanel" id="idt-url">
@@ -1151,7 +1155,6 @@ footer{
     <div class="avd-panel" id="avd-file">
       <div class="avd-file-area" id="avd-file-area">
         <p>🎬 Drag & drop video file here<br/>or click to browse<br/><span style="color:var(--green)">MP4, MOV, WebM supported</span></p>
-        <input type="file" id="avd-file-input" accept="video/*"/>
       </div>
       <input class="avd-input" id="avd-file-title" placeholder="Video title..."/>
       <input class="avd-input" id="avd-file-duration" placeholder="Duration (e.g. 3:42) — optional"/>
@@ -2545,10 +2548,11 @@ document.querySelectorAll('.avd-tab').forEach(tab => {
   });
 });
 
-// File drop - use named handler to prevent duplicates
-function avdFileAreaClick(){ document.getElementById('avd-file-input').click(); }
+// Video file area - use global input
 const fileArea = document.getElementById('avd-file-area');
-fileArea.onclick = avdFileAreaClick;
+const globalVideoInput = document.getElementById('global-video-input');
+globalVideoInput.onchange = e => { if(e.target.files[0]) handleVideoFile(e.target.files[0]); e.target.value=''; };
+fileArea.onclick = () => globalVideoInput.click();
 fileArea.addEventListener('dragover', e => { e.preventDefault(); fileArea.style.borderColor='var(--green)'; });
 fileArea.addEventListener('dragleave', () => { fileArea.style.borderColor=''; });
 fileArea.addEventListener('drop', e => {
@@ -2556,7 +2560,6 @@ fileArea.addEventListener('drop', e => {
   const file = e.dataTransfer.files[0];
   if(file && file.type.startsWith('video/')) handleVideoFile(file);
 });
-document.getElementById('avd-file-input').onchange = e => { if(e.target.files[0]) handleVideoFile(e.target.files[0]); };
 
 function handleVideoFile(file){
   const url = URL.createObjectURL(file);
@@ -2597,8 +2600,8 @@ function handleVideoFile(file){
       const s = String(Math.floor(vid.duration%60)).padStart(2,'0');
       document.getElementById('avd-file-duration').value = `${m}:${s}`;
     }
-    // Keep click handler on area (no file input re-injection)
-    fileArea.onclick = avdFileAreaClick;
+    // Keep click handler
+    fileArea.onclick = () => globalVideoInput.click();
   });
 
   fileArea.innerHTML = `<p>⏳ Generating preview...<br/><span style="color:var(--text-muted);font-size:.6rem">${file.name}</span></p>`;
@@ -2659,12 +2662,10 @@ function openThumbPicker(vid){
     <input type="file" id="tp-file-input" accept="image/*" style="display:none"/>
   `;
   // Re-attach
-  setTimeout(() => {
-    const fi = document.getElementById('tp-file-input');
-    if(fi) fi.addEventListener('change', e => { if(e.target.files[0]) handleThumbFile(e.target.files[0]); });
-    const fa = document.getElementById('tp-file-area');
-    if(fa) fa.addEventListener('click', () => fi && fi.click());
-  }, 50);
+  const tpArea = document.getElementById('tp-file-area');
+  const globalThumbInput = document.getElementById('global-thumb-input');
+  globalThumbInput.onchange = e => { if(e.target.files[0]) handleThumbFile(e.target.files[0]); e.target.value=''; };
+  tpArea.onclick = () => globalThumbInput.click();
 
   document.getElementById('thumb-picker').classList.add('open');
 }
@@ -2688,12 +2689,8 @@ function handleThumbFile(file){
     const preview = document.getElementById('tp-current-img');
     preview.src = e.target.result;
     document.getElementById('tp-current-wrap').style.display = 'block';
-    document.getElementById('tp-file-area').innerHTML = `<p>✅ <strong style="color:var(--green)">${file.name}</strong></p><input type="file" id="tp-file-input" accept="image/*" style="display:none"/>`;
-    setTimeout(() => {
-      const fi = document.getElementById('tp-file-input');
-      const fa = document.getElementById('tp-file-area');
-      if(fi && fa){ fi.addEventListener('change', e2 => { if(e2.target.files[0]) handleThumbFile(e2.target.files[0]); }); fa.addEventListener('click', () => fi.click()); }
-    }, 50);
+    document.getElementById('tp-file-area').innerHTML = `<p>✅ <strong style="color:var(--green)">${file.name}</strong><br/><span style="font-size:.6rem">Click to change</span></p>`;
+    document.getElementById('tp-file-area').onclick = () => document.getElementById('global-thumb-input').click();
   };
   reader.readAsDataURL(file);
 }
@@ -2842,8 +2839,12 @@ document.querySelectorAll('.img-dtab').forEach(tab => {
 
 // File input
 const imgFileArea = document.getElementById('img-file-area');
-function imgFileAreaClick(){ document.getElementById('img-file-input').click(); }
-imgFileArea.onclick = imgFileAreaClick;
+const globalImgInput = document.getElementById('global-img-input');
+globalImgInput.onchange = e => {
+  if(e.target.files[0]) handleImgFile(e.target.files[0]);
+  e.target.value = '';
+};
+imgFileArea.onclick = () => globalImgInput.click();
 imgFileArea.addEventListener('dragover', e => { e.preventDefault(); imgFileArea.style.borderColor='var(--green)'; });
 imgFileArea.addEventListener('dragleave', () => imgFileArea.style.borderColor='');
 imgFileArea.addEventListener('drop', e => {
@@ -2851,7 +2852,6 @@ imgFileArea.addEventListener('drop', e => {
   const file = e.dataTransfer.files[0];
   if(file) handleImgFile(file);
 });
-document.getElementById('img-file-input').onchange = e => { if(e.target.files[0]) handleImgFile(e.target.files[0]); e.target.value=''; };
 
 function handleImgFile(file){
   const reader = new FileReader();
@@ -2892,11 +2892,8 @@ function openImgDialog(mode, catId, imgId=null, currentTitle=''){
   document.getElementById('img-url-input').value = '';
   document.getElementById('img-preview-wrap').style.display = 'none';
   document.getElementById('img-url-preview-wrap').style.display = 'none';
-  document.getElementById('img-file-area').innerHTML = `<p>🖼 Kéo thả ảnh vào đây<br/>hoặc click để chọn file<br/><span style="color:var(--green)">JPG, PNG, WebP</span></p><input type="file" id="img-file-input" accept="image/*" style="display:none"/>`;
-  // Re-attach file input listener
-  const newInput = document.getElementById('img-file-input');
-  newInput.addEventListener('change', e => { if(e.target.files[0]) handleImgFile(e.target.files[0]); e.target.value=''; });
-  imgFileArea.addEventListener('click', () => newInput.click());
+  imgFileArea.innerHTML = `<p>🖼 Kéo thả ảnh vào đây<br/>hoặc click để chọn file<br/><span style="color:var(--green)">JPG, PNG, WebP</span></p>`;
+  imgFileArea.onclick = () => globalImgInput.click();
   document.getElementById('img-dialog').classList.add('open');
 }
 
@@ -3038,20 +3035,22 @@ function initUploadPanel(catId) {
   const drop = document.getElementById(`udrop-${catId}`);
   const fileInput = document.getElementById(`ufile-${catId}`);
   if(!drop || !fileInput) return;
+  if(drop.dataset.init === '1') return; // prevent duplicate init
+  drop.dataset.init = '1';
 
   uploadQueues[catId] = [];
 
-  drop.addEventListener('click', () => fileInput.click());
+  drop.onclick = () => fileInput.click();
   drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('dragover'); });
   drop.addEventListener('dragleave', () => drop.classList.remove('dragover'));
   drop.addEventListener('drop', e => {
     e.preventDefault(); drop.classList.remove('dragover');
     handleUploadFiles(catId, Array.from(e.dataTransfer.files));
   });
-  fileInput.addEventListener('change', e => {
+  fileInput.onchange = e => {
     handleUploadFiles(catId, Array.from(e.target.files));
     e.target.value = '';
-  });
+  };
 }
 
 function handleUploadFiles(catId, files) {
