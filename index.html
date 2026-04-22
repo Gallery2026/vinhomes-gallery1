@@ -1600,6 +1600,9 @@ function renderSpecialFilter(root, type){
     const card = document.createElement('div');
     card.className = 'card';
     card.style.animationDelay = `${idx*55}ms`;
+    card.dataset.imgId = img.id;
+    card.dataset.catId = cat.id;
+    card.dataset.imgTitle = img.title;
     card.innerHTML = `
       <img src="${img.src}" alt="${img.title}" loading="lazy"
         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
@@ -1721,16 +1724,20 @@ function renderSection(cat, root, i){
   // Load remote images from Supabase and merge with local
   loadRemoteImages(cat.id).then(remoteImgs => {
     const remoteFormatted = remoteImgs.map(r => ({
-      id: r.id, src: r.src, title: r.title, sub: r.sub || cat.label, _remote: true
+      id: r.id, src: r.src, title: r.title, sub: r.sub || cat.label, _remote: true,
+      local_id: r.local_id
     }));
-    // Remote images take priority, then add local ones not already in remote
-    const remoteIds = new Set(remoteImgs.map(r => r.id));
-    const localOnly = cat.images.filter(img => !remoteIds.has(img.id));
-    const allImgs = [...cat.images, ...remoteFormatted.filter(r => !cat.images.find(i => i.src === r.src))];
+    // Build set of local_ids that have been replaced in Supabase
+    const replacedLocalIds = new Set(remoteImgs.filter(r => r.local_id).map(r => r.local_id));
+    // Filter out local images that have been replaced
+    const localImgs = cat.images.filter(img => !replacedLocalIds.has(img.id));
+    // Merge: replaced remote first, then remaining local
+    const allImgs = [...localImgs, ...remoteFormatted];
+    grid.dataset.rendering = '0';
     renderImgGrid(grid, allImgs, cat);
   });
 
-  // Show local images while Supabase loads
+  // Show local images immediately
   renderImgGrid(grid, cat.images, cat);
 }
 
@@ -1747,6 +1754,9 @@ function renderImgGrid(grid, images, cat){
     const card = document.createElement('div');
     card.className = 'card';
     card.style.animationDelay = `${idx*55}ms`;
+    card.dataset.imgId = img.id;
+    card.dataset.catId = cat.id;
+    card.dataset.imgTitle = img.title;
     card.innerHTML = `
       <img src="${img.src}" alt="${img.title}" loading="lazy"
         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
@@ -1767,8 +1777,8 @@ function renderImgGrid(grid, images, cat){
         <span>${count}</span>
       </div>
       <div class="card-editor-bar${isEditor?' visible':''}" id="ebar-${img.id}">
-        <button class="card-edit-btn card-replace-btn" onclick="event.stopPropagation();openImgDialog('replace','${cat.id}','${img.id}','${img.title.replace(/'/g,'')}')">🔄 Replace</button>
-        <button class="card-edit-btn card-delete-btn" onclick="event.stopPropagation();deleteImage('${cat.id}','${img.id}')">🗑 Delete</button>
+        <button class="card-edit-btn card-replace-btn" onclick="event.stopPropagation();handleReplaceClick(this)">🔄 Replace</button>
+        <button class="card-edit-btn card-delete-btn" onclick="event.stopPropagation();handleDeleteClick(this)">🗑 Delete</button>
       </div>
     `;
     card.querySelector('.heart-btn').addEventListener('click', e => {
@@ -2916,30 +2926,51 @@ document.getElementById('img-dialog-save').addEventListener('click', async () =>
     // If it's a local image (not UUID), just update the src in CATEGORIES
     const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-/.test(imgDialogImgId);
     if(isUUID){
-      const result = await supa(`images?id=eq.${imgDialogImgId}`, {
+      // Remote image — PATCH in Supabase
+      await supa(`images?id=eq.${imgDialogImgId}`, {
         method: 'PATCH',
-        headers: { 'Prefer': 'return=representation' },
         body: JSON.stringify({ src, title })
       });
-      if(!result && result !== null){ showToast('❌ Thay thế thất bại!', 'error'); btn.textContent='Lưu'; btn.disabled=false; return; }
     } else {
-      // Local image — update in CATEGORIES array directly
-      for(const cat of CATEGORIES){
-        const img = cat.images.find(i => i.id === imgDialogImgId);
-        if(img){ img.src = src; img.title = title; break; }
-      }
+      // Local image — INSERT new record to Supabase with replace flag
+      // First delete any existing Supabase record with same local_id
+      await supa(`images?local_id=eq.${imgDialogImgId}`, { method: 'DELETE' });
+      await supa('images', {
+        method: 'POST',
+        prefer: 'return=representation',
+        body: JSON.stringify({
+          cat_id: imgDialogCatId,
+          title,
+          src,
+          sub: imgDialogCatId,
+          uploaded_by: savedName || 'Editor',
+          local_id: imgDialogImgId
+        })
+      });
     }
     showToast('✅ Đã thay thế ảnh!');
   }
 
   btn.textContent='Lưu'; btn.disabled=false;
   closeImgDialog();
-  // Reload just this category grid
+
+  if(imgDialogMode === 'replace'){
+    // Instantly update the card image on page without full re-render
+    const card = document.querySelector(`.card[data-img-id="${imgDialogImgId}"]`);
+    if(card){
+      const imgEl = card.querySelector('img');
+      if(imgEl){ imgEl.src = src; imgEl.style.display = ''; }
+      const placeholder = card.querySelector('.img-placeholder');
+      if(placeholder) placeholder.style.display = 'none';
+      card.dataset.imgTitle = title;
+    }
+  }
+
+  // Also refresh grid from Supabase
   const catGrid = document.getElementById(`grid-${imgDialogCatId}`);
   if(catGrid){
-    catGrid.dataset.rendering = '0';
     const cat = CATEGORIES.find(c => c.id === imgDialogCatId);
-    if(cat) {
+    if(cat){
       loadRemoteImages(imgDialogCatId).then(remoteImgs => {
         const remoteFormatted = remoteImgs.map(r => ({ id: r.id, src: r.src, title: r.title, sub: r.sub || cat.label, _remote: true }));
         const allImgs = [...cat.images, ...remoteFormatted.filter(r => !cat.images.find(i => i.src === r.src))];
@@ -2975,7 +3006,7 @@ async function syncCommentToSupabase(imgId, comment) {
 }
 
 async function loadRemoteImages(catId) {
-  const rows = await supa(`images?cat_id=eq.${catId}&order=created_at.asc`);
+  const rows = await supa(`images?cat_id=eq.${catId}&order=created_at.asc&select=*`);
   return rows || [];
 }
 
@@ -3080,6 +3111,19 @@ async function startUpload(catId) {
 }
 
 /* ══ DELETE IMAGE ══ */
+function handleReplaceClick(btn){
+  const card = btn.closest('.card');
+  const imgId = card.dataset.imgId;
+  const catId = card.dataset.catId;
+  const title = card.dataset.imgTitle || '';
+  openImgDialog('replace', catId, imgId, title);
+}
+
+function handleDeleteClick(btn){
+  const card = btn.closest('.card');
+  deleteImage(card.dataset.catId, card.dataset.imgId);
+}
+
 async function deleteImage(catId, imgId){
   if(!isEditor) return;
   if(!confirm('Xóa ảnh này?')) return;
