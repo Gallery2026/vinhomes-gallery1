@@ -780,6 +780,86 @@ footer{
 .avd-save{padding:8px 18px;background:var(--green);border:none;border-radius:6px;color:#fff;font-family:var(--mono);font-size:.62rem;cursor:pointer;transition:background .2s}
 .avd-save:hover{background:var(--dark-green)}
 
+/* ── EDITOR CARD CONTROLS ── */
+.card-editor-bar{
+  position:absolute;bottom:0;left:0;right:0;
+  background:linear-gradient(to top,rgba(2,20,16,.95),transparent);
+  padding:28px 8px 8px;
+  display:none;
+  gap:6px;justify-content:flex-end;
+  z-index:15;
+}
+.card:hover .card-editor-bar.visible{display:flex}
+.card-edit-btn{
+  padding:4px 10px;border-radius:4px;border:none;cursor:pointer;
+  font-family:var(--mono);font-size:.58rem;letter-spacing:.06em;
+  transition:all .2s;
+}
+.card-replace-btn{background:rgba(226,176,85,.9);color:#000}
+.card-replace-btn:hover{background:var(--bold-gold)}
+.card-delete-btn{background:rgba(180,40,40,.85);color:#fff}
+.card-delete-btn:hover{background:#c0392b}
+
+/* ── ADD IMAGE BTN ── */
+.add-img-card{
+  background:transparent;
+  border:1px dashed rgba(0,155,81,.35);
+  border-radius:4px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:10px;padding:32px 16px;min-height:180px;
+  cursor:pointer;transition:border-color .2s,background .2s;
+}
+.add-img-card:hover{border-color:var(--green);background:rgba(0,155,81,.06)}
+.add-img-card svg{width:28px;height:28px;stroke:var(--text-muted);fill:none;stroke-width:1.5;opacity:.5}
+.add-img-card span{font-family:var(--mono);font-size:.6rem;color:var(--text-muted);letter-spacing:.08em;text-align:center;line-height:1.7}
+
+/* ── IMAGE DIALOG ── */
+.img-dialog{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.85);z-index:30000;
+  align-items:center;justify-content:center;
+}
+.img-dialog.open{display:flex;animation:fadeIn .2s ease}
+.img-dialog-box{
+  background:#0a2420;border:1px solid rgba(0,155,81,.3);
+  border-radius:10px;padding:28px;width:min(500px,92vw);
+}
+.img-dialog-title{font-family:var(--sans);font-size:1rem;font-weight:700;color:var(--bold-gold);margin-bottom:20px}
+.img-dialog-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:18px}
+.img-dtab{
+  padding:7px 18px;background:none;border:none;
+  font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--text-muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;
+}
+.img-dtab.active{color:var(--bold-gold);border-bottom-color:var(--bold-gold)}
+.img-dpanel{display:none;flex-direction:column;gap:12px}
+.img-dpanel.active{display:flex}
+.img-file-area{
+  border:1px dashed rgba(0,155,81,.35);border-radius:6px;
+  padding:28px;text-align:center;cursor:pointer;
+  transition:border-color .2s,background .2s;
+}
+.img-file-area:hover{border-color:var(--green);background:rgba(0,155,81,.05)}
+.img-file-area p{font-family:var(--mono);font-size:.62rem;color:var(--text-muted);line-height:1.8}
+.img-preview-wrap{
+  width:100%;aspect-ratio:16/9;border-radius:6px;overflow:hidden;
+  background:var(--surface2);display:none;margin-bottom:4px;
+}
+.img-preview-wrap img{width:100%;height:100%;object-fit:cover}
+.img-dialog-input{
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
+  border-radius:6px;padding:9px 13px;color:var(--text);
+  font-family:var(--sans);font-size:.82rem;outline:none;width:100%;
+  transition:border-color .2s;
+}
+.img-dialog-input:focus{border-color:var(--green)}
+.img-dialog-input::placeholder{color:var(--text-muted)}
+.img-dialog-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:8px}
+.img-dialog-cancel{padding:8px 16px;background:none;border:1px solid var(--border);border-radius:6px;color:var(--text-muted);font-family:var(--mono);font-size:.62rem;cursor:pointer;transition:all .2s}
+.img-dialog-cancel:hover{border-color:var(--text-muted);color:var(--text)}
+.img-dialog-save{padding:8px 18px;background:var(--green);border:none;border-radius:6px;color:#fff;font-family:var(--mono);font-size:.62rem;cursor:pointer;transition:background .2s;font-weight:600}
+.img-dialog-save:hover{background:var(--dark-green)}
+
 /* ── UPLOAD PANEL ── */
 .upload-drop-zone{
   border:2px dashed rgba(0,155,81,.35);border-radius:8px;
@@ -980,12 +1060,78 @@ footer{
   </div>
 </div>
 
+<!-- ══ IMAGE DIALOG ══ -->
+<div class="img-dialog" id="img-dialog">
+  <div class="img-dialog-box">
+    <div class="img-dialog-title" id="img-dialog-title">➕ Thêm ảnh</div>
+    <div class="img-dialog-tabs">
+      <button class="img-dtab active" data-idt="file">📁 Upload file</button>
+      <button class="img-dtab" data-idt="url">🔗 Paste URL</button>
+    </div>
+    <div class="img-dpanel active" id="idt-file">
+      <div class="img-preview-wrap" id="img-preview-wrap"><img id="img-preview-img" src="" alt=""/></div>
+      <div class="img-file-area" id="img-file-area">
+        <p>🖼 Kéo thả ảnh vào đây<br/>hoặc click để chọn file<br/><span style="color:var(--green)">JPG, PNG, WebP</span></p>
+        <input type="file" id="img-file-input" accept="image/*" style="display:none"/>
+      </div>
+    </div>
+    <div class="img-dpanel" id="idt-url">
+      <input class="img-dialog-input" id="img-url-input" type="url" placeholder="https://... (Cloudinary, Unsplash, Drive...)"/>
+      <div class="img-preview-wrap" id="img-url-preview-wrap"><img id="img-url-preview-img" src="" alt="" style="width:100%;height:100%;object-fit:cover"/></div>
+    </div>
+    <input class="img-dialog-input" id="img-title-input" placeholder="Tiêu đề ảnh..."/>
+    <div class="img-dialog-actions">
+      <button class="img-dialog-cancel" id="img-dialog-cancel">Huỷ</button>
+      <button class="img-dialog-save" id="img-dialog-save">Lưu</button>
+    </div>
+  </div>
+</div>
+
 <!-- ══ VIDEO MODAL ══ -->
 <div class="video-modal" id="video-modal">
   <div class="video-modal-inner">
     <button class="video-modal-close" id="video-modal-close">✕</button>
     <div id="video-modal-body"></div>
     <div class="video-modal-title" id="video-modal-title"></div>
+  </div>
+</div>
+
+<!-- ══ THUMBNAIL PICKER ══ -->
+<div class="img-dialog" id="thumb-picker">
+  <div class="img-dialog-box" style="max-width:520px">
+    <div class="img-dialog-title">🖼 Chọn Thumbnail Video</div>
+    <p style="font-family:var(--mono);font-size:.62rem;color:var(--text-muted);margin-bottom:16px;line-height:1.7">Thumbnail giúp người xem nhận biết nội dung video trước khi play. Bạn có thể dùng thumbnail tự động, upload ảnh mới hoặc paste URL.</p>
+
+    <!-- Current thumbnail preview -->
+    <div id="tp-current-wrap" style="display:none;margin-bottom:16px;position:relative;border-radius:6px;overflow:hidden;aspect-ratio:16/9;background:var(--surface2)">
+      <img id="tp-current-img" src="" alt="" style="width:100%;height:100%;object-fit:cover"/>
+      <div style="position:absolute;top:8px;left:8px;background:rgba(0,0,0,.6);padding:3px 8px;border-radius:4px;font-family:var(--mono);font-size:.55rem;color:#fff;letter-spacing:.08em">PREVIEW</div>
+    </div>
+
+    <div class="img-dialog-tabs" style="margin-bottom:14px">
+      <button class="img-dtab active" onclick="switchThumbTab('auto')" id="tpt-auto">✨ Tự động</button>
+      <button class="img-dtab" onclick="switchThumbTab('upload')" id="tpt-upload">📁 Upload</button>
+      <button class="img-dtab" onclick="switchThumbTab('url')" id="tpt-url">🔗 URL</button>
+    </div>
+
+    <div id="tp-tab-auto" style="font-family:var(--mono);font-size:.62rem;color:var(--text-muted);padding:8px 0;line-height:1.8">
+      ✅ Thumbnail tự động đã được tạo từ video.<br/>Bạn có thể giữ nguyên hoặc chọn tab khác để thay đổi.
+    </div>
+    <div id="tp-tab-upload" style="display:none">
+      <div class="img-file-area" id="tp-file-area" style="padding:20px">
+        <p>🖼 Upload ảnh thumbnail<br/>hoặc kéo thả vào đây<br/><span style="color:var(--green)">JPG, PNG, WebP</span></p>
+        <input type="file" id="tp-file-input" accept="image/*" style="display:none"/>
+      </div>
+    </div>
+    <div id="tp-tab-url" style="display:none;flex-direction:column;gap:10px">
+      <input class="img-dialog-input" id="tp-url-input" type="url" placeholder="https://... paste link ảnh thumbnail"/>
+      <img id="tp-url-preview" src="" alt="" style="display:none;width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:6px"/>
+    </div>
+
+    <div class="img-dialog-actions" style="margin-top:20px">
+      <button class="img-dialog-cancel" id="tp-skip">Bỏ qua →</button>
+      <button class="img-dialog-save" id="tp-save">✅ Xác nhận & Lưu video</button>
+    </div>
   </div>
 </div>
 
@@ -1097,6 +1243,13 @@ function updateEditorUI() {
   });
   const badge = document.getElementById('editor-badge');
   if(badge) badge.style.display = isEditor ? 'flex' : 'none';
+  // Show/hide editor bars on cards
+  document.querySelectorAll('.card-editor-bar').forEach(bar => {
+    if(isEditor) bar.classList.add('visible');
+    else bar.classList.remove('visible');
+  });
+  // Re-render to add/remove Add image cards
+  renderAll();
 }
 
 function showToast(msg, type='success') {
@@ -1475,6 +1628,18 @@ function renderSpecialFilter(root, type){
     card.querySelector('.card-overlay').addEventListener('click', ()=> openLB(img, cat));
     grid.appendChild(card);
   });
+
+  // Add image card (editor only)
+  if(isEditor){
+    const addCard = document.createElement('div');
+    addCard.className = 'add-img-card';
+    addCard.innerHTML = `
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+      <span>Thêm ảnh mới<br/>Upload file hoặc paste URL</span>
+    `;
+    addCard.addEventListener('click', () => openImgDialog('add', cat.id));
+    grid.appendChild(addCard);
+  }
 }
 
 function renderSection(cat, root, i){
@@ -1552,7 +1717,25 @@ function renderSection(cat, root, i){
   });
 
   const grid = sec.querySelector(`#grid-${cat.id}`);
-  cat.images.forEach((img, idx) => {
+
+  // Load remote images from Supabase and merge with local
+  loadRemoteImages(cat.id).then(remoteImgs => {
+    const remoteFormatted = remoteImgs.map(r => ({
+      id: r.id, src: r.src, title: r.title, sub: r.sub || cat.label, _remote: true
+    }));
+    const allImgs = [...cat.images, ...remoteFormatted];
+    renderImgGrid(grid, allImgs, cat);
+  });
+
+  // Show local images immediately while loading
+  renderImgGrid(grid, cat.images, cat);
+}
+
+function renderImgGrid(grid, images, cat){
+  // Clear existing cards but keep add-img-card
+  Array.from(grid.children).forEach(c => { if(!c.classList.contains('add-img-card')) c.remove(); });
+
+  images.forEach((img, idx) => {
     const liked = !!likes[img.id];
     const count = likes[img.id] || 0;
     const card = document.createElement('div');
@@ -1577,6 +1760,10 @@ function renderSection(cat, root, i){
         <svg viewBox="0 0 24 24"><path d="M12 21C12 21 3 14.5 3 8.5C3 5.42 5.42 3 8.5 3C10.24 3 11.78 3.82 12 5C12.22 3.82 13.76 3 15.5 3C18.58 3 21 5.42 21 8.5C21 14.5 12 21 12 21Z"/></svg>
         <span>${count}</span>
       </div>
+      <div class="card-editor-bar${isEditor?' visible':''}" id="ebar-${img.id}">
+        <button class="card-edit-btn card-replace-btn" onclick="event.stopPropagation();openImgDialog('replace','${cat.id}','${img.id}','${img.title.replace(/'/g,'')}')">🔄 Replace</button>
+        <button class="card-edit-btn card-delete-btn" onclick="event.stopPropagation();deleteImage('${cat.id}','${img.id}')">🗑 Delete</button>
+      </div>
     `;
     card.querySelector('.heart-btn').addEventListener('click', e => {
       e.stopPropagation();
@@ -1586,6 +1773,18 @@ function renderSection(cat, root, i){
     card.querySelector('.card-overlay').addEventListener('click', ()=> openLB(img, cat));
     grid.appendChild(card);
   });
+
+  // Add image card (editor only)
+  if(isEditor){
+    const addCard = document.createElement('div');
+    addCard.className = 'add-img-card';
+    addCard.innerHTML = `
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+      <span>Thêm ảnh mới<br/>Upload file hoặc paste URL</span>
+    `;
+    addCard.addEventListener('click', () => openImgDialog('add', cat.id));
+    grid.appendChild(addCard);
+  }
 }
 
 function toggleLike(id, card){
@@ -1609,6 +1808,8 @@ function toggleLike(id, card){
   if(n>0) hcWrap.classList.add('show'); else hcWrap.classList.remove('show');
   saveLikes();
   updateStats();
+  // Sync to Supabase
+  syncLikesToSupabase(id, n);
 }
 
 function updateStats(){
@@ -2043,8 +2244,11 @@ function submitComment(){
   if(!comments[currentImgId]) comments[currentImgId] = [];
   const pinData = activePinIdx != null ? comments[currentImgId][activePinIdx]?.pin : pendingPin;
   const newCmtIdx = comments[currentImgId].length;
-  comments[currentImgId].push({ name, text, ts: Date.now(), pin: pinData, replyTo: activePinIdx });
+  const newCmt = { name, text, ts: Date.now(), pin: pinData, replyTo: activePinIdx };
+  comments[currentImgId].push(newCmt);
   saveComments();
+  // Sync to Supabase
+  syncCommentToSupabase(currentImgId, newCmt);
 
   // Link pending stroke to this comment (for pin/draw annotations)
   if(pendingStrokeIdx != null){
@@ -2241,8 +2445,8 @@ function closeVideoModal(){
 document.getElementById('video-modal-close').addEventListener('click', closeVideoModal);
 document.getElementById('video-modal').addEventListener('click', e => { if(e.target===e.currentTarget) closeVideoModal(); });
 
-function renderVideoGrid(catId, container){
-  const vids = videos[catId] || [];
+function renderVideoGrid(catId, container, overrideList=null){
+  const vids = overrideList || videos[catId] || [];
   container.innerHTML = '';
   // Add card
   const addCard = document.createElement('div');
@@ -2393,16 +2597,138 @@ document.getElementById('avd-save').addEventListener('click', () => {
     newVid = { id: Date.now()+'', title, type:'file', src: pendingFileData.src, thumb: pendingFileData.thumb || '', duration };
   }
 
-  if(!videos[currentAddCatId]) videos[currentAddCatId] = [];
-  videos[currentAddCatId].push(newVid);
-  saveVideos();
-
-  // re-render grids
-  const grid = document.getElementById(`vgrid-${currentAddCatId}`);
-  if(grid) renderVideoGrid(currentAddCatId, grid);
-  renderVideoSection();
-  closeAddVideoDialog();
+  // Open thumbnail picker before saving
+  openThumbPicker(newVid);
 });
+
+/* ══ THUMBNAIL PICKER ══ */
+let pendingVideo = null;
+
+function openThumbPicker(vid){
+  pendingVideo = vid;
+  closeAddVideoDialog();
+
+  // Pre-fill auto thumb if available
+  const preview = document.getElementById('tp-current-img');
+  if(vid.thumb){
+    preview.src = vid.thumb;
+    document.getElementById('tp-current-wrap').style.display = 'block';
+  } else if(vid.type === 'yt'){
+    preview.src = `https://img.youtube.com/vi/${vid.src}/hqdefault.jpg`;
+    document.getElementById('tp-current-wrap').style.display = 'block';
+  } else {
+    document.getElementById('tp-current-wrap').style.display = 'none';
+  }
+
+  document.getElementById('tp-url-input').value = '';
+  document.getElementById('tp-url-preview').style.display = 'none';
+  document.getElementById('tp-file-area').innerHTML = `
+    <p>🖼 Upload ảnh thumbnail<br/>hoặc kéo thả vào đây<br/><span style="color:var(--green)">JPG, PNG, WebP</span></p>
+    <input type="file" id="tp-file-input" accept="image/*" style="display:none"/>
+  `;
+  // Re-attach
+  setTimeout(() => {
+    const fi = document.getElementById('tp-file-input');
+    if(fi) fi.addEventListener('change', e => { if(e.target.files[0]) handleThumbFile(e.target.files[0]); });
+    const fa = document.getElementById('tp-file-area');
+    if(fa) fa.addEventListener('click', () => fi && fi.click());
+  }, 50);
+
+  document.getElementById('thumb-picker').classList.add('open');
+}
+
+function switchThumbTab(tab){
+  ['auto','upload','url'].forEach(t => {
+    document.getElementById('tpt-'+t).classList.toggle('active', t===tab);
+    document.getElementById('tp-tab-'+t).style.display = t===tab ? (t==='url'?'flex':'block') : 'none';
+  });
+}
+
+function closeThumbPicker(){
+  document.getElementById('thumb-picker').classList.remove('open');
+  pendingVideo = null;
+}
+
+function handleThumbFile(file){
+  const reader = new FileReader();
+  reader.onload = e => {
+    if(pendingVideo) pendingVideo.thumb = e.target.result;
+    const preview = document.getElementById('tp-current-img');
+    preview.src = e.target.result;
+    document.getElementById('tp-current-wrap').style.display = 'block';
+    document.getElementById('tp-file-area').innerHTML = `<p>✅ <strong style="color:var(--green)">${file.name}</strong></p><input type="file" id="tp-file-input" accept="image/*" style="display:none"/>`;
+    setTimeout(() => {
+      const fi = document.getElementById('tp-file-input');
+      const fa = document.getElementById('tp-file-area');
+      if(fi && fa){ fi.addEventListener('change', e2 => { if(e2.target.files[0]) handleThumbFile(e2.target.files[0]); }); fa.addEventListener('click', () => fi.click()); }
+    }, 50);
+  };
+  reader.readAsDataURL(file);
+}
+
+document.getElementById('tp-url-input').addEventListener('input', e => {
+  const url = e.target.value.trim();
+  if(url){
+    const img = document.getElementById('tp-url-preview');
+    img.src = url;
+    img.style.display = 'block';
+    img.onload = () => { if(pendingVideo) pendingVideo.thumb = url; document.getElementById('tp-current-img').src = url; document.getElementById('tp-current-wrap').style.display='block'; };
+  }
+});
+
+document.getElementById('tp-skip').addEventListener('click', () => {
+  saveVideoAndClose();
+});
+
+document.getElementById('tp-save').addEventListener('click', () => {
+  saveVideoAndClose();
+});
+
+document.getElementById('thumb-picker').addEventListener('click', e => {
+  if(e.target === e.currentTarget) closeThumbPicker();
+});
+
+async function saveVideoAndClose(){
+  if(!pendingVideo) return;
+  // Save to Supabase
+  const row = {
+    cat_id: currentAddCatId,
+    title: pendingVideo.title,
+    type: pendingVideo.type,
+    src: pendingVideo.src,
+    thumb: pendingVideo.thumb || '',
+    duration: pendingVideo.duration || '',
+    uploaded_by: savedName || 'Editor'
+  };
+  const result = await supa('videos', {
+    method: 'POST',
+    prefer: 'return=representation',
+    body: JSON.stringify(row)
+  });
+  if(result) {
+    pendingVideo.id = result[0]?.id || pendingVideo.id;
+    showToast('✅ Video đã lưu lên Supabase!');
+  }
+  // Also save locally as backup
+  if(!videos[currentAddCatId]) videos[currentAddCatId] = [];
+  videos[currentAddCatId].push(pendingVideo);
+  saveVideos();
+  // Re-render
+  await loadAndRenderVideos(currentAddCatId);
+  renderVideoSection();
+  closeThumbPicker();
+}
+
+async function loadAndRenderVideos(catId){
+  const rows = await supa(`videos?cat_id=eq.${catId}&order=created_at.asc`) || [];
+  const grid = document.getElementById(`vgrid-${catId}`);
+  if(!grid) return;
+  // Merge remote + local
+  const localVids = videos[catId] || [];
+  const remoteIds = rows.map(r => r.id);
+  const merged = [...rows, ...localVids.filter(v => !remoteIds.includes(v.id))];
+  renderVideoGrid(catId, grid, merged);
+}
 
 /* ══ VIDEO SECTION (global) ══ */
 function renderVideoSection(){
@@ -2463,6 +2789,135 @@ function renderVideoSection(){
     grid.appendChild(card);
   });
 }
+
+/* ══ IMAGE DIALOG ══ */
+let imgDialogMode = 'add'; // 'add' | 'replace'
+let imgDialogCatId = null;
+let imgDialogImgId = null; // for replace mode
+let imgDialogFileData = null; // {file, dataUrl}
+let imgDialogTab = 'file';
+
+// Tab switching
+document.querySelectorAll('.img-dtab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.img-dtab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.img-dpanel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    imgDialogTab = tab.dataset.idt;
+    document.getElementById('idt-' + imgDialogTab).classList.add('active');
+  });
+});
+
+// File input
+const imgFileArea = document.getElementById('img-file-area');
+const imgFileInput = document.getElementById('img-file-input');
+imgFileArea.addEventListener('click', () => imgFileInput.click());
+imgFileArea.addEventListener('dragover', e => { e.preventDefault(); imgFileArea.style.borderColor='var(--green)'; });
+imgFileArea.addEventListener('dragleave', () => imgFileArea.style.borderColor='');
+imgFileArea.addEventListener('drop', e => {
+  e.preventDefault(); imgFileArea.style.borderColor='';
+  const file = e.dataTransfer.files[0];
+  if(file) handleImgFile(file);
+});
+imgFileInput.addEventListener('change', e => { if(e.target.files[0]) handleImgFile(e.target.files[0]); e.target.value=''; });
+
+function handleImgFile(file){
+  const reader = new FileReader();
+  reader.onload = e => {
+    imgDialogFileData = { file, dataUrl: e.target.result };
+    const wrap = document.getElementById('img-preview-wrap');
+    const img = document.getElementById('img-preview-img');
+    img.src = e.target.result;
+    wrap.style.display = 'block';
+    imgFileArea.innerHTML = `<p>✅ <strong style="color:var(--green)">${file.name}</strong></p><input type="file" id="img-file-input" accept="image/*" style="display:none"/>`;
+    if(!document.getElementById('img-title-input').value)
+      document.getElementById('img-title-input').value = file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g,' ');
+  };
+  reader.readAsDataURL(file);
+}
+
+// URL preview
+document.getElementById('img-url-input').addEventListener('input', e => {
+  const url = e.target.value.trim();
+  if(url) {
+    const wrap = document.getElementById('img-url-preview-wrap');
+    const img = document.getElementById('img-url-preview-img');
+    img.src = url;
+    img.onload = () => wrap.style.display = 'block';
+    img.onerror = () => wrap.style.display = 'none';
+  }
+});
+
+function openImgDialog(mode, catId, imgId=null, currentTitle=''){
+  imgDialogMode = mode;
+  imgDialogCatId = catId;
+  imgDialogImgId = imgId;
+  imgDialogFileData = null;
+  // Reset
+  document.getElementById('img-dialog-title').textContent = mode==='add' ? '➕ Thêm ảnh mới' : '🔄 Thay thế ảnh';
+  document.getElementById('img-dialog-save').textContent = mode==='add' ? 'Thêm vào gallery' : 'Thay thế';
+  document.getElementById('img-title-input').value = currentTitle;
+  document.getElementById('img-url-input').value = '';
+  document.getElementById('img-preview-wrap').style.display = 'none';
+  document.getElementById('img-url-preview-wrap').style.display = 'none';
+  document.getElementById('img-file-area').innerHTML = `<p>🖼 Kéo thả ảnh vào đây<br/>hoặc click để chọn file<br/><span style="color:var(--green)">JPG, PNG, WebP</span></p><input type="file" id="img-file-input" accept="image/*" style="display:none"/>`;
+  // Re-attach file input listener
+  const newInput = document.getElementById('img-file-input');
+  newInput.addEventListener('change', e => { if(e.target.files[0]) handleImgFile(e.target.files[0]); e.target.value=''; });
+  imgFileArea.addEventListener('click', () => newInput.click());
+  document.getElementById('img-dialog').classList.add('open');
+}
+
+function closeImgDialog(){
+  document.getElementById('img-dialog').classList.remove('open');
+}
+
+document.getElementById('img-dialog-cancel').addEventListener('click', closeImgDialog);
+document.getElementById('img-dialog').addEventListener('click', e => { if(e.target===e.currentTarget) closeImgDialog(); });
+
+document.getElementById('img-dialog-save').addEventListener('click', async () => {
+  if(!isEditor){ showEditorLoginDialog(); return; }
+  const title = document.getElementById('img-title-input').value.trim() || 'Untitled';
+  let src = '';
+
+  const btn = document.getElementById('img-dialog-save');
+  btn.textContent = 'Đang lưu...'; btn.disabled = true;
+
+  if(imgDialogTab === 'file' && imgDialogFileData){
+    // Upload to Supabase storage
+    const ext = imgDialogFileData.file.name.split('.').pop();
+    const path = `images/${imgDialogCatId}/${Date.now()}.${ext}`;
+    src = await supaUpload(imgDialogFileData.file, path);
+    if(!src){ showToast('Upload thất bại!', 'error'); btn.textContent='Lưu'; btn.disabled=false; return; }
+  } else if(imgDialogTab === 'url'){
+    src = document.getElementById('img-url-input').value.trim();
+    if(!src){ showToast('Vui lòng nhập URL!', 'error'); btn.textContent='Lưu'; btn.disabled=false; return; }
+  } else {
+    showToast('Chọn file hoặc nhập URL!', 'error'); btn.textContent='Lưu'; btn.disabled=false; return;
+  }
+
+  if(imgDialogMode === 'add'){
+    // Insert new image to Supabase
+    await supa('images', {
+      method: 'POST',
+      prefer: 'return=representation',
+      body: JSON.stringify({ cat_id: imgDialogCatId, title, src, sub: imgDialogCatId, uploaded_by: savedName || 'Editor' })
+    });
+    showToast('✅ Đã thêm ảnh mới!');
+  } else {
+    // Update existing image in Supabase
+    await supa(`images?id=eq.${imgDialogImgId}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ src, title })
+    });
+    showToast('✅ Đã thay thế ảnh!');
+  }
+
+  btn.textContent='Lưu'; btn.disabled=false;
+  closeImgDialog();
+  // Reload gallery to show changes
+  renderAll();
+});
 
 /* ══ SUPABASE SYNC ══ */
 async function syncLikesToSupabase(imageId, count) {
@@ -2593,6 +3048,15 @@ async function startUpload(catId) {
   showToast('✅ Upload thành công! Ảnh đã lưu vào Supabase');
 }
 
+/* ══ DELETE IMAGE ══ */
+async function deleteImage(catId, imgId){
+  if(!isEditor) return;
+  if(!confirm('Xóa ảnh này?')) return;
+  await supa(`images?id=eq.${imgId}`, { method: 'DELETE' });
+  showToast('🗑 Đã xóa ảnh');
+  renderAll();
+}
+
 /* ══ PROJECT DROPDOWN ══ */
 let selectedProjects = new Set(); // empty = all
 
@@ -2707,9 +3171,20 @@ function applyProjectFilter(){
 }
 
 /* ══ INIT ══ */
-buildDropdown();
-renderAll();
-updateEditorUI();
+async function init(){
+  // Load likes from Supabase
+  const remoteLikes = await supa('likes?select=image_id,count') || [];
+  remoteLikes.forEach(l => {
+    // Merge: take max of local and remote
+    likes[l.image_id] = Math.max(likes[l.image_id] || 0, l.count);
+  });
+  saveLikes();
+
+  buildDropdown();
+  renderAll();
+  updateEditorUI();
+}
+init();
 </script>
 </body>
 </html>
