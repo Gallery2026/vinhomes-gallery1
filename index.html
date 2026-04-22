@@ -3115,6 +3115,25 @@ const imgFileInputGlobal = document.getElementById('img-file-input-global');
 let imgMultiFiles = [];
 
 // Single permanent listener — never duplicated
+// Extra input for "Add more" - appends to existing selection
+const imgFileInputExtra = document.createElement('input');
+imgFileInputExtra.type = 'file';
+imgFileInputExtra.accept = 'image/*';
+imgFileInputExtra.multiple = true;
+imgFileInputExtra.style.display = 'none';
+document.body.appendChild(imgFileInputExtra);
+imgFileInputExtra.onchange = e => {
+  const newFiles = Array.from(e.target.files).filter(f => f.type.startsWith('image/'));
+  if(!newFiles.length){ e.target.value=''; return; }
+  const merged = [...imgMultiFiles, ...newFiles];
+  handleImgFiles(merged);
+  e.target.value = '';
+};
+
+function addMoreFiles(){
+  imgFileInputExtra.click();
+}
+
 imgFileInputGlobal.onchange = e => {
   const files = Array.from(e.target.files).filter(f => f.type.startsWith('image/'));
   if(files.length) handleImgFiles(files);
@@ -3148,8 +3167,14 @@ function handleImgFiles(files){
       document.getElementById('img-preview-wrap').style.display = 'block';
       document.getElementById('img-preview-img').src = ev.target.result;
       document.getElementById('img-multi-preview').style.display = 'none';
-      imgFileArea.innerHTML = `<p>✅ <strong style="color:var(--green)">${files[0].name}</strong><br/><span style="font-size:.9em;opacity:.7">Click để đổi ảnh</span></p>`;
-      imgFileArea.onclick = () => imgFileInputGlobal.click();
+      imgFileArea.innerHTML = `
+        <p>✅ <strong style="color:var(--green)">${files[0].name}</strong></p>
+        <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;justify-content:center">
+          <button onclick="event.stopPropagation();imgFileInputGlobal.click()" style="padding:5px 14px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:20px;color:var(--text);font-family:var(--mono);font-size:.58rem;cursor:pointer;transition:all .2s" onmouseover="this.style.background='rgba(255,255,255,.18)'" onmouseout="this.style.background='rgba(255,255,255,.1)'">🔄 Đổi ảnh</button>
+          <button onclick="event.stopPropagation();imgFileInputGlobal.click()" id="add-more-btn" style="padding:5px 14px;background:rgba(0,155,81,.15);border:1px solid rgba(0,155,81,.3);border-radius:20px;color:var(--green);font-family:var(--mono);font-size:.58rem;cursor:pointer;transition:all .2s" onmouseover="this.style.background='rgba(0,155,81,.25)'" onmouseout="this.style.background='rgba(0,155,81,.15)'">➕ Thêm ảnh</button>
+        </div>
+      `;
+      imgFileArea.onclick = null; // disable area click, use buttons instead
       if(!document.getElementById('img-title-input').value)
         document.getElementById('img-title-input').value = files[0].name.replace(/\.[^/.]+$/, '').replace(/[-_]/g,' ');
     };
@@ -3172,8 +3197,14 @@ function handleImgFiles(files){
       };
       reader.readAsDataURL(f);
     });
-    imgFileArea.innerHTML = `<p>✅ <strong style="color:var(--green)">${files.length} ảnh</strong> đã chọn — click để chọn lại</p>`;
-    imgFileArea.onclick = () => imgFileInputGlobal.click();
+    imgFileArea.innerHTML = `
+      <p>✅ <strong style="color:var(--green)">${imgMultiFiles.length} ảnh</strong> đã chọn</p>
+      <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;justify-content:center">
+        <button onclick="event.stopPropagation();imgFileInputGlobal.click()" style="padding:5px 14px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:20px;color:var(--text);font-family:var(--mono);font-size:.58rem;cursor:pointer" onmouseover="this.style.background='rgba(255,255,255,.18)'" onmouseout="this.style.background='rgba(255,255,255,.1)'">🔄 Chọn lại</button>
+        <button onclick="event.stopPropagation();addMoreFiles()" style="padding:5px 14px;background:rgba(0,155,81,.15);border:1px solid rgba(0,155,81,.3);border-radius:20px;color:var(--green);font-family:var(--mono);font-size:.58rem;cursor:pointer" onmouseover="this.style.background='rgba(0,155,81,.25)'" onmouseout="this.style.background='rgba(0,155,81,.15)'">➕ Thêm ảnh</button>
+      </div>
+    `;
+    imgFileArea.onclick = null;
     document.getElementById('img-title-input').placeholder = 'Tiêu đề chung (để trống = dùng tên file)...';
   }
 }
@@ -3214,6 +3245,7 @@ function openImgDialog(mode, catId, imgId=null, currentTitle=''){
     <p>Kéo thả ảnh vào đây hoặc click để chọn<br/><span style="color:var(--green);font-size:.95em">Chọn nhiều ảnh cùng lúc — JPG, PNG, WebP</span></p>
   `;
   imgFileArea.onclick = () => imgFileInputGlobal.click();
+  imgMultiFiles = [];
   document.getElementById('img-dialog').classList.add('open');
 }
 
