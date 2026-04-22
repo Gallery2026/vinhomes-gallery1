@@ -1190,10 +1190,16 @@ async function supa(path, options={}) {
 async function supaUpload(file, path) {
   const res = await fetch(`${SUPA_URL}/storage/v1/object/gallery-media/${path}`, {
     method: 'POST',
-    headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY },
+    headers: {
+      'apikey': SUPA_KEY,
+      'Authorization': 'Bearer ' + SUPA_KEY,
+      'Content-Type': file.type || 'application/octet-stream',
+      'x-upsert': 'true'
+    },
     body: file
   });
-  if(!res.ok) return null;
+  if(!res.ok){ const err = await res.text(); console.error('Upload error:', err); return null; }
+  // Return public URL
   return `${SUPA_URL}/storage/v1/object/public/gallery-media/${path}`;
 }
 
@@ -1729,9 +1735,17 @@ function renderSection(cat, root, i){
     }));
     // Build set of local_ids that have been replaced in Supabase
     const replacedLocalIds = new Set(remoteImgs.filter(r => r.local_id).map(r => r.local_id));
-    // Filter out local images that have been replaced
-    const localImgs = cat.images.filter(img => !replacedLocalIds.has(img.id));
-    // Merge: replaced remote first, then remaining local
+    // Also check localStorage backup
+    const replacedMap = JSON.parse(localStorage.getItem('vgp_replaced') || '{}');
+    Object.keys(replacedMap).forEach(lid => replacedLocalIds.add(lid));
+    // Apply localStorage overrides to local images
+    const localImgs = cat.images
+      .filter(img => !replacedLocalIds.has(img.id))
+      .map(img => {
+        const rep = replacedMap[img.id];
+        return rep ? { ...img, src: rep.src, title: rep.title } : img;
+      });
+    // Merge: local (with overrides) + remote
     const allImgs = [...localImgs, ...remoteFormatted];
     grid.dataset.rendering = '0';
     renderImgGrid(grid, allImgs, cat);
@@ -2531,10 +2545,10 @@ document.querySelectorAll('.avd-tab').forEach(tab => {
   });
 });
 
-// File drop
+// File drop - use named handler to prevent duplicates
+function avdFileAreaClick(){ document.getElementById('avd-file-input').click(); }
 const fileArea = document.getElementById('avd-file-area');
-const fileInput = document.getElementById('avd-file-input');
-fileArea.addEventListener('click', () => fileInput.click());
+fileArea.onclick = avdFileAreaClick;
 fileArea.addEventListener('dragover', e => { e.preventDefault(); fileArea.style.borderColor='var(--green)'; });
 fileArea.addEventListener('dragleave', () => { fileArea.style.borderColor=''; });
 fileArea.addEventListener('drop', e => {
@@ -2542,7 +2556,7 @@ fileArea.addEventListener('drop', e => {
   const file = e.dataTransfer.files[0];
   if(file && file.type.startsWith('video/')) handleVideoFile(file);
 });
-fileInput.addEventListener('change', e => { if(e.target.files[0]) handleVideoFile(e.target.files[0]); });
+document.getElementById('avd-file-input').onchange = e => { if(e.target.files[0]) handleVideoFile(e.target.files[0]); };
 
 function handleVideoFile(file){
   const url = URL.createObjectURL(file);
@@ -2583,11 +2597,13 @@ function handleVideoFile(file){
       const s = String(Math.floor(vid.duration%60)).padStart(2,'0');
       document.getElementById('avd-file-duration').value = `${m}:${s}`;
     }
+    // Keep click handler on area (no file input re-injection)
+    fileArea.onclick = avdFileAreaClick;
   });
 
-  fileArea.innerHTML = `<p>⏳ Generating preview...<br/><span style="color:var(--text-muted);font-size:.6rem">${file.name}</span></p><input type="file" id="avd-file-input" accept="video/*" style="display:none"/>`;
+  fileArea.innerHTML = `<p>⏳ Generating preview...<br/><span style="color:var(--text-muted);font-size:.6rem">${file.name}</span></p>`;
   if(!document.getElementById('avd-file-title').value)
-    document.getElementById('avd-file-title').value = file.name.replace(/\.[^/.]+$/, '');
+    document.getElementById('avd-file-title').value = file.name.replace(/[^a-zA-Z0-9\s]/g, ' ').trim();
 }
 
 document.getElementById('avd-cancel').addEventListener('click', closeAddVideoDialog);
@@ -2826,8 +2842,8 @@ document.querySelectorAll('.img-dtab').forEach(tab => {
 
 // File input
 const imgFileArea = document.getElementById('img-file-area');
-const imgFileInput = document.getElementById('img-file-input');
-imgFileArea.addEventListener('click', () => imgFileInput.click());
+function imgFileAreaClick(){ document.getElementById('img-file-input').click(); }
+imgFileArea.onclick = imgFileAreaClick;
 imgFileArea.addEventListener('dragover', e => { e.preventDefault(); imgFileArea.style.borderColor='var(--green)'; });
 imgFileArea.addEventListener('dragleave', () => imgFileArea.style.borderColor='');
 imgFileArea.addEventListener('drop', e => {
@@ -2835,7 +2851,7 @@ imgFileArea.addEventListener('drop', e => {
   const file = e.dataTransfer.files[0];
   if(file) handleImgFile(file);
 });
-imgFileInput.addEventListener('change', e => { if(e.target.files[0]) handleImgFile(e.target.files[0]); e.target.value=''; });
+document.getElementById('img-file-input').onchange = e => { if(e.target.files[0]) handleImgFile(e.target.files[0]); e.target.value=''; };
 
 function handleImgFile(file){
   const reader = new FileReader();
@@ -2914,10 +2930,11 @@ document.getElementById('img-dialog-save').addEventListener('click', async () =>
 
   if(imgDialogMode === 'add'){
     // Insert new image to Supabase
+    const catObj = CATEGORIES.find(c => c.id === imgDialogCatId);
     const result = await supa('images', {
       method: 'POST',
       prefer: 'return=representation',
-      body: JSON.stringify({ cat_id: imgDialogCatId, title, src, sub: imgDialogCatId, uploaded_by: savedName || 'Editor' })
+      body: JSON.stringify({ cat_id: imgDialogCatId, title, src, sub: catObj ? catObj.label : imgDialogCatId, uploaded_by: savedName || 'Editor' })
     });
     if(result){ showToast('✅ Đã thêm ảnh mới!'); }
     else { showToast('❌ Thêm ảnh thất bại!', 'error'); btn.textContent='Lưu'; btn.disabled=false; return; }
@@ -2935,7 +2952,7 @@ document.getElementById('img-dialog-save').addEventListener('click', async () =>
       // Local image — INSERT new record to Supabase with replace flag
       // First delete any existing Supabase record with same local_id
       await supa(`images?local_id=eq.${imgDialogImgId}`, { method: 'DELETE' });
-      await supa('images', {
+      const insertResult = await supa('images', {
         method: 'POST',
         prefer: 'return=representation',
         body: JSON.stringify({
@@ -2947,6 +2964,10 @@ document.getElementById('img-dialog-save').addEventListener('click', async () =>
           local_id: imgDialogImgId
         })
       });
+      // Store in localStorage as backup so replace persists even if Supabase slow
+      const replacedMap = JSON.parse(localStorage.getItem('vgp_replaced') || '{}');
+      replacedMap[imgDialogImgId] = { src, title, catId: imgDialogCatId };
+      localStorage.setItem('vgp_replaced', JSON.stringify(replacedMap));
     }
     showToast('✅ Đã thay thế ảnh!');
   }
@@ -3040,7 +3061,7 @@ function handleUploadFiles(catId, files) {
     reader.onload = e => {
       const item = document.createElement('div');
       item.className = 'upload-prev-item';
-      const defaultTitle = file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g,' ');
+      const defaultTitle = file.name.replace(/\.[^/.]+$/,'').replace(/[-_]/g,' ').replace(/\w/g, c=>c.toUpperCase());
       item.innerHTML = `
         <img src="${e.target.result}" alt=""/>
         <div class="up-status">
