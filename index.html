@@ -1767,7 +1767,6 @@ function renderSection(cat, root, i){
     // New remote images (not replacements, not deleted)
     const newRemote = remoteFormatted.filter(r => r.local_id == null && !deletedIds.has(r.id));
     const allImgs = [...localImgs, ...newRemote];
-    grid.dataset.rendering = '0';
     renderImgGrid(grid, allImgs, cat);
   });
 
@@ -1776,9 +1775,6 @@ function renderSection(cat, root, i){
 }
 
 function renderImgGrid(grid, images, cat){
-  // Prevent duplicate renders by checking if already rendering
-  if(grid.dataset.rendering === '1') return;
-  grid.dataset.rendering = '1';
   // Clear existing cards but keep add-img-card
   Array.from(grid.children).forEach(c => { if(!c.classList.contains('add-img-card')) c.remove(); });
 
@@ -3064,7 +3060,6 @@ document.getElementById('img-dialog-save').addEventListener('click', async () =>
       loadRemoteImages(imgDialogCatId).then(remoteImgs => {
         const remoteFormatted = remoteImgs.map(r => ({ id: r.id, src: r.src, title: r.title, sub: r.sub || cat.label, _remote: true }));
         const allImgs = [...cat.images, ...remoteFormatted.filter(r => !cat.images.find(i => i.src === r.src))];
-        catGrid.dataset.rendering = '0';
         renderImgGrid(catGrid, allImgs, cat);
       });
     }
