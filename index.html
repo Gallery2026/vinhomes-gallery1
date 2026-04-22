@@ -965,6 +965,74 @@ footer{
 .upload-submit-btn:hover{background:var(--dark-green)}
 .upload-submit-btn:disabled{opacity:.5;cursor:not-allowed}
 
+/* ── SEARCH BAR ── */
+.search-bar{
+  background:rgba(2,30,26,.92);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:10px 52px;
+  display:flex;align-items:center;gap:12px;
+  position:sticky;top:49px;z-index:98;
+}
+.search-wrap{
+  flex:1;max-width:480px;
+  position:relative;display:flex;align-items:center;
+}
+.search-wrap svg{
+  position:absolute;left:12px;
+  width:16px;height:16px;stroke:var(--text-muted);fill:none;stroke-width:2;
+  pointer-events:none;
+}
+.search-input{
+  width:100%;
+  background:rgba(255,255,255,.07);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:8px 12px 8px 36px;
+  color:var(--text);
+  font-family:var(--sans);font-size:.82rem;
+  outline:none;transition:border-color .2s,background .2s;
+}
+.search-input:focus{border-color:var(--green);background:rgba(255,255,255,.1)}
+.search-input::placeholder{color:var(--text-muted)}
+.search-clear{
+  position:absolute;right:10px;
+  background:none;border:none;color:var(--text-muted);
+  cursor:pointer;font-size:.9rem;
+  display:none;transition:color .2s;
+}
+.search-clear:hover{color:var(--text)}
+.search-results-count{
+  font-family:var(--mono);font-size:.62rem;color:var(--text-muted);
+  letter-spacing:.08em;white-space:nowrap;
+}
+
+/* ── DRAG & DROP ── */
+.card[draggable="true"]{cursor:grab}
+.card[draggable="true"]:active{cursor:grabbing}
+.card.drag-over{
+  outline:2px dashed var(--green);
+  outline-offset:2px;
+  background:rgba(0,155,81,.08);
+}
+.card.dragging{
+  opacity:.4;
+  transform:scale(.97);
+}
+.masonry.drag-active .card:not(.dragging){
+  transition:transform .15s ease;
+}
+.drag-drop-hint{
+  font-family:var(--mono);font-size:.58rem;
+  color:var(--text-muted);letter-spacing:.08em;
+  padding:4px 10px;
+  background:rgba(0,155,81,.08);
+  border:1px solid var(--border);
+  border-radius:20px;
+  display:none;
+}
+.editor-active .drag-drop-hint{display:inline}
+
 /* ── RESPONSIVE ── */
 @media(max-width:768px){
   .hero{padding:36px 24px 32px}
@@ -1035,6 +1103,17 @@ footer{
     <div class="dropdown-menu" id="dropdown-menu"></div>
   </div>
   <div class="active-tags" id="active-tags"></div>
+</div>
+
+<!-- ══ SEARCH BAR ══ -->
+<div class="search-bar" id="search-bar">
+  <div class="search-wrap">
+    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input class="search-input" id="search-input" type="text" placeholder="Tìm kiếm asset, hạng mục..."/>
+    <button class="search-clear" id="search-clear">✕</button>
+  </div>
+  <span class="search-results-count" id="search-count"></span>
+  <span class="drag-drop-hint">✋ Kéo thả ảnh để sắp xếp</span>
 </div>
 
 <!-- ══ MAIN ══ -->
@@ -1360,30 +1439,21 @@ function showToast(msg, type='success') {
    rank: thứ tự ưu tiên (1 = cao nhất)
    ══════════════════════════════════════════════ */
 const CATEGORIES = [
+  /* ══ PRIORITY ══ */
   {
     id: "toa-108",
-    group: "priority",
-    rank: 1,
+    group: "priority", rank: 1,
     label: "Toà nhà 108 Tầng",
     tag: "Biểu tượng kiến trúc",
-    desc: "Toà tháp chủ đạo 108 tầng — biểu tượng kỳ quan kiến trúc của dự án, trở thành điểm nhấn trên đường chân trời Cần Giờ, thiết kế lấy cảm hứng từ những tán lá rừng ngập mặn.",
-    driveNote: "Thêm ảnh từ thư mục của bạn",
-    images: [
-      { id:"t108-1", src:"https://images.unsplash.com/photo-1486325212027-8081e485255e?w=700&q=85", title:"Phối cảnh ban ngày", sub:"Toà 108 Tầng" },
-      { id:"t108-2", src:"https://images.unsplash.com/photo-1582407947304-fd86f028f716?w=700&q=85", title:"Skyline về đêm", sub:"Toà 108 Tầng" },
-      { id:"t108-3", src:"https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=700&q=85", title:"Kiến trúc chi tiết mặt đứng", sub:"Toà 108 Tầng" },
-      { id:"t108-4", src:"https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=500&q=85", title:"Nhìn từ biển", sub:"Toà 108 Tầng" },
-      { id:"t108-5", src:"https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=700&q=85", title:"Toàn cảnh dự án", sub:"Toà 108 Tầng" },
-    ]
+    desc: "Toà tháp chủ đạo 108 tầng — biểu tượng kỳ quan kiến trúc của dự án, trở thành điểm nhấn trên đường chân trời Cần Giờ.",
+    images: []
   },
   {
     id: "blue-waves",
-    group: "priority",
-    rank: 2,
+    group: "priority", rank: 2,
     label: "Blue Waves Theatre",
-    tag: "Giải trí biểu diễn",
-    desc: "Nhà hát Blue Waves — không gian biểu diễn nghệ thuật đỉnh cao bên bờ biển, kiến trúc lấy cảm hứng từ những con sóng vỗ bờ, sức chứa hàng nghìn khán giả.",
-    driveNote: "drive.google.com/drive/folders/18-clXBCe2g5qhMMblTsEjuuw5GsUy_OX",
+    tag: "Giải trí · Biểu diễn",
+    desc: "Nhà hát Blue Waves — không gian biểu diễn nghệ thuật đỉnh cao bên bờ biển, kiến trúc lấy cảm hứng từ những con sóng vỗ bờ.",
     images: [
       { id:"bw-1", src:"https://res.cloudinary.com/dfphe25o0/image/upload/v1776845778/C01-PSD_t9bnul.jpg", title:"Phối cảnh từ mặt biển — hoàng hôn", sub:"Blue Waves Theatre" },
       { id:"bw-2", src:"https://res.cloudinary.com/dfphe25o0/image/upload/v1776845778/C02-PSD_ntkhwv.jpg", title:"Nhìn từ trên cao — sunset panorama", sub:"Blue Waves Theatre" },
@@ -1398,171 +1468,106 @@ const CATEGORIES = [
   },
   {
     id: "paradise-lagoon",
-    group: "priority",
-    rank: 3,
+    group: "priority", rank: 3,
     label: "Paradise Lagoon",
     tag: "Bãi biển & Lagoon",
     desc: "Đầm phá thiên đường nhân tạo với nước biển trong xanh, bãi cát trắng mịn — trải nghiệm nghỉ dưỡng resort 5 sao ngay trong lòng dự án.",
-    driveNote: "drive.google.com/drive/folders/1_jzb3rFbR-ZFzC6sTekC3DyYcPqu-XF_",
-    images: [
-      { id:"pl-1", src:"https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=700&q=85", title:"Toàn cảnh Lagoon", sub:"Paradise Lagoon" },
-      { id:"pl-2", src:"https://images.unsplash.com/photo-1566073771259-6a8506099945?w=700&q=85", title:"Bãi biển riêng tư", sub:"Paradise Lagoon" },
-      { id:"pl-3", src:"https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=500&q=85", title:"Sunset tại Lagoon", sub:"Paradise Lagoon" },
-      { id:"pl-4", src:"https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=700&q=85", title:"Nước trong xanh", sub:"Paradise Lagoon" },
-      { id:"pl-5", src:"https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=700&q=85", title:"Nhìn từ trên cao", sub:"Paradise Lagoon" },
-    ]
+    images: []
+  },
+  {
+    id: "ga-depot",
+    group: "priority", rank: 4,
+    label: "Nhà ga Depot — Tàu tốc độ cao",
+    tag: "Hạ tầng · Giao thông",
+    desc: "Nhà ga Depot chuyển tàu tốc độ cao — hạ tầng giao thông đẳng cấp kết nối Cần Giờ với TP.HCM và các tỉnh thành, rút ngắn thời gian di chuyển.",
+    images: []
   },
   {
     id: "san-golf",
-    group: "priority",
-    rank: 4,
+    group: "priority", rank: 5,
     label: "Bộ đôi Sân golf Tiger Woods",
     tag: "Golf · Thể thao đẳng cấp",
-    desc: "Hai sân golf 18 lỗ tiêu chuẩn PGA được thiết kế bởi huyền thoại Tiger Woods — trải nghiệm golf đẳng cấp thế giới đầu tiên tại Việt Nam, view biển độc đáo.",
-    driveNote: "drive.google.com/drive/folders/1sCXGcFzUpHgfXgt-buc0CXxrmljbrFEW",
-    images: [
-      { id:"sg-1", src:"https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?w=700&q=85", title:"Sân golf fairway panorama", sub:"Tiger Woods Golf" },
-      { id:"sg-2", src:"https://images.unsplash.com/photo-1535131749006-b7f58c99034b?w=700&q=85", title:"Green view biển", sub:"Tiger Woods Golf" },
-      { id:"sg-3", src:"https://images.unsplash.com/photo-1591491653056-4e43b9bb95a5?w=500&q=85", title:"Clubhouse đẳng cấp", sub:"Tiger Woods Golf" },
-      { id:"sg-4", src:"https://images.unsplash.com/photo-1632148102880-5768f6e93e7a?w=700&q=85", title:"Sáng sớm trên sân", sub:"Tiger Woods Golf" },
-    ]
+    desc: "Hai sân golf 18 lỗ tiêu chuẩn PGA được thiết kế bởi huyền thoại Tiger Woods — trải nghiệm golf đẳng cấp thế giới đầu tiên tại Việt Nam.",
+    images: []
+  },
+  {
+    id: "vinmec",
+    group: "priority", rank: 6,
+    label: "Vinmec Cleveland Clinic",
+    tag: "Y tế · Đẳng cấp quốc tế",
+    desc: "Hệ thống bệnh viện Vinmec hợp tác Cleveland Clinic — thương hiệu y tế số 1 thế giới, phục vụ cư dân và khách nghỉ dưỡng tại dự án.",
+    images: []
   },
   {
     id: "vinwonders",
-    group: "priority",
-    rank: 5,
+    group: "priority", rank: 7,
     label: "VinWonders",
     tag: "Giải trí · Núi tuyết 68m",
-    desc: "Công viên giải trí VinWonders với hơn 100 trò chơi — điểm nhấn là ngọn núi tuyết nhân tạo cao 68m, lớn nhất Đông Nam Á. Trải nghiệm trượt tuyết giữa vùng nhiệt đới.",
-    driveNote: "drive.google.com/drive/folders/1jOmK5wNemrIt4n1fgFP1dyMP1kb7PpnT",
-    images: [
-      { id:"vw-1", src:"https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=700&q=85", title:"Núi tuyết nhân tạo 68m", sub:"VinWonders" },
-      { id:"vw-2", src:"https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=700&q=85", title:"Khu vực vui chơi trẻ em", sub:"VinWonders" },
-      { id:"vw-3", src:"https://images.unsplash.com/photo-1622135487614-c89a694f0d8e?w=500&q=85", title:"Trải nghiệm trượt tuyết", sub:"VinWonders" },
-      { id:"vw-4", src:"https://images.unsplash.com/photo-1603565816030-6b389eeb23cb?w=700&q=85", title:"Toàn cảnh công viên", sub:"VinWonders" },
-      { id:"vw-5", src:"https://images.unsplash.com/photo-1568667256549-094345857637?w=700&q=85", title:"Show ánh sáng đêm", sub:"VinWonders" },
-    ]
-  },
-  {
-    id: "biet-thu-vnh",
-    group: "priority",
-    rank: 6,
-    label: "Biệt thự Vịnh Ngọc",
-    tag: "Biệt thự · Waterfront",
-    desc: "Dòng biệt thự Vịnh Ngọc — cuộc sống xa hoa bên bờ vịnh với view nước trực diện, thiết kế kiến trúc Địa Trung Hải kết hợp hiện đại, hồ bơi riêng và cầu tàu riêng.",
-    driveNote: "drive.google.com/drive/folders/1dzHI5XuByKwVEW50X1OOTzzfuKpDWV1H",
-    images: [
-      { id:"vinh-ngoc-1", src:"https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=700&q=85", title:"Biệt thự view vịnh", sub:"Vịnh Ngọc" },
-      { id:"vinh-ngoc-2", src:"https://images.unsplash.com/photo-1615571022219-eb45cf7faa9d?w=700&q=85", title:"Hồ bơi riêng tư", sub:"Vịnh Ngọc" },
-      { id:"vinh-ngoc-3", src:"https://images.unsplash.com/photo-1613977257592-4871e5fcd7c4?w=500&q=85", title:"Nội thất sang trọng", sub:"Vịnh Ngọc" },
-      { id:"vinh-ngoc-4", src:"https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?w=700&q=85", title:"Khu vực cầu tàu", sub:"Vịnh Ngọc" },
-    ]
+    desc: "Công viên giải trí VinWonders với hơn 100 trò chơi — điểm nhấn là ngọn núi tuyết nhân tạo cao 68m, lớn nhất Đông Nam Á.",
+    images: []
   },
   {
     id: "biet-thu-vt",
-    group: "priority",
-    rank: 6,
+    group: "priority", rank: 8,
     label: "Biệt thự Vịnh Tiên",
     tag: "Biệt thự · Beachfront",
-    desc: "Biệt thự Vịnh Tiên — dòng sản phẩm resort villa đẳng cấp với view biển trực diện, không gian sống mở hoà quyện thiên nhiên. Cần xác nhận thêm tư liệu hình ảnh.",
-    driveNote: "drive.google.com/drive/folders/1QKl-mBBaRrO-5MNP8snyZ6La6FX1vT-i",
-    images: [
-      { id:"vinh-tien-1", src:"https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=700&q=85", title:"Biệt thự bãi biển", sub:"Vịnh Tiên" },
-      { id:"vinh-tien-2", src:"https://images.unsplash.com/photo-1602002418082-a4443978a678?w=700&q=85", title:"View biển từ terrace", sub:"Vịnh Tiên" },
-      { id:"vinh-tien-3", src:"https://images.unsplash.com/photo-1463074075349-0406c7a39c46?w=500&q=85", title:"Không gian sinh hoạt ngoài trời", sub:"Vịnh Tiên" },
-    ]
+    desc: "Biệt thự Vịnh Tiên — dòng sản phẩm resort villa đẳng cấp với view biển trực diện, không gian sống mở hoà quyện thiên nhiên.",
+    images: []
+  },
+  {
+    id: "biet-thu-vnh",
+    group: "priority", rank: 8,
+    label: "Biệt thự Vịnh Ngọc",
+    tag: "Biệt thự · Waterfront",
+    desc: "Dòng biệt thự Vịnh Ngọc — cuộc sống xa hoa bên bờ vịnh với view nước trực diện, thiết kế Địa Trung Hải kết hợp hiện đại.",
+    images: []
   },
   {
     id: "di-chuyen-xanh",
-    group: "priority",
-    rank: 6,
+    group: "priority", rank: 9,
     label: "Di chuyển Nội khu Xanh",
     tag: "Giao thông · 100% năng lượng xanh",
-    desc: "Toàn bộ phương tiện di chuyển nội khu sử dụng 100% năng lượng xanh — xe điện, thuyền điện, xe đạp điện. Cam kết zero-carbon trong khuôn viên dự án.",
-    driveNote: "Đang cập nhật hình ảnh",
-    infoBanner: {
-      title: "100% Năng lượng Xanh — Zero Carbon Nội khu",
-      body: "Vinhomes Green Paradise là dự án đầu tiên tại Việt Nam cam kết 100% phương tiện nội khu chạy bằng năng lượng điện: xe golf điện, xe buýt điện mini, thuyền điện di chuyển trên kênh rạch nội khu và hệ thống xe đạp công cộng. Trạm sạc phủ khắp khu vực. Mục tiêu đạt chứng chỉ Net Zero Carbon vào 2028."
-    },
-    images: [
-      { id:"dcx-1", src:"https://images.unsplash.com/photo-1593941707882-a5bba14938c7?w=700&q=85", title:"Xe điện nội khu", sub:"Di chuyển xanh" },
-      { id:"dcx-2", src:"https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&q=85", title:"Thuyền điện kênh nội khu", sub:"Di chuyển xanh" },
-      { id:"dcx-3", src:"https://images.unsplash.com/photo-1558980394-0a06c4631733?w=500&q=85", title:"Xe đạp điện công cộng", sub:"Di chuyển xanh" },
-    ]
+    desc: "Toàn bộ phương tiện nội khu sử dụng 100% năng lượng xanh — xe điện, thuyền điện, xe đạp điện. Cam kết zero-carbon trong khuôn viên dự án.",
+    infoBanner: { title: "100% Năng lượng Xanh — Zero Carbon Nội khu", body: "Vinhomes Green Paradise là dự án đầu tiên tại Việt Nam cam kết 100% phương tiện nội khu chạy bằng năng lượng điện: xe golf điện, xe buýt điện mini, thuyền điện và hệ thống xe đạp công cộng." },
+    images: []
   },
-  // OTHER
+
+  /* ══ OTHER ══ */
   {
     id: "ritz-carlton",
-    group: "other",
-    rank: null,
+    group: "other", rank: null,
     label: "Ritz-Carlton & Vincom Plaza",
     tag: "Khách sạn · Thương mại",
     desc: "Tổ hợp khách sạn 6 sao Ritz-Carlton kết hợp Vincom Plaza thương mại — trung tâm dịch vụ cao cấp, shopping và ẩm thực đẳng cấp quốc tế.",
-    driveNote: "drive.google.com/drive/folders/18ZPk2lbfCwxdKRjiawTE80YEcaQIKGjS",
-    images: [
-      { id:"rc-1", src:"https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=700&q=85", title:"Lobby Ritz-Carlton", sub:"Ritz-Carlton" },
-      { id:"rc-2", src:"https://images.unsplash.com/photo-1584132967334-10e028bd69f7?w=700&q=85", title:"Sky Bar tầng thượng", sub:"Ritz-Carlton" },
-      { id:"rc-3", src:"https://images.unsplash.com/photo-1561501878-aabd62634533?w=500&q=85", title:"Vincom Plaza tầng trệt", sub:"Vincom Plaza" },
-      { id:"rc-4", src:"https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=700&q=85", title:"Hồ bơi vô cực khách sạn", sub:"Ritz-Carlton" },
-    ]
+    images: []
   },
   {
     id: "cosmo-bay",
-    group: "other",
-    rank: null,
+    group: "other", rank: null,
     label: "Cosmo Bay",
     tag: "Giải trí · Lifestyle",
-    desc: "Cosmo Bay — khu phức hợp giải trí bên vịnh với bar, nhà hàng, shop, entertainment. Không gian sống động về đêm của dự án.",
-    driveNote: "Đang cập nhật hình ảnh",
-    images: [
-      { id:"cb-1", src:"https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=700&q=85", title:"Nhà hàng bờ vịnh", sub:"Cosmo Bay" },
-      { id:"cb-2", src:"https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=700&q=85", title:"Bar & Nightlife", sub:"Cosmo Bay" },
-      { id:"cb-3", src:"https://images.unsplash.com/photo-1596436889106-be35e843f974?w=500&q=85", title:"Khu mua sắm lifestyle", sub:"Cosmo Bay" },
-    ]
+    desc: "Cosmo Bay — khu phức hợp giải trí bên vịnh với bar, nhà hàng, shop và entertainment. Không gian sống động về đêm của dự án.",
+    images: []
   },
   {
     id: "sportia",
-    group: "other",
-    rank: null,
+    group: "other", rank: null,
     label: "Sportia Complex",
     tag: "Thể thao · Wellness",
     desc: "Tổ hợp thể thao Sportia — sân tennis, gym đẳng cấp, bể bơi Olympic, phòng yoga, spa và wellness center phục vụ toàn bộ cư dân.",
-    driveNote: "drive.google.com/drive/folders/1HSv7ixvTlDAHiHDzfQ2G2HZKGjBa4LPr",
-    images: [
-      { id:"sp-1", src:"https://images.unsplash.com/photo-1544919982-b61976f0ba43?w=700&q=85", title:"Sân tennis outdoor", sub:"Sportia Complex" },
-      { id:"sp-2", src:"https://images.unsplash.com/photo-1593079831268-3381b0db4a77?w=700&q=85", title:"Gym cao cấp", sub:"Sportia Complex" },
-      { id:"sp-3", src:"https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=500&q=85", title:"Bể bơi Olympic", sub:"Sportia Complex" },
-      { id:"sp-4", src:"https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=700&q=85", title:"Spa & Wellness", sub:"Sportia Complex" },
-    ]
+    images: []
   },
   {
     id: "ben-du-thuyen",
-    group: "other",
-    rank: null,
+    group: "other", rank: null,
     label: "Bến Du thuyền",
     tag: "Marina · Mood",
-    desc: "Bến du thuyền nội khu — hình ảnh mood & concept của không gian marina đẳng cấp, nơi neo đậu du thuyền và điểm xuất phát khám phá vùng biển Cần Giờ.",
-    driveNote: "drive.google.com/drive/folders/1ZbzNITzeCn0NHZugSbW07C-EgkEeSBv5",
-    images: [
-      { id:"dt-1", src:"https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?w=700&q=85", title:"Cảnh đêm bến du thuyền", sub:"Marina · Mood" },
-      { id:"dt-2", src:"https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?w=700&q=85", title:"Du thuyền neo đậu", sub:"Marina · Mood" },
-      { id:"dt-3", src:"https://images.unsplash.com/photo-1518578219994-b9de410cbabf?w=500&q=85", title:"Sunset marina", sub:"Marina · Mood" },
-      { id:"dt-4", src:"https://images.unsplash.com/photo-1534361960057-19f4434a4fec?w=700&q=85", title:"Góc nhìn từ trên cao", sub:"Marina · Mood" },
-    ]
-  },
-  {
-    id: "kien-truc-khu-a",
-    group: "priority",
-    rank: 6,
-    label: "Ảnh kiến trúc Khu A — Vịnh Tiên",
-    tag: "Kiến trúc · Khu A",
-    desc: "Bộ ảnh kiến trúc khu biệt thự Vịnh Tiên — Khu A dự án Vinhomes Green Paradise Cần Giờ.",
+    desc: "Bến du thuyền nội khu — không gian marina đẳng cấp, nơi neo đậu du thuyền và điểm xuất phát khám phá vùng biển Cần Giờ.",
     images: []
   },
   {
     id: "tong-the",
-    group: "priority",
-    rank: 1,
+    group: "other", rank: null,
     label: "Ảnh Tổng thể",
     tag: "Quy hoạch · Masterplan",
     desc: "Bộ ảnh tổng thể toàn khu dự án Vinhomes Green Paradise Cần Giờ — view từ trên cao và phối cảnh tổng thể.",
@@ -1570,8 +1575,7 @@ const CATEGORIES = [
   },
   {
     id: "tong-the-khu-a",
-    group: "priority",
-    rank: 2,
+    group: "other", rank: null,
     label: "Tổng thể Khu A",
     tag: "Quy hoạch · Khu A",
     desc: "Ảnh tổng thể và phối cảnh khu A dự án Vinhomes Green Paradise Cần Giờ.",
@@ -1579,26 +1583,31 @@ const CATEGORIES = [
   },
   {
     id: "tong-the-khu-b",
-    group: "priority",
-    rank: 2,
+    group: "other", rank: null,
     label: "Tổng thể Khu B",
     tag: "Quy hoạch · Khu B",
     desc: "Ảnh tổng thể và phối cảnh khu B dự án Vinhomes Green Paradise Cần Giờ.",
     images: []
   },
   {
+    id: "kien-truc-khu-a",
+    group: "other", rank: null,
+    label: "Kiến trúc Khu A — Vịnh Tiên",
+    tag: "Kiến trúc · Khu A",
+    desc: "Bộ ảnh kiến trúc khu biệt thự Vịnh Tiên — Khu A dự án Vinhomes Green Paradise Cần Giờ.",
+    images: []
+  },
+  {
     id: "kien-truc-khu-b",
-    group: "priority",
-    rank: 6,
-    label: "Ảnh kiến trúc Khu B — Vịnh Ngọc",
+    group: "other", rank: null,
+    label: "Kiến trúc Khu B — Vịnh Ngọc",
     tag: "Kiến trúc · Khu B",
     desc: "Bộ ảnh kiến trúc khu biệt thự Vịnh Ngọc — Khu B dự án Vinhomes Green Paradise Cần Giờ.",
     images: []
   },
   {
     id: "rung-sac",
-    group: "priority",
-    rank: 6,
+    group: "other", rank: null,
     label: "Rừng Sác Cần Giờ",
     tag: "Thiên nhiên · Rừng ngập mặn",
     desc: "Hình ảnh rừng Sác Cần Giờ — hệ sinh thái rừng ngập mặn đặc trưng bao quanh dự án, di sản thiên nhiên UNESCO.",
@@ -1606,8 +1615,7 @@ const CATEGORIES = [
   },
   {
     id: "nha-mau",
-    group: "other",
-    rank: null,
+    group: "other", rank: null,
     label: "Nhà Mẫu",
     tag: "Sản phẩm · Showroom",
     desc: "Nhà mẫu Vinhomes Green Paradise Cần Giờ — không gian trải nghiệm sản phẩm thực tế với nội thất đẳng cấp.",
@@ -1615,17 +1623,15 @@ const CATEGORIES = [
   },
   {
     id: "cau-than-tien",
-    group: "other",
-    rank: null,
+    group: "other", rank: null,
     label: "Cầu Thần Tiên Fairy Bridge",
     tag: "Hạ tầng · Biểu tượng",
-    desc: "Cầu Thần Tiên Fairy Bridge — cây cầu biểu tượng kết nối các khu trong dự án với thiết kế độc đáo.",
+    desc: "Cầu Thần Tiên Fairy Bridge — cây cầu biểu tượng kết nối các khu trong dự án với thiết kế độc đáo mang dấu ấn nghệ thuật.",
     images: []
   },
   {
     id: "cau-thinh-vuong",
-    group: "other",
-    rank: null,
+    group: "other", rank: null,
     label: "Cầu Thịnh Vượng Khu B",
     tag: "Hạ tầng · Khu B",
     desc: "Cầu Thịnh Vượng khu B — hạ tầng kết nối nội khu với thiết kế hiện đại và cảnh quan đẹp.",
@@ -1633,29 +1639,10 @@ const CATEGORIES = [
   },
   {
     id: "cong-vien-welcome",
-    group: "other",
-    rank: null,
+    group: "other", rank: null,
     label: "Công viên Welcome Park",
     tag: "Cảnh quan · Công viên",
     desc: "Welcome Park — công viên chào đón cửa ngõ dự án với không gian xanh rộng lớn và tiểu cảnh đặc sắc.",
-    images: []
-  },
-  {
-    id: "ga-depot",
-    group: "other",
-    rank: null,
-    label: "Ga Depot",
-    tag: "Hạ tầng · Giao thông",
-    desc: "Ga Depot — trạm trung chuyển giao thông nội khu hiện đại, kết nối toàn bộ hệ thống di chuyển xanh.",
-    images: []
-  },
-  {
-    id: "vinmec",
-    group: "other",
-    rank: null,
-    label: "Vinmec Cần Giờ",
-    tag: "Y tế · Chăm sóc sức khoẻ",
-    desc: "Bệnh viện Vinmec Cần Giờ — hệ thống y tế đẳng cấp quốc tế phục vụ cư dân và khách nghỉ dưỡng.",
     images: []
   }
 ];
@@ -3738,8 +3725,210 @@ document.addEventListener('click', e => {
   }
 }, true);
 
+/* ══ SEARCH ══ */
+let searchQuery = '';
+
+const searchInput = document.getElementById('search-input');
+const searchClear = document.getElementById('search-clear');
+const searchCount = document.getElementById('search-count');
+
+searchInput.addEventListener('input', e => {
+  searchQuery = e.target.value.trim().toLowerCase();
+  searchClear.style.display = searchQuery ? 'block' : 'none';
+  applySearch();
+});
+
+searchClear.addEventListener('click', () => {
+  searchInput.value = '';
+  searchQuery = '';
+  searchClear.style.display = 'none';
+  applySearch();
+  searchInput.focus();
+});
+
+// Keyboard shortcut: / to focus search
+document.addEventListener('keydown', e => {
+  if(e.key === '/' && !['INPUT','TEXTAREA'].includes(e.target.tagName)){
+    e.preventDefault();
+    searchInput.focus();
+    searchInput.select();
+  }
+});
+
+function applySearch(){
+  if(!searchQuery){
+    // Show all sections
+    document.querySelectorAll('.cat-section').forEach(s => s.style.display = '');
+    document.querySelectorAll('.priority-divider').forEach(d => d.style.display = '');
+    searchCount.textContent = '';
+    return;
+  }
+
+  let visibleCount = 0;
+  CATEGORIES.forEach(cat => {
+    const sec = document.getElementById(`sec-${cat.id}`);
+    if(!sec) return;
+    const matches =
+      cat.label.toLowerCase().includes(searchQuery) ||
+      cat.tag.toLowerCase().includes(searchQuery) ||
+      cat.desc.toLowerCase().includes(searchQuery) ||
+      cat.id.toLowerCase().includes(searchQuery);
+    sec.style.display = matches ? '' : 'none';
+    if(matches) visibleCount++;
+  });
+
+  // Hide dividers if all sections in that group are hidden
+  document.querySelectorAll('.priority-divider').forEach(d => d.style.display = 'none');
+
+  searchCount.textContent = visibleCount > 0
+    ? `${visibleCount} kết quả`
+    : '😔 Không tìm thấy';
+}
+
+/* ══ DRAG & DROP ══ */
+let dragSrcCard = null;
+let dragSrcCatId = null;
+let dragSrcImgId = null;
+
+function initDragDrop(){
+  if(!isEditor) return;
+  document.querySelectorAll('.card[data-img-id]').forEach(card => {
+    card.setAttribute('draggable', 'true');
+    card.addEventListener('dragstart', onDragStart);
+    card.addEventListener('dragend', onDragEnd);
+    card.addEventListener('dragover', onDragOver);
+    card.addEventListener('dragleave', onDragLeave);
+    card.addEventListener('drop', onDrop);
+  });
+}
+
+function onDragStart(e){
+  dragSrcCard = this;
+  dragSrcCatId = this.dataset.catId;
+  dragSrcImgId = this.dataset.imgId;
+  this.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/plain', this.dataset.imgId);
+  // Highlight all grids
+  document.querySelectorAll('.masonry').forEach(g => g.classList.add('drag-active'));
+}
+
+function onDragEnd(e){
+  this.classList.remove('dragging');
+  document.querySelectorAll('.card').forEach(c => c.classList.remove('drag-over'));
+  document.querySelectorAll('.masonry').forEach(g => g.classList.remove('drag-active'));
+  dragSrcCard = null;
+}
+
+function onDragOver(e){
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  if(this !== dragSrcCard){
+    document.querySelectorAll('.card').forEach(c => c.classList.remove('drag-over'));
+    this.classList.add('drag-over');
+  }
+}
+
+function onDragLeave(e){
+  this.classList.remove('drag-over');
+}
+
+function onDrop(e){
+  e.preventDefault();
+  e.stopPropagation();
+  this.classList.remove('drag-over');
+  if(!dragSrcCard || this === dragSrcCard) return;
+
+  const targetCard = this;
+  const targetCatId = targetCard.dataset.catId;
+  const targetImgId = targetCard.dataset.imgId;
+  const grid = targetCard.closest('.masonry');
+
+  // DOM swap: insert dragSrcCard before targetCard
+  const parent = grid;
+  const allCards = [...parent.querySelectorAll('.card[data-img-id]')];
+  const srcIdx = allCards.indexOf(dragSrcCard);
+  const tgtIdx = allCards.indexOf(targetCard);
+
+  if(srcIdx === -1 || tgtIdx === -1) return;
+
+  // Move in DOM
+  if(srcIdx < tgtIdx){
+    parent.insertBefore(dragSrcCard, targetCard.nextSibling);
+  } else {
+    parent.insertBefore(dragSrcCard, targetCard);
+  }
+
+  // Update drag src card's catId if moved to different section
+  if(dragSrcCatId !== targetCatId){
+    dragSrcCard.dataset.catId = targetCatId;
+    // Move image data between CATEGORIES
+    const srcCat = CATEGORIES.find(c => c.id === dragSrcCatId);
+    const tgtCat = CATEGORIES.find(c => c.id === targetCatId);
+    if(srcCat && tgtCat){
+      const imgIdx = srcCat.images.findIndex(i => i.id === dragSrcImgId);
+      if(imgIdx > -1){
+        const [img] = srcCat.images.splice(imgIdx, 1);
+        img.sub = tgtCat.label;
+        // Insert at position in target
+        const tgtAllImgs = tgtCat.images;
+        const tgtImgIdx = tgtAllImgs.findIndex(i => i.id === targetImgId);
+        tgtAllImgs.splice(tgtImgIdx === -1 ? tgtAllImgs.length : tgtImgIdx, 0, img);
+      }
+    }
+    dragSrcCatId = targetCatId;
+    // Also update in Supabase if remote image
+    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-/.test(dragSrcImgId);
+    if(isUUID){
+      supa(`images?id=eq.${dragSrcImgId}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ cat_id: targetCatId, sub: targetCatId })
+      });
+    }
+  } else {
+    // Same section — reorder in CATEGORIES.images
+    const cat = CATEGORIES.find(c => c.id === dragSrcCatId);
+    if(cat){
+      const srcImgIdx = cat.images.findIndex(i => i.id === dragSrcImgId);
+      const tgtImgIdx = cat.images.findIndex(i => i.id === targetImgId);
+      if(srcImgIdx > -1 && tgtImgIdx > -1){
+        const [img] = cat.images.splice(srcImgIdx, 1);
+        cat.images.splice(tgtImgIdx, 0, img);
+      }
+    }
+  }
+
+  // Save order to localStorage
+  saveImageOrder();
+  showToast('✅ Đã di chuyển ảnh');
+}
+
+function saveImageOrder(){
+  const order = {};
+  CATEGORIES.forEach(cat => {
+    order[cat.id] = cat.images.map(i => i.id);
+  });
+  localStorage.setItem('vgp_order', JSON.stringify(order));
+}
+
+function applyImageOrder(){
+  const order = JSON.parse(localStorage.getItem('vgp_order') || '{}');
+  CATEGORIES.forEach(cat => {
+    if(!order[cat.id]) return;
+    const idxMap = {};
+    order[cat.id].forEach((id, i) => idxMap[id] = i);
+    cat.images.sort((a, b) => {
+      const ai = idxMap[a.id] ?? 999;
+      const bi = idxMap[b.id] ?? 999;
+      return ai - bi;
+    });
+  });
+}
+
 /* ══ INIT ══ */
 async function init(){
+  // Apply saved image order
+  applyImageOrder();
   // Load likes from Supabase
   const remoteLikes = await supa('likes?select=image_id,count') || [];
   remoteLikes.forEach(l => {
