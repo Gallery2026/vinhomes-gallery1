@@ -1024,14 +1024,77 @@ footer{
 }
 .drag-drop-hint{
   font-family:var(--mono);font-size:.58rem;
-  color:var(--text-muted);letter-spacing:.08em;
+  color:var(--green);letter-spacing:.08em;
   padding:4px 10px;
   background:rgba(0,155,81,.08);
-  border:1px solid var(--border);
+  border:1px solid rgba(0,155,81,.3);
   border-radius:20px;
   display:none;
 }
-.editor-active .drag-drop-hint{display:inline}
+
+/* ── SECTION EDIT ── */
+.section-head-edit{
+  display:none;position:absolute;top:0;right:0;
+  gap:6px;
+}
+.editor-active .section-head-edit{display:flex}
+.sec-edit-btn{
+  padding:5px 12px;border-radius:6px;border:none;
+  font-family:var(--mono);font-size:.58rem;letter-spacing:.06em;
+  cursor:pointer;transition:all .2s;
+}
+.sec-edit-title-btn{background:rgba(226,176,85,.15);color:var(--bold-gold);border:1px solid rgba(226,176,85,.3)}
+.sec-edit-title-btn:hover{background:rgba(226,176,85,.3)}
+.sec-edit-note-btn{background:rgba(255,255,255,.08);color:var(--text-muted);border:1px solid var(--border)}
+.sec-edit-note-btn:hover{background:rgba(255,255,255,.15);color:var(--text)}
+
+/* Note/desc editable inline */
+.section-desc[contenteditable="true"]{
+  outline:1px dashed rgba(0,155,81,.4);
+  border-radius:4px;padding:4px 8px;
+  cursor:text;min-width:100px;
+}
+.section-title-wrap{position:relative;display:inline-flex;align-items:center;gap:8px}
+.section-title[contenteditable="true"]{
+  outline:1px dashed var(--bold-gold);
+  border-radius:4px;padding:2px 8px;cursor:text;
+}
+
+/* ── MOVE DIALOG ── */
+.move-dialog{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.8);z-index:30001;
+  align-items:center;justify-content:center;
+}
+.move-dialog.open{display:flex;animation:fadeIn .2s ease}
+.move-dialog-box{
+  background:#0a2420;border:1px solid rgba(0,155,81,.3);
+  border-radius:10px;padding:28px;width:min(440px,92vw);
+}
+.move-dialog-title{font-family:var(--sans);font-size:1rem;font-weight:700;color:var(--bold-gold);margin-bottom:6px}
+.move-dialog-sub{font-family:var(--mono);font-size:.62rem;color:var(--text-muted);margin-bottom:20px;letter-spacing:.06em}
+.move-section-list{display:flex;flex-direction:column;gap:6px;max-height:320px;overflow-y:auto;margin-bottom:16px;padding-right:4px}
+.move-section-list::-webkit-scrollbar{width:4px}
+.move-section-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.move-section-item{
+  padding:10px 14px;border-radius:6px;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);
+  cursor:pointer;transition:all .2s;
+  display:flex;align-items:center;gap:10px;
+}
+.move-section-item:hover{background:rgba(0,155,81,.1);border-color:var(--green)}
+.move-section-item.current{opacity:.4;cursor:not-allowed}
+.move-section-item .msi-rank{
+  width:22px;height:22px;border-radius:50%;flex-shrink:0;
+  background:var(--bold-gold);color:var(--bg);
+  font-family:var(--mono);font-size:.55rem;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+}
+.move-section-item .msi-info{}
+.move-section-item .msi-label{font-size:.82rem;color:var(--text)}
+.move-section-item .msi-tag{font-family:var(--mono);font-size:.58rem;color:var(--text-muted)}
+.move-dialog-cancel{padding:8px 18px;background:none;border:1px solid var(--border);border-radius:6px;color:var(--text-muted);font-family:var(--mono);font-size:.62rem;cursor:pointer}
+.move-dialog-cancel:hover{border-color:var(--text-muted);color:var(--text)}
 
 /* ── RESPONSIVE ── */
 @media(max-width:768px){
@@ -1094,6 +1157,7 @@ footer{
 </nav>
 <div class="project-bar" id="project-bar">
   <span class="project-bar-label">Assets:</span>
+  <span class="drag-drop-hint" id="drag-drop-hint">✋ Kéo thả ảnh để di chuyển</span>
   <div class="dropdown-wrap" id="dropdown-wrap">
     <div class="dropdown-trigger" id="dropdown-trigger">
       <span class="dt-label">Select assets...</span>
@@ -1113,7 +1177,6 @@ footer{
     <button class="search-clear" id="search-clear">✕</button>
   </div>
   <span class="search-results-count" id="search-count"></span>
-  <span class="drag-drop-hint">✋ Kéo thả ảnh để sắp xếp</span>
 </div>
 
 <!-- ══ MAIN ══ -->
@@ -1213,6 +1276,18 @@ footer{
   <button class="ms-btn ms-select-all" id="ms-select-all">Chọn tất cả</button>
   <button class="ms-btn ms-delete" id="ms-delete-selected">🗑 Xóa</button>
   <button class="ms-btn ms-cancel" id="ms-cancel">✕ Huỷ</button>
+</div>
+
+<!-- ══ MOVE IMAGE DIALOG ══ -->
+<div class="move-dialog" id="move-dialog">
+  <div class="move-dialog-box">
+    <div class="move-dialog-title">📦 Di chuyển ảnh</div>
+    <div class="move-dialog-sub" id="move-dialog-sub">Chọn section để chuyển ảnh đến</div>
+    <div class="move-section-list" id="move-section-list"></div>
+    <div style="display:flex;justify-content:flex-end">
+      <button class="move-dialog-cancel" id="move-dialog-cancel">Huỷ</button>
+    </div>
+  </div>
 </div>
 
 <!-- ══ RENAME DIALOG ══ -->
@@ -1856,12 +1931,16 @@ function renderSection(cat, root, i){
       <div class="section-badge">${badgeText(cat)}</div>
       <div class="section-info">
         <div class="section-tag">${cat.tag}</div>
-        <h2 class="section-title"><em>${cat.label}</em></h2>
-        <p class="section-desc">${cat.desc}</p>
+        <h2 class="section-title" id="title-${cat.id}" contenteditable="false" onblur="saveSectionTitle('${cat.id}',this)">${cat.label}</h2>
+        <p class="section-desc" id="desc-${cat.id}" contenteditable="false" onblur="saveSectionDesc('${cat.id}',this)">${cat.desc || ''}</p>
       </div>
-      <div class="section-right">
+      <div class="section-right" style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
         <div class="priority-label">${priorityLabel(cat)}</div>
         <div class="img-count" id="cnt-${cat.id}">${cat.images.length} ảnh</div>
+        <div class="section-head-edit">
+          <button class="sec-edit-btn sec-edit-title-btn" onclick="editSectionTitle('${cat.id}')">✏️ Đổi tên</button>
+          <button class="sec-edit-btn sec-edit-note-btn" onclick="editSectionDesc('${cat.id}')">📝 Ghi chú</button>
+        </div>
       </div>
     </div>
     ${infoHTML}
@@ -1961,9 +2040,10 @@ function renderImgGrid(grid, images, cat){
         <span>${count}</span>
       </div>
       <div class="card-editor-bar${isEditor?' visible':''}" id="ebar-${img.id}">
-        <button class="card-edit-btn card-rename-btn" onclick="event.stopPropagation();handleRenameClick(this)">✏️</button>
-        <button class="card-edit-btn card-replace-btn" onclick="event.stopPropagation();handleReplaceClick(this)">🔄</button>
-        <button class="card-edit-btn card-delete-btn" onclick="event.stopPropagation();handleDeleteClick(this)">🗑</button>
+        <button class="card-edit-btn card-rename-btn" onclick="event.stopPropagation();handleRenameClick(this)" title="Đổi tên">✏️</button>
+        <button class="card-edit-btn" onclick="event.stopPropagation();handleMoveClick(this)" title="Di chuyển" style="background:rgba(100,180,255,.15);color:#7ec8ff;border:none">📦</button>
+        <button class="card-edit-btn card-replace-btn" onclick="event.stopPropagation();handleReplaceClick(this)" title="Thay ảnh">🔄</button>
+        <button class="card-edit-btn card-delete-btn" onclick="event.stopPropagation();handleDeleteClick(this)" title="Xóa">🗑</button>
       </div>
     `;
     card.querySelector('.heart-btn').addEventListener('click', e => {
@@ -3785,6 +3865,162 @@ function applySearch(){
     : '😔 Không tìm thấy';
 }
 
+/* ══ MOVE IMAGE ══ */
+let moveImgId = null;
+let moveSrcCatId = null;
+
+function handleMoveClick(btn){
+  const card = btn.closest('.card');
+  moveImgId = card.dataset.imgId;
+  moveSrcCatId = card.dataset.catId;
+  const title = card.dataset.imgTitle || 'Ảnh';
+
+  document.getElementById('move-dialog-sub').textContent = `"${title}" → chọn section đích`;
+
+  // Build section list
+  const list = document.getElementById('move-section-list');
+  list.innerHTML = '';
+  CATEGORIES.forEach(cat => {
+    const item = document.createElement('div');
+    item.className = 'move-section-item' + (cat.id === moveSrcCatId ? ' current' : '');
+    item.innerHTML = `
+      <div class="msi-rank">${cat.rank || '•'}</div>
+      <div class="msi-info">
+        <div class="msi-label">${cat.label}</div>
+        <div class="msi-tag">${cat.tag}${cat.id === moveSrcCatId ? ' — Đang ở đây' : ''}</div>
+      </div>
+    `;
+    if(cat.id !== moveSrcCatId){
+      item.addEventListener('click', () => doMoveImage(cat.id));
+    }
+    list.appendChild(item);
+  });
+
+  document.getElementById('move-dialog').classList.add('open');
+}
+
+document.getElementById('move-dialog-cancel').addEventListener('click', () => {
+  document.getElementById('move-dialog').classList.remove('open');
+});
+document.getElementById('move-dialog').addEventListener('click', e => {
+  if(e.target === e.currentTarget) document.getElementById('move-dialog').classList.remove('open');
+});
+
+async function doMoveImage(targetCatId){
+  document.getElementById('move-dialog').classList.remove('open');
+
+  // Update DOM — move card to target grid
+  const card = document.querySelector(`.card[data-img-id="${moveImgId}"]`);
+  const targetGrid = document.getElementById(`grid-${targetCatId}`);
+  if(card && targetGrid){
+    // Insert before add-img-card
+    const addCard = targetGrid.querySelector('.add-img-card');
+    if(addCard) targetGrid.insertBefore(card, addCard);
+    else targetGrid.appendChild(card);
+    card.dataset.catId = targetCatId;
+    // Re-init drag on moved card
+    if(isEditor){
+      card.setAttribute('draggable','true');
+      card.removeEventListener('dragstart', onDragStart);
+      card.removeEventListener('dragend', onDragEnd);
+      card.removeEventListener('dragover', onDragOver);
+      card.removeEventListener('dragleave', onDragLeave);
+      card.removeEventListener('drop', onDrop);
+      card.addEventListener('dragstart', onDragStart);
+      card.addEventListener('dragend', onDragEnd);
+      card.addEventListener('dragover', onDragOver);
+      card.addEventListener('dragleave', onDragLeave);
+      card.addEventListener('drop', onDrop);
+    }
+  }
+
+  // Update CATEGORIES data
+  const srcCat = CATEGORIES.find(c => c.id === moveSrcCatId);
+  const tgtCat = CATEGORIES.find(c => c.id === targetCatId);
+  if(srcCat && tgtCat){
+    const imgIdx = srcCat.images.findIndex(i => i.id === moveImgId);
+    if(imgIdx > -1){
+      const [img] = srcCat.images.splice(imgIdx, 1);
+      img.sub = tgtCat.label;
+      tgtCat.images.push(img);
+    }
+  }
+
+  // Update Supabase if UUID
+  const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-/.test(moveImgId);
+  if(isUUID){
+    await supa(`images?id=eq.${moveImgId}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ cat_id: targetCatId, sub: targetCatId })
+    });
+  }
+
+  saveImageOrder();
+  showToast(`✅ Đã chuyển ảnh sang "${tgtCat ? tgtCat.label : targetCatId}"`);
+}
+
+/* ══ SECTION TITLE & DESC EDIT ══ */
+function editSectionTitle(catId){
+  const el = document.getElementById(`title-${catId}`);
+  if(!el) return;
+  el.contentEditable = 'true';
+  el.focus();
+  // Select all text
+  const range = document.createRange();
+  range.selectNodeContents(el);
+  window.getSelection().removeAllRanges();
+  window.getSelection().addRange(range);
+}
+
+function editSectionDesc(catId){
+  const el = document.getElementById(`desc-${catId}`);
+  if(!el) return;
+  el.contentEditable = 'true';
+  el.focus();
+  if(!el.textContent.trim()) el.textContent = 'Nhập ghi chú...';
+  const range = document.createRange();
+  range.selectNodeContents(el);
+  window.getSelection().removeAllRanges();
+  window.getSelection().addRange(range);
+}
+
+function saveSectionTitle(catId, el){
+  el.contentEditable = 'false';
+  const newTitle = el.textContent.trim();
+  if(!newTitle){ el.textContent = CATEGORIES.find(c=>c.id===catId)?.label || catId; return; }
+  const cat = CATEGORIES.find(c => c.id === catId);
+  if(cat) cat.label = newTitle;
+  // Save to localStorage
+  const edits = JSON.parse(localStorage.getItem('vgp_section_edits') || '{}');
+  if(!edits[catId]) edits[catId] = {};
+  edits[catId].label = newTitle;
+  localStorage.setItem('vgp_section_edits', JSON.stringify(edits));
+  showToast('✅ Đã lưu tên section');
+}
+
+function saveSectionDesc(catId, el){
+  el.contentEditable = 'false';
+  const text = el.textContent.trim();
+  if(text === 'Nhập ghi chú...') { el.textContent = ''; return; }
+  const cat = CATEGORIES.find(c => c.id === catId);
+  if(cat) cat.desc = text;
+  const edits = JSON.parse(localStorage.getItem('vgp_section_edits') || '{}');
+  if(!edits[catId]) edits[catId] = {};
+  edits[catId].desc = text;
+  localStorage.setItem('vgp_section_edits', JSON.stringify(edits));
+  showToast('✅ Đã lưu ghi chú');
+}
+
+function applySectionEdits(){
+  const edits = JSON.parse(localStorage.getItem('vgp_section_edits') || '{}');
+  CATEGORIES.forEach(cat => {
+    if(edits[cat.id]){
+      if(edits[cat.id].label) cat.label = edits[cat.id].label;
+      if(edits[cat.id].desc !== undefined) cat.desc = edits[cat.id].desc;
+    }
+  });
+}
+
 /* ══ DRAG & DROP ══ */
 let dragSrcCard = null;
 let dragSrcCatId = null;
@@ -3927,7 +4163,8 @@ function applyImageOrder(){
 
 /* ══ INIT ══ */
 async function init(){
-  // Apply saved image order
+  // Apply saved section edits & image order
+  applySectionEdits();
   applyImageOrder();
   // Load likes from Supabase
   const remoteLikes = await supa('likes?select=image_id,count') || [];
