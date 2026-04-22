@@ -1152,7 +1152,7 @@ footer{
 
 <!-- ══ GLOBAL FILE INPUTS (prevents duplicate dialog) ══ -->
 <input type="file" id="global-img-input" accept="image/*" style="display:none" multiple/>
-<input type="file" id="global-video-input" accept="video/*" style="display:none"/>
+<input type="file" id="global-video-input" accept="video/*" style="display:none" multiple/>
 <input type="file" id="global-thumb-input" accept="image/*" style="display:none"/>
 
 <!-- ══ IMAGE DIALOG ══ -->
@@ -1164,16 +1164,21 @@ footer{
       <button class="img-dtab" data-idt="url">🔗 Paste URL</button>
     </div>
     <div class="img-dpanel active" id="idt-file">
-      <div class="img-preview-wrap" id="img-preview-wrap"><img id="img-preview-img" src="" alt=""/></div>
       <div class="img-file-area" id="img-file-area">
-        <p>🖼 Kéo thả ảnh vào đây<br/>hoặc click để chọn file<br/><span style="color:var(--green)">JPG, PNG, WebP</span></p>
+        <p>🖼 Kéo thả ảnh vào đây<br/>hoặc click để chọn<br/><span style="color:var(--green)">Chọn nhiều ảnh cùng lúc</span></p>
       </div>
+      <!-- Multi file preview -->
+      <div id="img-multi-preview" style="display:none;margin-top:12px">
+        <div id="img-multi-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:6px;max-height:200px;overflow-y:auto"></div>
+        <div style="margin-top:8px;font-family:var(--mono);font-size:.6rem;color:var(--bold-gold)" id="img-multi-count"></div>
+      </div>
+      <div class="img-preview-wrap" id="img-preview-wrap" style="display:none"><img id="img-preview-img" src="" alt=""/></div>
     </div>
     <div class="img-dpanel" id="idt-url">
-      <input class="img-dialog-input" id="img-url-input" type="url" placeholder="https://... (Cloudinary, Unsplash, Drive...)"/>
-      <div class="img-preview-wrap" id="img-url-preview-wrap"><img id="img-url-preview-img" src="" alt="" style="width:100%;height:100%;object-fit:cover"/></div>
+      <textarea class="img-dialog-input" id="img-url-input" placeholder="Paste links ảnh vào đây (mỗi link 1 dòng)..." style="height:100px;resize:none"></textarea>
+      <div class="img-preview-wrap" id="img-url-preview-wrap" style="display:none"><img id="img-url-preview-img" src="" alt="" style="width:100%;height:100%;object-fit:cover"/></div>
     </div>
-    <input class="img-dialog-input" id="img-title-input" placeholder="Tiêu đề ảnh..."/>
+    <input class="img-dialog-input" id="img-title-input" placeholder="Tiêu đề chung (áp dụng cho tất cả ảnh)..."/>
     <div class="img-dialog-actions">
       <button class="img-dialog-cancel" id="img-dialog-cancel">Huỷ</button>
       <button class="img-dialog-save" id="img-dialog-save">Lưu</button>
@@ -1244,7 +1249,10 @@ footer{
     </div>
     <div class="avd-panel" id="avd-file">
       <div class="avd-file-area" id="avd-file-area">
-        <p>🎬 Drag & drop video file here<br/>or click to browse<br/><span style="color:var(--green)">MP4, MOV, WebM supported</span></p>
+        <p>🎬 Kéo thả video vào đây<br/>hoặc click để chọn<br/><span style="color:var(--green)">Chọn nhiều video cùng lúc</span></p>
+      </div>
+      <div id="video-multi-preview" style="display:none;margin-top:10px">
+        <div id="video-multi-list" style="display:flex;flex-direction:column;gap:6px;max-height:150px;overflow-y:auto"></div>
       </div>
       <input class="avd-input" id="avd-file-title" placeholder="Video title..."/>
       <input class="avd-input" id="avd-file-duration" placeholder="Duration (e.g. 3:42) — optional"/>
@@ -2697,7 +2705,33 @@ document.querySelectorAll('.avd-tab').forEach(tab => {
 // Video file area - use global input
 const fileArea = document.getElementById('avd-file-area');
 const globalVideoInput = document.getElementById('global-video-input');
-globalVideoInput.onchange = e => { if(e.target.files[0]) handleVideoFile(e.target.files[0]); e.target.value=''; };
+let videoMultiFiles = [];
+globalVideoInput.onchange = e => {
+  if(e.target.files.length > 1){
+    handleMultipleVideos(Array.from(e.target.files));
+  } else if(e.target.files[0]){
+    videoMultiFiles = [];
+    handleVideoFile(e.target.files[0]);
+  }
+  e.target.value='';
+};
+
+function handleMultipleVideos(files){
+  videoMultiFiles = files;
+  pendingFileData = null;
+  const listEl = document.getElementById('video-multi-list');
+  const previewEl = document.getElementById('video-multi-preview');
+  listEl.innerHTML = '';
+  files.forEach(f => {
+    const item = document.createElement('div');
+    item.style.cssText = 'display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.05);padding:6px 10px;border-radius:4px';
+    item.innerHTML = `<span style="font-size:1.2rem">🎬</span><span style="font-family:var(--mono);font-size:.62rem;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${f.name}</span><span style="font-family:var(--mono);font-size:.58rem;color:var(--text-muted)">${(f.size/1024/1024).toFixed(1)}MB</span>`;
+    listEl.appendChild(item);
+  });
+  previewEl.style.display = 'block';
+  fileArea.innerHTML = `<p>✅ <strong style="color:var(--green)">${files.length} video</strong> được chọn<br/><span style="font-size:.6rem">Click để chọn lại</span></p>`;
+  fileArea.onclick = () => globalVideoInput.click();
+}
 fileArea.onclick = () => globalVideoInput.click();
 fileArea.addEventListener('dragover', e => { e.preventDefault(); fileArea.style.borderColor='var(--green)'; });
 fileArea.addEventListener('dragleave', () => { fileArea.style.borderColor=''; });
@@ -2766,20 +2800,50 @@ document.getElementById('avd-save').addEventListener('click', () => {
     const url = document.getElementById('avd-url').value.trim();
     const title = document.getElementById('avd-link-title').value.trim() || 'Untitled video';
     const duration = document.getElementById('avd-link-duration').value.trim();
-    const ytId = getYTId(url);
-    const vimeoId = getVimeoId(url);
+    // Support multiple URLs (one per line)
+    const urls = url.split('
+').map(u=>u.trim()).filter(u=>u);
+    if(urls.length > 1){
+      // Multiple links - save all without thumb picker
+      for(const u of urls){
+        const ytId = getYTId(u), vimeoId = getVimeoId(u);
+        if(ytId){ pendingVideo = { id:Date.now()+'', title: title||'YouTube Video', type:'yt', src:ytId, duration }; await saveVideoAndClose(); }
+        else if(vimeoId){ pendingVideo = { id:Date.now()+'', title: title||'Vimeo Video', type:'vimeo', src:vimeoId, duration }; await saveVideoAndClose(); }
+      }
+      closeAddVideoDialog();
+      showToast(`✅ Đã thêm ${urls.length} video!`);
+      return;
+    }
+    const ytId = getYTId(url), vimeoId = getVimeoId(url);
     if(ytId) newVid = { id: Date.now()+'', title, type:'yt', src:ytId, duration };
     else if(vimeoId) newVid = { id: Date.now()+'', title, type:'vimeo', src:vimeoId, duration };
     else { alert('Invalid YouTube or Vimeo URL'); return; }
+    openThumbPicker(newVid);
   } else {
+    if(videoMultiFiles.length > 1){
+      // Multiple video files - show picker for first, queue rest
+      pendingFileData = { src: URL.createObjectURL(videoMultiFiles[0]), name: videoMultiFiles[0].name, thumb: null };
+      const title = document.getElementById('avd-file-title').value.trim() || videoMultiFiles[0].name;
+      newVid = { id: Date.now()+'', title, type:'file', src: pendingFileData.src, thumb:'', duration:'' };
+      openThumbPicker(newVid);
+      // Save remaining without thumb picker
+      for(let i=1; i<videoMultiFiles.length; i++){
+        const f = videoMultiFiles[i];
+        const v = { id: Date.now()+i+'', title: f.name.replace(/\.[^/.]+$/,''), type:'file', src: URL.createObjectURL(f), thumb:'', duration:'' };
+        if(!videos[currentAddCatId]) videos[currentAddCatId]=[];
+        videos[currentAddCatId].push(v);
+      }
+      saveVideos();
+      if(videoMultiFiles.length > 1) showToast(`+ ${videoMultiFiles.length-1} video khác đã được thêm`);
+      videoMultiFiles = [];
+      return;
+    }
     if(!pendingFileData){ alert('Please select a video file'); return; }
     const title = document.getElementById('avd-file-title').value.trim() || pendingFileData.name;
     const duration = document.getElementById('avd-file-duration').value.trim();
     newVid = { id: Date.now()+'', title, type:'file', src: pendingFileData.src, thumb: pendingFileData.thumb || '', duration };
+    openThumbPicker(newVid);
   }
-
-  // Open thumbnail picker before saving
-  openThumbPicker(newVid);
 });
 
 /* ══ THUMBNAIL PICKER ══ */
@@ -2987,7 +3051,7 @@ document.querySelectorAll('.img-dtab').forEach(tab => {
 const imgFileArea = document.getElementById('img-file-area');
 const globalImgInput = document.getElementById('global-img-input');
 globalImgInput.onchange = e => {
-  if(e.target.files[0]) handleImgFile(e.target.files[0]);
+  if(e.target.files.length > 0) handleImgFile(e.target.files);
   e.target.value = '';
 };
 imgFileArea.onclick = () => globalImgInput.click();
@@ -2995,8 +3059,7 @@ imgFileArea.addEventListener('dragover', e => { e.preventDefault(); imgFileArea.
 imgFileArea.addEventListener('dragleave', () => imgFileArea.style.borderColor='');
 imgFileArea.addEventListener('drop', e => {
   e.preventDefault(); imgFileArea.style.borderColor='';
-  const file = e.dataTransfer.files[0];
-  if(file) handleImgFile(file);
+  if(e.dataTransfer.files.length > 0) handleImgFile(e.dataTransfer.files);
 });
 
 function handleImgFile(file){
