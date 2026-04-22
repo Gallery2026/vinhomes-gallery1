@@ -1060,6 +1060,9 @@ footer{
   </div>
 </div>
 
+<!-- ══ PERMANENT FILE INPUT (never removed from DOM) ══ -->
+<input type="file" id="img-file-input-global" accept="image/*" multiple style="display:none"/>
+
 <!-- ══ IMAGE DIALOG ══ -->
 <div class="img-dialog" id="img-dialog">
   <div class="img-dialog-box">
@@ -1069,10 +1072,16 @@ footer{
       <button class="img-dtab" data-idt="url">🔗 Paste URL</button>
     </div>
     <div class="img-dpanel active" id="idt-file">
-      <div class="img-preview-wrap" id="img-preview-wrap"><img id="img-preview-img" src="" alt=""/></div>
       <div class="img-file-area" id="img-file-area">
-        <p>🖼 Kéo thả ảnh vào đây<br/>hoặc click để chọn file<br/><span style="color:var(--green)">JPG, PNG, WebP</span></p>
-        <input type="file" id="img-file-input" accept="image/*" style="display:none"/>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:32px;height:32px;opacity:.4;margin-bottom:8px"><path d="M12 16V8m0 0l-3 3m3-3l3 3M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1"/></svg>
+        <p>Kéo thả ảnh vào đây hoặc click để chọn<br/><span style="color:var(--green);font-size:.95em">Chọn nhiều ảnh cùng lúc — JPG, PNG, WebP</span></p>
+      </div>
+      <!-- Single preview -->
+      <div class="img-preview-wrap" id="img-preview-wrap" style="display:none"><img id="img-preview-img" src="" alt=""/></div>
+      <!-- Multi preview grid -->
+      <div id="img-multi-preview" style="display:none;margin-top:12px">
+        <div id="img-multi-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:6px;max-height:220px;overflow-y:auto;padding:4px"></div>
+        <div id="img-multi-count" style="font-family:var(--mono);font-size:.62rem;color:var(--bold-gold);margin-top:8px"></div>
       </div>
     </div>
     <div class="img-dpanel" id="idt-url">
@@ -2820,33 +2829,76 @@ document.querySelectorAll('.img-dtab').forEach(tab => {
   });
 });
 
-// File input
+// File input — permanent global input, never removed from DOM
 const imgFileArea = document.getElementById('img-file-area');
-const imgFileInput = document.getElementById('img-file-input');
-imgFileArea.addEventListener('click', () => imgFileInput.click());
+const imgFileInputGlobal = document.getElementById('img-file-input-global');
+let imgMultiFiles = [];
+
+// Single permanent listener — never duplicated
+imgFileInputGlobal.onchange = e => {
+  const files = Array.from(e.target.files).filter(f => f.type.startsWith('image/'));
+  if(files.length) handleImgFiles(files);
+  e.target.value = '';
+};
+
+imgFileArea.onclick = () => imgFileInputGlobal.click();
 imgFileArea.addEventListener('dragover', e => { e.preventDefault(); imgFileArea.style.borderColor='var(--green)'; });
 imgFileArea.addEventListener('dragleave', () => imgFileArea.style.borderColor='');
 imgFileArea.addEventListener('drop', e => {
   e.preventDefault(); imgFileArea.style.borderColor='';
-  const file = e.dataTransfer.files[0];
-  if(file) handleImgFile(file);
+  const files = Array.from(e.dataTransfer.files).filter(f=>f.type.startsWith('image/'));
+  if(files.length) handleImgFiles(files);
 });
-imgFileInput.addEventListener('change', e => { if(e.target.files[0]) handleImgFile(e.target.files[0]); e.target.value=''; });
 
-function handleImgFile(file){
-  const reader = new FileReader();
-  reader.onload = e => {
-    imgDialogFileData = { file, dataUrl: e.target.result };
-    const wrap = document.getElementById('img-preview-wrap');
-    const img = document.getElementById('img-preview-img');
-    img.src = e.target.result;
-    wrap.style.display = 'block';
-    imgFileArea.innerHTML = `<p>✅ <strong style="color:var(--green)">${file.name}</strong></p><input type="file" id="img-file-input" accept="image/*" style="display:none"/>`;
-    if(!document.getElementById('img-title-input').value)
-      document.getElementById('img-title-input').value = file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g,' ');
-  };
-  reader.readAsDataURL(file);
+function initImgFileArea(){
+  // Re-attach onclick when area HTML is reset (permanent input stays in DOM)
+  imgFileArea.onclick = () => imgFileInputGlobal.click();
 }
+
+function handleImgFiles(files){
+  if(!files.length) return;
+  imgMultiFiles = files;
+
+  if(files.length === 1){
+    // Single — show single preview
+    imgDialogFileData = { file: files[0] };
+    const reader = new FileReader();
+    reader.onload = ev => {
+      imgDialogFileData.dataUrl = ev.target.result;
+      document.getElementById('img-preview-wrap').style.display = 'block';
+      document.getElementById('img-preview-img').src = ev.target.result;
+      document.getElementById('img-multi-preview').style.display = 'none';
+      imgFileArea.innerHTML = `<p>✅ <strong style="color:var(--green)">${files[0].name}</strong><br/><span style="font-size:.9em;opacity:.7">Click để đổi ảnh</span></p>`;
+      imgFileArea.onclick = () => imgFileInputGlobal.click();
+      if(!document.getElementById('img-title-input').value)
+        document.getElementById('img-title-input').value = files[0].name.replace(/\.[^/.]+$/, '').replace(/[-_]/g,' ');
+    };
+    reader.readAsDataURL(files[0]);
+  } else {
+    // Multiple — show grid preview
+    imgDialogFileData = null;
+    document.getElementById('img-preview-wrap').style.display = 'none';
+    document.getElementById('img-multi-preview').style.display = 'block';
+    document.getElementById('img-multi-count').textContent = `${files.length} ảnh được chọn — sẽ upload tất cả`;
+    const grid = document.getElementById('img-multi-grid');
+    grid.innerHTML = '';
+    files.forEach(f => {
+      const reader = new FileReader();
+      reader.onload = ev => {
+        const div = document.createElement('div');
+        div.style.cssText = 'position:relative;aspect-ratio:1;border-radius:4px;overflow:hidden;background:var(--surface2)';
+        div.innerHTML = `<img src="${ev.target.result}" style="width:100%;height:100%;object-fit:cover"/><div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.6);font-family:var(--mono);font-size:.45rem;color:#fff;padding:2px 4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${f.name}</div>`;
+        grid.appendChild(div);
+      };
+      reader.readAsDataURL(f);
+    });
+    imgFileArea.innerHTML = `<p>✅ <strong style="color:var(--green)">${files.length} ảnh</strong> đã chọn — click để chọn lại</p>`;
+    imgFileArea.onclick = () => imgFileInputGlobal.click();
+    document.getElementById('img-title-input').placeholder = 'Tiêu đề chung (để trống = dùng tên file)...';
+  }
+}
+
+function handleImgFile(file){ handleImgFiles([file]); }
 
 // URL preview
 document.getElementById('img-url-input').addEventListener('input', e => {
@@ -2872,11 +2924,16 @@ function openImgDialog(mode, catId, imgId=null, currentTitle=''){
   document.getElementById('img-url-input').value = '';
   document.getElementById('img-preview-wrap').style.display = 'none';
   document.getElementById('img-url-preview-wrap').style.display = 'none';
-  document.getElementById('img-file-area').innerHTML = `<p>🖼 Kéo thả ảnh vào đây<br/>hoặc click để chọn file<br/><span style="color:var(--green)">JPG, PNG, WebP</span></p><input type="file" id="img-file-input" accept="image/*" style="display:none"/>`;
-  // Re-attach file input listener
-  const newInput = document.getElementById('img-file-input');
-  newInput.addEventListener('change', e => { if(e.target.files[0]) handleImgFile(e.target.files[0]); e.target.value=''; });
-  imgFileArea.addEventListener('click', () => newInput.click());
+  imgMultiFiles = [];
+  imgDialogFileData = null;
+  document.getElementById('img-preview-wrap').style.display = 'none';
+  document.getElementById('img-multi-preview').style.display = 'none';
+  document.getElementById('img-title-input').placeholder = 'Tiêu đề ảnh...';
+  imgFileArea.innerHTML = `
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:32px;height:32px;opacity:.4;margin-bottom:8px"><path d="M12 16V8m0 0l-3 3m3-3l3 3M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1"/></svg>
+    <p>Kéo thả ảnh vào đây hoặc click để chọn<br/><span style="color:var(--green);font-size:.95em">Chọn nhiều ảnh cùng lúc — JPG, PNG, WebP</span></p>
+  `;
+  imgFileArea.onclick = () => imgFileInputGlobal.click();
   document.getElementById('img-dialog').classList.add('open');
 }
 
@@ -2895,8 +2952,45 @@ document.getElementById('img-dialog-save').addEventListener('click', async () =>
   const btn = document.getElementById('img-dialog-save');
   btn.textContent = 'Đang lưu...'; btn.disabled = true;
 
+  const catObj = CATEGORIES.find(c => c.id === imgDialogCatId);
+  const catLabel = catObj ? catObj.label : imgDialogCatId;
+
+  // ── MULTI-FILE ADD MODE ──
+  if(imgDialogMode === 'add' && imgDialogTab === 'file' && imgMultiFiles.length > 1){
+    btn.textContent = `Đang upload 0/${imgMultiFiles.length}...`; btn.disabled = true;
+    let ok = 0;
+    for(let i = 0; i < imgMultiFiles.length; i++){
+      const f = imgMultiFiles[i];
+      btn.textContent = `Đang upload ${i+1}/${imgMultiFiles.length}...`;
+      const ext = f.name.split('.').pop();
+      const path = `images/${imgDialogCatId}/${Date.now()}-${i}.${ext}`;
+      const uploadedSrc = await supaUpload(f, path);
+      if(uploadedSrc){
+        const fileTitle = title || f.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g,' ');
+        await supa('images', {
+          method: 'POST',
+          prefer: 'return=representation',
+          body: JSON.stringify({ cat_id: imgDialogCatId, title: fileTitle, src: uploadedSrc, sub: catLabel, uploaded_by: savedName || 'Editor' })
+        });
+        ok++;
+      }
+    }
+    btn.textContent='Lưu'; btn.disabled=false;
+    showToast(`✅ Đã upload ${ok}/${imgMultiFiles.length} ảnh!`);
+    closeImgDialog();
+    // Refresh grid
+    const catGrid2 = document.getElementById(`grid-${imgDialogCatId}`);
+    if(catGrid2){
+      loadRemoteImages(imgDialogCatId).then(remoteImgs => {
+        const remoteFormatted = remoteImgs.map(r => ({ id: r.id, src: r.src, title: r.title, sub: r.sub || catLabel, _remote: true }));
+        const allImgs = [...catObj.images, ...remoteFormatted.filter(r => !catObj.images.find(i => i.src === r.src))];
+        renderImgGrid(catGrid2, allImgs, catObj);
+      });
+    }
+    return;
+  }
+
   if(imgDialogTab === 'file' && imgDialogFileData){
-    // Upload to Supabase storage
     const ext = imgDialogFileData.file.name.split('.').pop();
     const path = `images/${imgDialogCatId}/${Date.now()}.${ext}`;
     src = await supaUpload(imgDialogFileData.file, path);
@@ -2909,11 +3003,10 @@ document.getElementById('img-dialog-save').addEventListener('click', async () =>
   }
 
   if(imgDialogMode === 'add'){
-    // Insert new image to Supabase
     const result = await supa('images', {
       method: 'POST',
       prefer: 'return=representation',
-      body: JSON.stringify({ cat_id: imgDialogCatId, title, src, sub: imgDialogCatId, uploaded_by: savedName || 'Editor' })
+      body: JSON.stringify({ cat_id: imgDialogCatId, title, src, sub: catLabel, uploaded_by: savedName || 'Editor' })
     });
     if(result){ showToast('✅ Đã thêm ảnh mới!'); }
     else { showToast('❌ Thêm ảnh thất bại!', 'error'); btn.textContent='Lưu'; btn.disabled=false; return; }
