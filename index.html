@@ -2030,16 +2030,16 @@ function renderAll(){
   }
 
   const visible = CATEGORIES.filter(c => {
-    if(activeFilter==='all') return true;
+    if(activeFilter==='all') return c.group !== 'research';
     return c.group === activeFilter;
   });
 
-  // Priority section first, then other
-  const priority = visible.filter(c=>c.group==='priority');
-  const other    = visible.filter(c=>c.group==='other');
+  const priority = visible.filter(c => c.group==='priority');
+  const other    = visible.filter(c => c.group==='other');
+  const research = visible.filter(c => c.group==='research');
 
   if(priority.length){
-    if(activeFilter==='all'){
+    if(activeFilter==='all' || activeFilter==='priority'){
       const div = document.createElement('div');
       div.className='priority-divider';
       div.innerHTML='<span>Priority Assets</span>';
@@ -2056,29 +2056,40 @@ function renderAll(){
     other.forEach((cat,i) => renderSection(cat, root, i));
   }
 
-  // Render global Videos section
-  const existingVidSec = document.getElementById('sec-all-videos');
-  if(!existingVidSec){
-    const vidDiv = document.createElement('div');
-    vidDiv.className = 'priority-divider';
-    vidDiv.innerHTML = '<span>🎬 Video Library</span>';
-    root.appendChild(vidDiv);
-    const vidSec = document.createElement('section');
-    vidSec.className = 'cat-section gallery-section';
-    vidSec.id = 'sec-all-videos';
-    vidSec.innerHTML = `
-      <div class="section-head">
-        <div class="section-info">
-          <div class="section-tag">Tổng hợp video</div>
-          <h2 class="section-title"><em>Video Library</em></h2>
-          <p class="section-desc">Tất cả video từ các hạng mục — YouTube, Vimeo và file upload</p>
-        </div>
-      </div>
-      <div class="video-grid" id="vgrid-all"></div>
-    `;
-    root.appendChild(vidSec);
-    setTimeout(renderVideoSection, 0);
+  if(research.length){
+    const div = document.createElement('div');
+    div.className='priority-divider';
+    div.innerHTML='<span>🔬 Research</span>';
+    root.appendChild(div);
+    research.forEach((cat,i) => renderSection(cat, root, i));
   }
+
+  // Video Library (chỉ hiện ở All)
+  if(activeFilter === 'all'){
+    const existingVidSec = document.getElementById('sec-all-videos');
+    if(!existingVidSec){
+      const vidDiv = document.createElement('div');
+      vidDiv.className = 'priority-divider';
+      vidDiv.innerHTML = '<span>🎬 Video Library</span>';
+      root.appendChild(vidDiv);
+      const vidSec = document.createElement('section');
+      vidSec.className = 'cat-section gallery-section';
+      vidSec.id = 'sec-all-videos';
+      vidSec.innerHTML = `
+        <div class="section-head">
+          <div class="section-info">
+            <div class="section-tag">Tổng hợp video</div>
+            <h2 class="section-title"><em>Video Library</em></h2>
+            <p class="section-desc">Tất cả video từ các hạng mục — YouTube, Vimeo và file upload</p>
+          </div>
+        </div>
+        <div class="video-grid" id="vgrid-all"></div>
+      `;
+      root.appendChild(vidSec);
+      setTimeout(renderVideoSection, 0);
+    }
+  }
+
   updateStats();
 }
 
