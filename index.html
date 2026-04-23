@@ -1142,6 +1142,74 @@ footer{
 .move-dialog-cancel{padding:8px 18px;background:none;border:1px solid var(--border);border-radius:6px;color:var(--text-muted);font-family:var(--mono);font-size:.62rem;cursor:pointer}
 .move-dialog-cancel:hover{border-color:var(--text-muted);color:var(--text)}
 
+/* ── ADD SECTION DIALOG ── */
+.add-section-dialog{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.85);z-index:30002;
+  align-items:center;justify-content:center;
+}
+.add-section-dialog.open{display:flex;animation:fadeIn .2s ease}
+.asd-box{
+  background:#0a2420;border:1px solid rgba(0,155,81,.3);
+  border-radius:10px;padding:28px;width:min(460px,92vw);
+}
+.asd-title{font-family:var(--sans);font-size:1rem;font-weight:700;color:var(--bold-gold);margin-bottom:20px}
+.asd-field{margin-bottom:14px}
+.asd-label{font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px;display:block}
+.asd-input{
+  width:100%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
+  border-radius:6px;padding:9px 13px;color:var(--text);
+  font-family:var(--sans);font-size:.85rem;outline:none;transition:border-color .2s;
+}
+.asd-input:focus{border-color:var(--green)}
+.asd-input::placeholder{color:var(--text-muted)}
+.asd-group-row{display:flex;gap:8px}
+.asd-group-btn{
+  flex:1;padding:8px;border-radius:6px;border:1px solid var(--border);
+  background:none;color:var(--text-muted);font-family:var(--mono);
+  font-size:.62rem;cursor:pointer;transition:all .2s;letter-spacing:.06em;
+}
+.asd-group-btn.active{background:var(--green);border-color:var(--green);color:#fff}
+.asd-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
+.asd-cancel{padding:8px 16px;background:none;border:1px solid var(--border);border-radius:6px;color:var(--text-muted);font-family:var(--mono);font-size:.62rem;cursor:pointer;transition:all .2s}
+.asd-cancel:hover{border-color:var(--text);color:var(--text)}
+.asd-save{padding:8px 20px;background:var(--green);border:none;border-radius:6px;color:#fff;font-family:var(--mono);font-size:.62rem;cursor:pointer;font-weight:600;transition:background .2s}
+.asd-save:hover{background:var(--dark-green)}
+
+/* Add section btn in nav */
+.add-section-nav-btn{
+  margin-left:auto;flex-shrink:0;
+  padding:8px 16px;border-radius:20px;border:1px dashed rgba(0,155,81,.4);
+  background:none;color:rgba(0,155,81,.7);
+  font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;
+  cursor:pointer;transition:all .2s;white-space:nowrap;
+  display:none;
+}
+.add-section-nav-btn:hover{border-color:var(--green);color:var(--green);background:rgba(0,155,81,.08)}
+.editor-active .add-section-nav-btn{display:block}
+
+/* Section delete btn */
+.sec-delete-btn{
+  padding:5px 12px;border-radius:6px;border:1px solid rgba(180,40,40,.4);
+  background:rgba(180,40,40,.1);color:#e05555;
+  font-family:var(--mono);font-size:.58rem;cursor:pointer;transition:all .2s;
+}
+.sec-delete-btn:hover{background:rgba(180,40,40,.25);border-color:#e05555}
+
+/* ── DOWNLOAD BTN ── */
+.card-download-btn{
+  position:absolute;top:10px;left:10px;
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(2,30,26,.75);border:1px solid rgba(255,255,255,.15);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  opacity:0;transform:scale(.7);
+  transition:opacity .25s ease,transform .35s cubic-bezier(.34,1.56,.64,1);
+  z-index:10;backdrop-filter:blur(6px);text-decoration:none;
+}
+.card:hover .card-download-btn{opacity:1;transform:scale(1)}
+.card-download-btn:hover{background:rgba(0,155,81,.6);border-color:var(--green)}
+.card-download-btn svg{width:14px;height:14px;stroke:#fff;fill:none;stroke-width:2;pointer-events:none}
+
 /* ── RESPONSIVE ── */
 @media(max-width:768px){
   .hero{padding:36px 24px 32px}
@@ -1201,6 +1269,7 @@ footer{
   <button class="nav-btn" data-filter="research">🔬 Research</button>
   <button class="nav-btn" data-filter="liked">❤️ Liked</button>
   <button class="nav-btn" data-filter="commented">💬 Commented</button>
+  <button class="add-section-nav-btn" id="add-section-btn" onclick="openAddSectionDialog()">＋ Thêm mục</button>
 </nav>
 <div class="project-bar" id="project-bar">
   <span class="project-bar-label">Assets:</span>
@@ -1323,6 +1392,37 @@ footer{
   <button class="ms-btn ms-select-all" id="ms-select-all">Chọn tất cả</button>
   <button class="ms-btn ms-delete" id="ms-delete-selected">🗑 Xóa</button>
   <button class="ms-btn ms-cancel" id="ms-cancel">✕ Huỷ</button>
+</div>
+
+<!-- ══ ADD SECTION DIALOG ══ -->
+<div class="add-section-dialog" id="add-section-dialog">
+  <div class="asd-box">
+    <div class="asd-title">➕ Thêm mục mới</div>
+    <div class="asd-field">
+      <label class="asd-label">Tên mục *</label>
+      <input class="asd-input" id="asd-label" placeholder="VD: Nhà mẫu Khu C..."/>
+    </div>
+    <div class="asd-field">
+      <label class="asd-label">Tag / Phân loại</label>
+      <input class="asd-input" id="asd-tag" placeholder="VD: Kiến trúc · Khu C"/>
+    </div>
+    <div class="asd-field">
+      <label class="asd-label">Mô tả</label>
+      <input class="asd-input" id="asd-desc" placeholder="Mô tả ngắn về mục này..."/>
+    </div>
+    <div class="asd-field">
+      <label class="asd-label">Nhóm</label>
+      <div class="asd-group-row">
+        <button class="asd-group-btn active" data-group="priority">⭐ Priority</button>
+        <button class="asd-group-btn" data-group="other">• Other</button>
+        <button class="asd-group-btn" data-group="research">🔬 Research</button>
+      </div>
+    </div>
+    <div class="asd-actions">
+      <button class="asd-cancel" id="asd-cancel">Huỷ</button>
+      <button class="asd-save" id="asd-save">✅ Tạo mục</button>
+    </div>
+  </div>
 </div>
 
 <!-- ══ MOVE IMAGE DIALOG ══ -->
@@ -1841,7 +1941,14 @@ const CATEGORIES = [
     label: "Design Language",
     tag: "Research · Ngôn ngữ thiết kế",
     desc: "Nghiên cứu ngôn ngữ thiết kế của dự án — bảng màu thương hiệu, typography, hệ thống hình ảnh và định hướng thẩm mỹ tổng thể.",
-    images: []
+    images: [
+      { id:"dl-1", src:"https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80", title:"Bảng màu thương hiệu", sub:"Design Language" },
+      { id:"dl-2", src:"https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?w=800&q=80", title:"Typography & Visual System", sub:"Design Language" },
+      { id:"dl-3", src:"https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&q=80", title:"Gradient & Texture", sub:"Design Language" },
+      { id:"dl-4", src:"https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&q=80", title:"Hệ thống biểu tượng", sub:"Design Language" },
+      { id:"dl-5", src:"https://images.unsplash.com/photo-1609743522653-52354461eb27?w=800&q=80", title:"Định hướng thẩm mỹ", sub:"Design Language" },
+      { id:"dl-6", src:"https://images.unsplash.com/photo-1634986666676-ec8fd927c23d?w=800&q=80", title:"Mood board tổng thể", sub:"Design Language" },
+    ]
   },
   {
     id: "environment",
@@ -1849,7 +1956,14 @@ const CATEGORIES = [
     label: "Environment",
     tag: "Research · Môi trường & Cảnh quan",
     desc: "Nghiên cứu môi trường tự nhiên xung quanh dự án — hệ sinh thái rừng ngập mặn, khí hậu, địa hình và các yếu tố cảnh quan đặc trưng của Cần Giờ.",
-    images: []
+    images: [
+      { id:"env-1", src:"https://images.unsplash.com/photo-1548030311-0e7de9ce3e07?w=800&q=80", title:"Rừng ngập mặn Cần Giờ", sub:"Environment" },
+      { id:"env-2", src:"https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80", title:"Bờ biển nhiệt đới", sub:"Environment" },
+      { id:"env-3", src:"https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=800&q=80", title:"Hệ sinh thái đước", sub:"Environment" },
+      { id:"env-4", src:"https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=800&q=80", title:"Hoàng hôn vùng ven biển", sub:"Environment" },
+      { id:"env-5", src:"https://images.unsplash.com/photo-1501854140801-50d01698950b?w=800&q=80", title:"Cảnh quan nhiệt đới", sub:"Environment" },
+      { id:"env-6", src:"https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=800&q=80", title:"Mặt nước và phản chiếu", sub:"Environment" },
+    ]
   },
   {
     id: "wardrobe",
@@ -1857,7 +1971,14 @@ const CATEGORIES = [
     label: "Wardrobe",
     tag: "Research · Phong cách & Lifestyle",
     desc: "Nghiên cứu phong cách sống, thời trang và lifestyle của cư dân mục tiêu — định hướng visual và cảm hứng thiết kế không gian sống.",
-    images: []
+    images: [
+      { id:"wb-1", src:"https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&q=80", title:"Resort casual lifestyle", sub:"Wardrobe" },
+      { id:"wb-2", src:"https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&q=80", title:"Luxury beachwear", sub:"Wardrobe" },
+      { id:"wb-3", src:"https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&q=80", title:"Phong cách tối giản hiện đại", sub:"Wardrobe" },
+      { id:"wb-4", src:"https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=800&q=80", title:"Tropical elegance", sub:"Wardrobe" },
+      { id:"wb-5", src:"https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=800&q=80", title:"Premium resort wear", sub:"Wardrobe" },
+      { id:"wb-6", src:"https://images.unsplash.com/photo-1509631179647-0177331693ae?w=800&q=80", title:"Lifestyle cư dân đẳng cấp", sub:"Wardrobe" },
+    ]
   }
 ];
 
@@ -2011,6 +2132,9 @@ function renderSpecialFilter(root, type){
     card.dataset.imgTitle = img.title;
     card.innerHTML = `
       <div class="select-check" onclick="event.stopPropagation();toggleCardSelect(this.closest('.card'))"></div>
+      <a class="card-download-btn" href="${img.src}" download="${img.original_filename || img.title || 'image'}" title="Tải xuống" onclick="event.stopPropagation();downloadImage(event,'${img.src}','${(img.original_filename || img.title || 'image').replace(/'/g,'')}')">
+        <svg viewBox="0 0 24 24"><path d="M12 16V4M8 12l4 4 4-4M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
       <img src="${img.src}" alt="${img.title}" loading="lazy"
         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
       />
@@ -2082,6 +2206,7 @@ function renderSection(cat, root, i){
         <div class="section-head-edit">
           <button class="sec-edit-btn sec-edit-title-btn" onclick="editSectionTitle('${cat.id}')">✏️ Đổi tên</button>
           <button class="sec-edit-btn sec-edit-note-btn" onclick="editSectionDesc('${cat.id}')">📝 Ghi chú</button>
+          <button class="sec-delete-btn" onclick="deleteSection('${cat.id}')">🗑 Xóa mục</button>
         </div>
       </div>
     </div>
@@ -2163,6 +2288,9 @@ function renderImgGrid(grid, images, cat){
     card.dataset.imgTitle = img.title;
     card.innerHTML = `
       <div class="select-check" onclick="event.stopPropagation();toggleCardSelect(this.closest('.card'))"></div>
+      <a class="card-download-btn" href="${img.src}" download="${img.original_filename || img.title || 'image'}" title="Tải xuống" onclick="event.stopPropagation();downloadImage(event,'${img.src}','${(img.original_filename || img.title || 'image').replace(/'/g,'')}')">
+        <svg viewBox="0 0 24 24"><path d="M12 16V4M8 12l4 4 4-4M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
       <img src="${img.src}" alt="${img.title}" loading="lazy"
         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
       />
@@ -3453,7 +3581,7 @@ document.getElementById('img-dialog-save').addEventListener('click', async () =>
     const result = await supa('images', {
       method: 'POST',
       prefer: 'return=representation',
-      body: JSON.stringify({ cat_id: imgDialogCatId, title, src, sub: catLabel, uploaded_by: savedName || 'Editor' })
+      body: JSON.stringify({ cat_id: imgDialogCatId, title, src, sub: catLabel, uploaded_by: savedName || 'Editor', original_filename: imgDialogFileData?.file?.name || title })
     });
     if(result){ showToast('✅ Đã thêm ảnh mới!'); }
     else { showToast('❌ Thêm ảnh thất bại!', 'error'); btn.textContent='Lưu'; btn.disabled=false; return; }
@@ -4039,6 +4167,31 @@ function applySearch(){
     : '😔 Không tìm thấy';
 }
 
+/* ══ DOWNLOAD IMAGE ══ */
+function downloadImage(e, src, filename){
+  e.preventDefault();
+  e.stopPropagation();
+  // Fetch as blob to force download with correct filename
+  fetch(src)
+    .then(r => r.blob())
+    .then(blob => {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename || 'image';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('⬇️ Đang tải xuống...');
+    })
+    .catch(() => {
+      // Fallback: open in new tab if CORS blocks fetch
+      window.open(src, '_blank');
+      showToast('⬇️ Mở ảnh để lưu về máy');
+    });
+}
+
 /* ══ MOVE IMAGE ══ */
 let moveImgId = null;
 let moveSrcCatId = null;
@@ -4131,6 +4284,104 @@ async function doMoveImage(targetCatId){
 
   saveImageOrder();
   showToast(`✅ Đã chuyển ảnh sang "${tgtCat ? tgtCat.label : targetCatId}"`);
+}
+
+/* ══ ADD / DELETE SECTION ══ */
+let asdGroup = 'priority';
+
+function openAddSectionDialog(){
+  document.getElementById('asd-label').value = '';
+  document.getElementById('asd-tag').value = '';
+  document.getElementById('asd-desc').value = '';
+  asdGroup = 'priority';
+  document.querySelectorAll('.asd-group-btn').forEach(b => b.classList.toggle('active', b.dataset.group === 'priority'));
+  document.getElementById('add-section-dialog').classList.add('open');
+  setTimeout(() => document.getElementById('asd-label').focus(), 100);
+}
+
+document.querySelectorAll('.asd-group-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    asdGroup = btn.dataset.group;
+    document.querySelectorAll('.asd-group-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+
+document.getElementById('asd-cancel').addEventListener('click', () => {
+  document.getElementById('add-section-dialog').classList.remove('open');
+});
+document.getElementById('add-section-dialog').addEventListener('click', e => {
+  if(e.target === e.currentTarget) document.getElementById('add-section-dialog').classList.remove('open');
+});
+
+document.getElementById('asd-save').addEventListener('click', () => {
+  const label = document.getElementById('asd-label').value.trim();
+  if(!label){ showToast('Vui lòng nhập tên mục!', 'error'); return; }
+  const tag   = document.getElementById('asd-tag').value.trim() || 'Asset';
+  const desc  = document.getElementById('asd-desc').value.trim() || '';
+  const id    = 'custom-' + Date.now();
+
+  const newCat = { id, group: asdGroup, rank: null, label, tag, desc, images: [] };
+  CATEGORIES.push(newCat);
+
+  // Save to localStorage
+  const customCats = JSON.parse(localStorage.getItem('vgp_custom_cats') || '[]');
+  customCats.push(newCat);
+  localStorage.setItem('vgp_custom_cats', JSON.stringify(customCats));
+
+  document.getElementById('add-section-dialog').classList.remove('open');
+  renderAll();
+  showToast(`✅ Đã tạo mục "${label}"`);
+
+  // Scroll to new section
+  setTimeout(() => {
+    const sec = document.getElementById(`sec-${id}`);
+    if(sec) sec.scrollIntoView({ behavior:'smooth', block:'start' });
+  }, 200);
+});
+
+function deleteSection(catId){
+  const cat = CATEGORIES.find(c => c.id === catId);
+  if(!cat) return;
+  if(cat.images.length > 0){
+    if(!confirm(`Xóa mục "${cat.label}"?
+Mục này còn ${cat.images.length} ảnh, tất cả sẽ bị xóa.`)) return;
+  } else {
+    if(!confirm(`Xóa mục "${cat.label}"?`)) return;
+  }
+
+  // Remove from CATEGORIES
+  const idx = CATEGORIES.findIndex(c => c.id === catId);
+  if(idx > -1) CATEGORIES.splice(idx, 1);
+
+  // Remove from custom cats localStorage
+  const customCats = JSON.parse(localStorage.getItem('vgp_custom_cats') || '[]');
+  const filtered = customCats.filter(c => c.id !== catId);
+  localStorage.setItem('vgp_custom_cats', JSON.stringify(filtered));
+
+  // Remove from deleted sections list
+  const deletedSecs = JSON.parse(localStorage.getItem('vgp_deleted_sections') || '[]');
+  deletedSecs.push(catId);
+  localStorage.setItem('vgp_deleted_sections', JSON.stringify(deletedSecs));
+
+  renderAll();
+  showToast(`🗑 Đã xóa mục "${cat.label}"`);
+}
+
+function loadCustomSections(){
+  const customCats = JSON.parse(localStorage.getItem('vgp_custom_cats') || '[]');
+  const deletedSecs = JSON.parse(localStorage.getItem('vgp_deleted_sections') || '[]');
+  // Add custom sections that haven't been deleted
+  customCats.forEach(cat => {
+    if(!deletedSecs.includes(cat.id) && !CATEGORIES.find(c => c.id === cat.id)){
+      CATEGORIES.push(cat);
+    }
+  });
+  // Remove default sections that were deleted
+  deletedSecs.forEach(id => {
+    const idx = CATEGORIES.findIndex(c => c.id === id);
+    if(idx > -1) CATEGORIES.splice(idx, 1);
+  });
 }
 
 /* ══ SECTION TITLE & DESC EDIT ══ */
@@ -4337,7 +4588,8 @@ function applyImageOrder(){
 
 /* ══ INIT ══ */
 async function init(){
-  // Apply saved section edits & image order
+  // Load custom/deleted sections, apply edits & order
+  loadCustomSections();
   applySectionEdits();
   applyImageOrder();
   // Load likes from Supabase
